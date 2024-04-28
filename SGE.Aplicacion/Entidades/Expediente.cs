@@ -1,10 +1,10 @@
 using System;
 namespace SGE.Aplicacion.Entidades;
 
-internal class Expediente
+public class Expediente
 {
-    private int Id { get; set; }
-    private string Caratula { get; set; }
+    public int Id { get; set; }
+    public string Caratula { get; set; }
     private DateTime FechaCreacion { get; set; }
     private DateTime FechaModificacion { get; set; }
     private int UsuarioModificacionId { get; set; }
