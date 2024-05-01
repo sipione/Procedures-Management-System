@@ -4,17 +4,16 @@ namespace SGE.Aplicacion;
 
 public class CasoDeUsoExpedienteAlta
 {
-    public Expediente expediente;
+    internal Expediente CrearNuevoExpediente(string caratula, int usuarioId, int id){
 
-    public CasoDeUsoExpedienteAlta(Expediente expediente){
-        this.expediente = expediente;
-    }
-
-    public void CrearNuevoExpediente(string usuario){
-        bool isAuthorized = ServicioAutorizacionProvisorio.VerifyAuthorization(usuario, Permiso.ExpedienteAlta);
+        ServicioAutorizacionProvisorio servicioAutorizacion = new ServicioAutorizacionProvisorio();
+        bool isAuthorized = servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.ExpedienteAlta);
         if(!isAuthorized) throw AutorizacionExcepcion.NotAuthorizedException("Usuario no autorizado");
 
-        bool isValid = ExpedienteValidador.IsValidExpedienteCreation(this.expediente);
+        Expediente nuevoExpediente = new Expediente(caratula, usuarioId, id);
+        bool isValid = ExpedienteValidador.IsValidExpedienteCreation(nuevoExpediente);
         if(!isValid) throw ValidacionExcepcion.AltaExpedienteNotValid("Fields do not match with the validation requirements.");
-    } 
+
+        return nuevoExpediente;        
+    }
 }

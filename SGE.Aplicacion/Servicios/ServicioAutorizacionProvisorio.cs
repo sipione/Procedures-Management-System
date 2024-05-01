@@ -1,7 +1,10 @@
-class ServicioAutorizacionProvisorio{
-     public static bool VerifyAuthorization(string usuario, Permiso permiso){
+using System.Data.Common;
+using SGE.Aplicacion;
+
+internal class ServicioAutorizacionProvisorio : IServicioAutorizacion{
+    public bool PoseeElPermiso(int usuarioId, Permiso permiso){
         if(permiso == Permiso.ExpedienteAlta){
-            return usuario == "editor";
+            return usuarioId == 1;
         }
         return false;
     }
