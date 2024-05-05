@@ -4,7 +4,7 @@ namespace SGE.Aplicacion;
 
 public class CasoDeUsoExpedienteAlta
 {
-    internal Expediente CrearNuevoExpediente(string caratula, int usuarioId, int id){
+    public static Expediente CrearNuevoExpediente(string caratula, int usuarioId, int id){
 
         ServicioAutorizacionProvisorio servicioAutorizacion = new ServicioAutorizacionProvisorio();
         bool isAuthorized = servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.ExpedienteAlta);

@@ -11,4 +11,16 @@ public class Tramite
     public DateTime FechaModificacion { get; set; }
     public int UsuarioModificacionId { get; set; }
     public string Estado { get; set; }
+
+    public Tramite(string idExpediente, string contenido, int usuarioId, int id)
+    {
+        this.Id = id;
+        this.IdExpediente = idExpediente;
+        this.Etiqueta = EtiquetaTramite.EscritoPresentado;
+        this.Contenido = contenido;
+        this.FechaCreacion = DateTime.Now;
+        this.FechaModificacion = DateTime.Now;
+        this.UsuarioModificacionId = usuarioId;
+        this.Estado = "RecienIniciado";
+    }
 }

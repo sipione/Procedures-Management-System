@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-internal enum EstadoExpediente
+public enum EstadoExpediente
 {
     [Description("Recién Iniciado")]
     RecienIniciado,
