@@ -1,9 +1,0 @@
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/bin/Debug/net8.0/SGE.Aplicacion.dll
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/bin/Debug/net8.0/SGE.Aplicacion.pdb
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/SGE.Aplicacion.GeneratedMSBuildEditorConfig.editorconfig
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/SGE.Aplicacion.AssemblyInfoInputs.cache
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/SGE.Aplicacion.AssemblyInfo.cs
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/SGE.Aplicacion.csproj.CoreCompileInputs.cache
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/SGE.Aplicacion.dll
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/refint/SGE.Aplicacion.dll
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/SGE.Aplicacion.pdb
