@@ -4,6 +4,64 @@
     "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/SGE.Consola.csproj": {}
   },
   "projects": {
+    "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj",
+        "projectName": "SGE.Aplicacion",
+        "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj",
+        "packagesPath": "/Users/ricardosipione/.nuget/packages/",
+        "outputPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/ricardosipione/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.201/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/SGE.Consola.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -25,7 +83,76 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj": {
+                "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj"
+              },
+              "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/SGE.Repositorios.csproj": {
+                "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/SGE.Repositorios.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.201/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/SGE.Repositorios.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/SGE.Repositorios.csproj",
+        "projectName": "SGE.Repositorios",
+        "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/SGE.Repositorios.csproj",
+        "packagesPath": "/Users/ricardosipione/.nuget/packages/",
+        "outputPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/ricardosipione/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj": {
+                "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
