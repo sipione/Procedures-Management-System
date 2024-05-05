@@ -6,5 +6,21 @@
     "FechaModificacion": "2024-05-05T00:28:38.930425-03:00",
     "UsuarioModificacionId": 1,
     "Estado": 0
+  },
+  {
+    "Id": 2,
+    "Caratula": "outra",
+    "FechaCreacion": "2024-05-05T10:45:28.886223-03:00",
+    "FechaModificacion": "2024-05-05T10:45:28.886246-03:00",
+    "UsuarioModificacionId": 1,
+    "Estado": 0
+  },
+  {
+    "Id": 3,
+    "Caratula": "um expediente valido",
+    "FechaCreacion": "2024-05-05T10:49:50.858074-03:00",
+    "FechaModificacion": "2024-05-05T10:49:50.858076-03:00",
+    "UsuarioModificacionId": 1,
+    "Estado": 0
   }
 ]

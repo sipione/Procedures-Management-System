@@ -7,5 +7,3 @@
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/SGE.Aplicacion.dll
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/refint/SGE.Aplicacion.dll
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/SGE.Aplicacion.pdb
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/bin/Debug/net8.0/SGE.Aplicacion.deps.json
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/obj/Debug/net8.0/ref/SGE.Aplicacion.dll

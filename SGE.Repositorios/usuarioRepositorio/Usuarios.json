@@ -22,5 +22,17 @@
     "FechaCreacion": "2024-05-05T00:14:04.821759-03:00",
     "FechaModificacion": "2024-05-05T00:14:04.821764-03:00",
     "UsuarioModificacionId": 0
+  },
+  {
+    "Id": 3,
+    "Nombre": "Nix",
+    "Apellido": "Deo",
+    "Email": "nixinho@mail.com",
+    "Password": "123",
+    "Rol": "dog",
+    "Activo": true,
+    "FechaCreacion": "2024-05-05T10:50:48.542189-03:00",
+    "FechaModificacion": "2024-05-05T10:50:48.542191-03:00",
+    "UsuarioModificacionId": 0
   }
 ]

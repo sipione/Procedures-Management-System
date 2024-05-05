@@ -8,8 +8,3 @@
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/obj/Debug/net8.0/SGE.Repositorios.dll
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/obj/Debug/net8.0/refint/SGE.Repositorios.dll
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/obj/Debug/net8.0/SGE.Repositorios.pdb
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/bin/Debug/net8.0/SGE.Repositorios.deps.json
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/bin/Debug/net8.0/SGE.Aplicacion.dll
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/bin/Debug/net8.0/SGE.Aplicacion.pdb
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/obj/Debug/net8.0/SGE.Repo.5B6658F4.Up2Date
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/obj/Debug/net8.0/ref/SGE.Repositorios.dll

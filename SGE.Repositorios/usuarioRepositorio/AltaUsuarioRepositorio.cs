@@ -17,7 +17,7 @@ public class AltaUsuarioRepositorio
         {
             List<Usuario> usuarios = getAllUsersFromTheFile(filePath);
             int Id = GenerarUsuarioId(usuarios);
-            Usuario usuario = new(Nombre, Apellido, Email, Password, Rol, Id);
+            Usuario usuario = CasoDeUsoUsuarioAlta.CrearNuevoUsuario(Nombre, Apellido, Email, Password, Rol, Id);
             await GuardarUsuario(usuario, filePath, usuarios, GetOptions());
             return "Usuario creado con éxito";
         }

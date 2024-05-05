@@ -6,6 +6,6 @@ internal class ServicioAutorizacionProvisorio : IServicioAutorizacion{
         if(permiso == Permiso.ExpedienteAlta){
             return usuarioId == 1;
         }
-        return false;
+        return usuarioId == 1;
     }
 }

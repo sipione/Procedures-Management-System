@@ -10,7 +10,7 @@ using System.Text.Json;
 public class AltaExpedienteRepositorio{
     private static JsonSerializerOptions GetOptions()
     {
-        return new JsonSerializerOptions { WriteIndented = true };
+        return new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
     }
     public async Task<string> CrearExpediente(string Caratula, int UsuarioId)
     {
@@ -36,7 +36,7 @@ public class AltaExpedienteRepositorio{
             try
             {
                 // Deserialize JSON string into 'Expediente' object
-                expedientes = JsonSerializer.Deserialize<List<Expediente>>(json);
+                expedientes = JsonSerializer.Deserialize<List<Expediente>>(json, GetOptions());
             }
             catch (JsonException ex)
             {

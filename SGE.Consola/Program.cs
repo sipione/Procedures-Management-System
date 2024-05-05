@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using SGE.Aplicacion.Entidades;
+﻿using SGE.Aplicacion.Entidades;
 using SGE.Repositorios;
 
 void Menu(){

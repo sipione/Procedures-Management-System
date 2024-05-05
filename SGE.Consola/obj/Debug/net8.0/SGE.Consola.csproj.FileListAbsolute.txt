@@ -9,12 +9,3 @@
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/obj/Debug/net8.0/SGE.Consola.dll
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/obj/Debug/net8.0/refint/SGE.Consola.dll
 /Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/obj/Debug/net8.0/SGE.Consola.pdb
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/bin/Debug/net8.0/SGE.Consola.deps.json
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/bin/Debug/net8.0/SGE.Consola.runtimeconfig.json
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/bin/Debug/net8.0/SGE.Aplicacion.dll
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/bin/Debug/net8.0/SGE.Repositorios.dll
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/bin/Debug/net8.0/SGE.Aplicacion.pdb
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/bin/Debug/net8.0/SGE.Repositorios.pdb
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/obj/Debug/net8.0/SGE.Cons.1669A3FB.Up2Date
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/obj/Debug/net8.0/SGE.Consola.genruntimeconfig.cache
-/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/obj/Debug/net8.0/ref/SGE.Consola.dll

@@ -1,49 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {
-      "SGE.Aplicacion/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/SGE.Aplicacion.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SGE.Aplicacion.dll": {}
-        }
-      },
-      "SGE.Repositorios/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "dependencies": {
-          "SGE.Aplicacion": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SGE.Repositorios.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SGE.Repositorios.dll": {}
-        }
-      }
-    }
+    "net8.0": {}
   },
-  "libraries": {
-    "SGE.Aplicacion/1.0.0": {
-      "type": "project",
-      "path": "../SGE.Aplicacion/SGE.Aplicacion.csproj",
-      "msbuildProject": "../SGE.Aplicacion/SGE.Aplicacion.csproj"
-    },
-    "SGE.Repositorios/1.0.0": {
-      "type": "project",
-      "path": "../SGE.Repositorios/SGE.Repositorios.csproj",
-      "msbuildProject": "../SGE.Repositorios/SGE.Repositorios.csproj"
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net8.0": [
-      "SGE.Aplicacion >= 1.0.0",
-      "SGE.Repositorios >= 1.0.0"
-    ]
+    "net8.0": []
   },
   "packageFolders": {
     "/Users/ricardosipione/.nuget/packages/": {}
@@ -51,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/SGE.Consola.csproj",
+      "projectUniqueName": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/SGE.Consola.csproj",
       "projectName": "SGE.Consola",
-      "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/SGE.Consola.csproj",
+      "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/SGE.Consola.csproj",
       "packagesPath": "/Users/ricardosipione/.nuget/packages/",
-      "outputPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/obj/",
+      "outputPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Consola/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/ricardosipione/.nuget/NuGet/NuGet.Config"
@@ -69,14 +31,7 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {
-            "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj": {
-              "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Aplicacion/SGE.Aplicacion.csproj"
-            },
-            "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/SGE.Repositorios.csproj": {
-              "projectPath": "/Volumes/externo/sipione/lic. sistemas/2do Año/Seminario de Lenguajes/Opcion Net/proyecto01/SGE/SGE.Repositorios/SGE.Repositorios.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
