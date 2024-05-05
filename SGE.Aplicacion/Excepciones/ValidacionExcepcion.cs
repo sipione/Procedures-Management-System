@@ -7,4 +7,8 @@ internal class ValidacionExcepcion{
     internal static Exception AltaUsuarioNotValid(string msg){
         return new Exception($"The user is not valid. {msg}");
     }
+
+    internal static Exception AltaTramiteNotValid(string msg){
+        return new Exception($"The tramite is not valid. {msg}");
+    }
 }

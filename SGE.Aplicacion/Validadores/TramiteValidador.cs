@@ -3,7 +3,7 @@ using SGE.Aplicacion.Entidades;
 
 internal class TramiteValidador{
 
-    internal static bool ValidarTramite(Tramite tramite){
+    internal static bool Validar(Tramite tramite){
         if(tramite == null){
             return false;
         }

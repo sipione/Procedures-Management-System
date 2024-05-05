@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json;
+using SGE.Aplicacion;
 using SGE.Aplicacion.Entidades;
 namespace SGE.Repositorios;
 
@@ -16,7 +17,7 @@ public class AltaTramiteRepositorio
             string filePath = "../SGE.Repositorios/tramitesRepositorio/Tramites.json"; // Specify the file path where you want to save the object
             List<Tramite> tramites = getAllTramitesFromTheFile(filePath);
             int Id = GenerateTramiteId(tramites);
-            Tramite tramite = new(IdExpediente, Contenido, UsuarioId, Id);
+            Tramite tramite = CasoDeUsoTramiteAlta.CrearTramite(IdExpediente, Contenido, UsuarioId, Id);
 
             await GuardarTramite(tramite, filePath, tramites);
             return "Tramite creado con éxito";
