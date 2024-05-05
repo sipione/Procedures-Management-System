@@ -21,18 +21,7 @@ public class Expediente{
     }
     
     // Deserialization constructor
-    public Expediente(){
-
-    }
-    public Expediente(int id, string caratula, DateTime fechaCreacion, DateTime fechaModificacion, int usuarioModificacionId, EstadoExpediente estado)
-    {
-        this.Id = id;
-        this.Caratula = caratula;
-        this.FechaCreacion = fechaCreacion;
-        this.FechaModificacion = fechaModificacion;
-        this.UsuarioModificacionId = usuarioModificacionId;
-        this.Estado = estado;
-    }
+    public Expediente(){}
 
     public void SetCaratula(string caratula, int usuarioId)
     {

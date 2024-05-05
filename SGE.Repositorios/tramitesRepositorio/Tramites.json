@@ -1,0 +1,32 @@
+[
+  {
+    "Id": 1,
+    "IdExpediente": "1",
+    "Etiqueta": 0,
+    "Contenido": "um contenido del tramite",
+    "FechaCreacion": "2024-05-05T12:09:29.620381-03:00",
+    "FechaModificacion": "2024-05-05T12:09:29.642033-03:00",
+    "UsuarioModificacionId": 1,
+    "Estado": "RecienIniciado"
+  },
+  {
+    "Id": 2,
+    "IdExpediente": "1",
+    "Etiqueta": 0,
+    "Contenido": "otro tramite",
+    "FechaCreacion": "2024-05-05T12:10:56.427762-03:00",
+    "FechaModificacion": "2024-05-05T12:10:56.427763-03:00",
+    "UsuarioModificacionId": 1,
+    "Estado": "RecienIniciado"
+  },
+  {
+    "Id": 3,
+    "IdExpediente": "sad",
+    "Etiqueta": 0,
+    "Contenido": "sadf",
+    "FechaCreacion": "2024-05-05T12:11:23.221261-03:00",
+    "FechaModificacion": "2024-05-05T12:11:23.22128-03:00",
+    "UsuarioModificacionId": 1,
+    "Estado": "RecienIniciado"
+  }
+]

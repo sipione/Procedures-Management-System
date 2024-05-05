@@ -23,4 +23,6 @@ public class Tramite
         this.UsuarioModificacionId = usuarioId;
         this.Estado = "RecienIniciado";
     }
+
+    public Tramite(){}
 }
