@@ -102,14 +102,14 @@ async void CrearTramite(){
     Console.Clear();
     Console.WriteLine("Crear Tramite");
     Console.Write("Ingrese el id del expediente: ");
-    string idExpediente = Console.ReadLine()!;
+    int idExpediente = int.Parse(Console.ReadLine()!);
     Console.Write("Ingrese el contenido: ");
     string contenido = Console.ReadLine()!;
     Console.Write("Ingrese el id del usuario: ");
     int usuarioId = int.Parse(Console.ReadLine()!);
 
     AltaTramiteRepositorio altaTramiteRepositorio = new();
-    string rsult = await altaTramiteRepositorio.CrearTramite(idExpediente, contenido, usuarioId);
+    string rsult = await AltaTramiteRepositorio.CrearTramite(idExpediente, contenido, usuarioId);
     Console.WriteLine("Tramite creado con exito");
     Console.WriteLine("Presione una tecla para continuar");
     Console.Read();

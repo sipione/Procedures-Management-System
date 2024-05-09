@@ -10,7 +10,7 @@ public class AltaTramiteRepositorio
     {
         return new JsonSerializerOptions { WriteIndented = true };
     }
-    public async Task<string> CrearTramite(string IdExpediente, string Contenido, int UsuarioId)
+    public static async Task<string> CrearTramite(int IdExpediente, string Contenido, int UsuarioId)
     {
         try
         {
@@ -18,7 +18,6 @@ public class AltaTramiteRepositorio
             List<Tramite> tramites = getAllTramitesFromTheFile(filePath);
             int Id = GenerateTramiteId(tramites);
             Tramite tramite = CasoDeUsoTramiteAlta.CrearTramite(IdExpediente, Contenido, UsuarioId, Id);
-
             await GuardarTramite(tramite, filePath, tramites);
             return "Tramite creado con éxito";
         }

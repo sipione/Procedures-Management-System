@@ -12,7 +12,7 @@ public class CasoDeUsoExpedienteAlta
 
         Expediente nuevoExpediente = new Expediente(caratula, usuarioId, id);
         bool isValid = ExpedienteValidador.IsValidExpedienteCreation(nuevoExpediente);
-        if(!isValid) throw ValidacionExcepcion.AltaExpedienteNotValid("Fields do not match with the validation requirements.");
+        if(!isValid) throw ValidacionExcepcion.ExpedienteNotValid("Fields do not match with the validation requirements.");
 
         return nuevoExpediente;        
     }

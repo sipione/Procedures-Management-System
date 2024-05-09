@@ -29,23 +29,26 @@ public class AltaExpedienteRepositorio{
     }
     private static List<Expediente> GetAllExpedientesFromTheFile(string filePath)
     {
-        List<Expediente> expedientes = new();
         if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
-            try
+            if (!string.IsNullOrEmpty(json))
             {
-                // Deserialize JSON string into 'Expediente' object
-                expedientes = JsonSerializer.Deserialize<List<Expediente>>(json, GetOptions());
-            }
-            catch (JsonException ex)
-            {
-                // Handle JSON deserialization error
-                Console.WriteLine($"Error deserializing JSON: {ex.Message}");
-                throw new Exception(ex.Message);
+                try
+                {
+                    // Deserialize JSON string into 'Expediente' object
+                    List<Expediente>? expedientes = JsonSerializer.Deserialize<List<Expediente>>(json, GetOptions());
+                    return expedientes == null ? new List<Expediente>() : expedientes;
+                }
+                catch (JsonException ex)
+                {
+                    // Handle JSON deserialization error
+                    Console.WriteLine($"Error deserializing JSON: {ex.Message}");
+                    throw new Exception(ex.Message);
+                }
             }
         }
-        return expedientes;
+        return new List<Expediente>();
     }
     private static int GenerateExpedienteId(List<Expediente> expedientes)
     {

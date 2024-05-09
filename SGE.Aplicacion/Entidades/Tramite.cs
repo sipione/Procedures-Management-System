@@ -4,7 +4,7 @@ namespace SGE.Aplicacion.Entidades;
 public class Tramite
 {
     public int Id { get; set; }
-    public string IdExpediente { get; set; }
+    public int IdExpediente { get; set; }
     public EtiquetaTramite Etiqueta { get; set; }
     public string Contenido { get; set; }
     public DateTime FechaCreacion { get; set; }
@@ -12,7 +12,7 @@ public class Tramite
     public int UsuarioModificacionId { get; set; }
     public string Estado { get; set; }
 
-    public Tramite(string idExpediente, string contenido, int usuarioId, int id)
+    public Tramite(int idExpediente, string contenido, int usuarioId, int id)
     {
         this.Id = id;
         this.IdExpediente = idExpediente;

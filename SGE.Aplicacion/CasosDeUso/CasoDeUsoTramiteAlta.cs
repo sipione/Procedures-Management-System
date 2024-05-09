@@ -4,7 +4,7 @@ namespace SGE.Aplicacion;
 
 public class CasoDeUsoTramiteAlta
 {
-    public static Tramite CrearTramite(string idExpediente, string contenido, int usuarioId, int id)
+    public static Tramite CrearTramite(int idExpediente, string contenido, int usuarioId, int id)
     {
         ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new();
         bool isAuthorized = servicioAutorizacionProvisorio.PoseeElPermiso(usuarioId, Permiso.TramiteAlta);
