@@ -40,7 +40,7 @@ void Menu(){
             ConsultarTodosExpedientes();
             break;
         case "8":
-            Console.WriteLine("Modificar Expediente");
+            ConsultarTodosTramites();
             break;
         case "9":
             Console.WriteLine("Modificar Tramites");
@@ -181,8 +181,8 @@ void ConsultarTramitesPorExpediente(){
     Console.WriteLine("Consultar Tramites por Expediente");
     Console.Write("Ingrese el id del expediente: ");
     int id = int.Parse(Console.ReadLine()!);
-    List<Tramite> tramites = ConsultaTramite.ConsultarPorExpediente(id);
-    if(tramites.Count > 0){
+    List<Tramite>? tramites = ConsultaTramite.ConsultarPorExpediente(id);
+    if(tramites != null && tramites.Count > 0){
         foreach (var tramite in tramites)
         {
             Console.WriteLine($"Id: {tramite.Id}");
@@ -201,3 +201,26 @@ void ConsultarTramitesPorExpediente(){
     Menu();
 }
 
+void ConsultarTodosTramites(){
+    Console.Clear();
+    Console.WriteLine("Consulta por todos los Tramites");
+    List<Tramite>? tramites = ConsultaTramite.ConsultaTodosTramites();
+    if(tramites != null){
+        foreach(Tramite tramite in tramites){
+            Console.WriteLine($"Id: {tramite.Id}");
+            Console.WriteLine($"IdExpediente: {tramite.IdExpediente}");
+            Console.WriteLine($"Etiqueta: {tramite.Etiqueta}");
+            Console.WriteLine($"Contenido: {tramite.Contenido}");
+            Console.WriteLine($"FechaCreacion: {tramite.FechaCreacion}");
+            Console.WriteLine($"FechaModificacion: {tramite.FechaModificacion}");
+            Console.WriteLine($"UsuarioModificacionId: {tramite.UsuarioModificacionId}");
+            Console.WriteLine($"Estado: {tramite.Estado}");
+            Console.WriteLine($"---------------------------------------------------------");
+        }
+    }else{
+        Console.WriteLine("No fue encontrado nungun tramite");
+    }
+    Console.WriteLine("Presione una tecla para continuar");
+    Console.Read();
+    Menu();
+}
