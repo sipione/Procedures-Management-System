@@ -8,13 +8,11 @@ void Menu(){
     Console.WriteLine("1. Crear Expediente");
     Console.WriteLine("2. Registrar Usuario");
     Console.WriteLine("3. Crear Tramites");
-    Console.WriteLine("4. Consultar Expediente");
-    Console.WriteLine("5. Consultar Tramites");
-    Console.WriteLine("6. Baja de Tramites");
-    Console.WriteLine("7. Baja de Expediente");
-    Console.WriteLine("8. Modificar Expediente");
-    Console.WriteLine("9. Modificar Tramites");
-    Console.WriteLine("10. Consultar Usuarios");
+    Console.WriteLine("4. Consultar Expediente por Id");
+    Console.WriteLine("5. Consultar Tramites por id");
+    Console.WriteLine("6. Consultar Tramites por Expediente");
+    Console.WriteLine("7. Consultar todos los Expedientes");
+    Console.WriteLine("8. Consultar todos los Tramites");
     Console.WriteLine("11. Salir");
     Console.Write("Opcion: ");
     string opcion = Console.ReadLine()!;
@@ -30,16 +28,16 @@ void Menu(){
             CrearTramite();
             break;
         case "4":
-            ConsultaExpedientePorIdAsync();
+            ConsultaExpedientePorId();
             break;
         case "5":
-            Console.WriteLine("Consultar Tramites");
+            ConsultarTramitesPorId();
             break;
         case "6":
-            Console.WriteLine("Baja de Tramites");
+            ConsultarTramitesPorExpediente();
             break;
         case "7":
-            Console.WriteLine("Baja de Expediente");
+            ConsultarTodosExpedientes();
             break;
         case "8":
             Console.WriteLine("Modificar Expediente");
@@ -116,12 +114,12 @@ async void CrearTramite(){
     Menu();
 }
 
-async void ConsultaExpedientePorIdAsync(){
+void ConsultaExpedientePorId(){
     Console.Clear();
     Console.WriteLine("Consultar Expediente");
     Console.Write("Ingrese el id del expediente: ");
     int id = int.Parse(Console.ReadLine()!);
-    Expediente? expediente = await ConsultaExpediente.ConsultarPorId(id);
+    Expediente? expediente = ConsultaExpediente.ConsultarPorId(id);
     if(expediente != null){
         Console.WriteLine($"Id: {expediente.Id}");
         Console.WriteLine($"Caratula: {expediente.Caratula}");
@@ -131,6 +129,72 @@ async void ConsultaExpedientePorIdAsync(){
         Console.WriteLine($"Estado: {expediente.Estado}");
     }else{
         Console.WriteLine($"No fue posible encontrar el expediente con id: {id}");
+    }
+    Console.WriteLine("Presione una tecla para continuar");
+    Console.Read();
+    Menu();
+}
+
+void ConsultarTodosExpedientes(){
+    Console.Clear();
+    Console.WriteLine("Consultar todos los Expedientes");
+    List<Expediente> expedientes = ConsultaExpediente.ConsultarTodos();
+    if(expedientes.Count > 0){
+        foreach (var expediente in expedientes)
+        {
+            Console.WriteLine($"Id: {expediente.Id}");
+            Console.WriteLine($"Caratula: {expediente.Caratula}");
+            Console.WriteLine($"Fecha de creacion: {expediente.FechaCreacion}");
+            Console.WriteLine($"Fecha de modificacion: {expediente.FechaModificacion}");
+            Console.WriteLine($"Usuario de modificacion: {expediente.UsuarioModificacionId}");
+            Console.WriteLine($"Estado: {expediente.Estado}");
+            Console.WriteLine("-------------------------------------------------");
+        }
+    }else{
+        Console.WriteLine("No hay expedientes registrados");
+    }
+}
+
+void ConsultarTramitesPorId(){
+    Console.Clear();
+    Console.WriteLine("Consultar Tramites por Id");
+    Console.Write("Ingrese el id del tramite: ");
+    int id = int.Parse(Console.ReadLine()!);
+    Tramite? tramite = ConsultaTramite.ConsultarPorId(id);
+    if(tramite != null){
+        Console.WriteLine($"Id: {tramite.Id}");
+        Console.WriteLine($"Contenido: {tramite.Contenido}");
+        Console.WriteLine($"Fecha de creacion: {tramite.FechaCreacion}");
+        Console.WriteLine($"Fecha de modificacion: {tramite.FechaModificacion}");
+        Console.WriteLine($"Usuario de modificacion: {tramite.UsuarioModificacionId}");
+        Console.WriteLine($"Estado: {tramite.Estado}");
+    }else{
+        Console.WriteLine($"No fue posible encontrar el tramite con id: {id}");
+    }
+    Console.WriteLine("Presione una tecla para continuar");
+    Console.Read();
+    Menu();
+}
+
+void ConsultarTramitesPorExpediente(){
+    Console.Clear();
+    Console.WriteLine("Consultar Tramites por Expediente");
+    Console.Write("Ingrese el id del expediente: ");
+    int id = int.Parse(Console.ReadLine()!);
+    List<Tramite> tramites = ConsultaTramite.ConsultarPorExpediente(id);
+    if(tramites.Count > 0){
+        foreach (var tramite in tramites)
+        {
+            Console.WriteLine($"Id: {tramite.Id}");
+            Console.WriteLine($"Contenido: {tramite.Contenido}");
+            Console.WriteLine($"Fecha de creacion: {tramite.FechaCreacion}");
+            Console.WriteLine($"Fecha de modificacion: {tramite.FechaModificacion}");
+            Console.WriteLine($"Usuario de modificacion: {tramite.UsuarioModificacionId}");
+            Console.WriteLine($"Estado: {tramite.Estado}");
+            Console.WriteLine("-------------------------------------------------");
+        }
+    }else{
+        Console.WriteLine("No hay tramites registrados para el expediente");
     }
     Console.WriteLine("Presione una tecla para continuar");
     Console.Read();

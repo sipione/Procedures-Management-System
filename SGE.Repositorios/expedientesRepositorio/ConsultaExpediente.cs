@@ -8,7 +8,7 @@ public class ConsultaExpediente
     {
         return new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
     }
-    async public static Task<Expediente?> ConsultarPorId(int id)
+    public static Expediente? ConsultarPorId(int id)
     {
         string filePath = "../SGE.Repositorios/expedientesRepositorio/Expedientes.json"; // Specify the file path where you want to save the object
         try{
@@ -20,6 +20,19 @@ public class ConsultaExpediente
             return null;
         }
     }
+
+    public static List<Expediente> ConsultarTodos()
+    {
+        string filePath = "../SGE.Repositorios/expedientesRepositorio/Expedientes.json"; // Specify the file path where you want to save the object
+        try{
+            List<Expediente> expedientes = GetAllExpedientesFromTheFile(filePath) ?? new List<Expediente>();
+            return CasoDeUsoExpedienteConsultaTodos.ConsultarTodos(expedientes);
+        }catch(Exception e){
+            Console.WriteLine($"Error al consultar expedientes: {e.Message}");
+            return new List<Expediente>();
+        }
+    }
+
     private static List<Expediente> GetAllExpedientesFromTheFile(string filePath)
     {
         if (File.Exists(filePath))
