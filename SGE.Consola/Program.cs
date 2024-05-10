@@ -30,7 +30,7 @@ void Menu(){
             CrearTramite();
             break;
         case "4":
-            Console.WriteLine("Consultar Expediente");
+            ConsultaExpedientePorIdAsync();
             break;
         case "5":
             Console.WriteLine("Consultar Tramites");
@@ -115,3 +115,25 @@ async void CrearTramite(){
     Console.Read();
     Menu();
 }
+
+async void ConsultaExpedientePorIdAsync(){
+    Console.Clear();
+    Console.WriteLine("Consultar Expediente");
+    Console.Write("Ingrese el id del expediente: ");
+    int id = int.Parse(Console.ReadLine()!);
+    Expediente? expediente = await ConsultaExpediente.ConsultarPorId(id);
+    if(expediente != null){
+        Console.WriteLine($"Id: {expediente.Id}");
+        Console.WriteLine($"Caratula: {expediente.Caratula}");
+        Console.WriteLine($"Fecha de creacion: {expediente.FechaCreacion}");
+        Console.WriteLine($"Fecha de modificacion: {expediente.FechaModificacion}");
+        Console.WriteLine($"Usuario de modificacion: {expediente.UsuarioModificacionId}");
+        Console.WriteLine($"Estado: {expediente.Estado}");
+    }else{
+        Console.WriteLine($"No fue posible encontrar el expediente con id: {id}");
+    }
+    Console.WriteLine("Presione una tecla para continuar");
+    Console.Read();
+    Menu();
+}
+
