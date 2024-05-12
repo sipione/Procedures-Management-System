@@ -10,7 +10,7 @@ public class CasoDeUsoUsuarioAlta
 
         Usuario nuevoUsuario = new(nombre, apellido, email, password, role, id);
         bool isValid = UsuarioValidador.IsValidUsuarioCreation(nuevoUsuario);
-        if (!isValid) throw ValidacionExcepcion.AltaUsuarioNotValid("Fields do not match with the validation requirements.");
+        if (!isValid) throw ValidacionExcepcion.UsuarioNotValid("Fields do not match with the validation requirements.");
 
         return nuevoUsuario;
     }

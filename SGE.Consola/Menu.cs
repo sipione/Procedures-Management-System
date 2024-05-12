@@ -150,7 +150,7 @@ public class ConsultarTramitesPorId : Menu{
             Console.WriteLine($"Fecha de creacion: {tramite.FechaCreacion}");
             Console.WriteLine($"Fecha de modificacion: {tramite.FechaModificacion}");
             Console.WriteLine($"Usuario de modificacion: {tramite.UsuarioModificacionId}");
-            Console.WriteLine($"Estado: {tramite.Estado}");
+            Console.WriteLine($"Etiqueta: {tramite.Etiqueta}");
         }else{
             Console.WriteLine($"No fue posible encontrar el tramite con id: {id}");
         }
@@ -174,7 +174,7 @@ public class ConsultarTramitesPorExpediente : Menu{
                 Console.WriteLine($"Fecha de creacion: {tramite.FechaCreacion}");
                 Console.WriteLine($"Fecha de modificacion: {tramite.FechaModificacion}");
                 Console.WriteLine($"Usuario de modificacion: {tramite.UsuarioModificacionId}");
-                Console.WriteLine($"Estado: {tramite.Estado}");
+                Console.WriteLine($"Etiqueta: {tramite.Etiqueta}");
                 Console.WriteLine("-------------------------------------------------");
             }
         }else{
@@ -198,7 +198,6 @@ public class ConsultaTodosTramites : Menu{
                 Console.WriteLine($"FechaCreacion: {tramite.FechaCreacion}");
                 Console.WriteLine($"FechaModificacion: {tramite.FechaModificacion}");
                 Console.WriteLine($"UsuarioModificacionId: {tramite.UsuarioModificacionId}");
-                Console.WriteLine($"Estado: {tramite.Estado}");
                 Console.WriteLine($"---------------------------------------------------------");
             }
         }else{
@@ -250,7 +249,7 @@ public class ModificarExpediente : Menu{
             await ModificacionExpedienteRepositorio.ModificarEstado(estado, id, usuarioId);
             Console.WriteLine("Estado modificado con exito");
         }catch(Exception e){
-            Console.WriteLine($"Oops, algo salió mla. Error: {e.Message}");
+            Console.WriteLine($"Oops, algo salió mal. Error: {e.Message}");
         }
     }
 
@@ -262,8 +261,67 @@ public class ModificarExpediente : Menu{
             await ModificacionExpedienteRepositorio.ModificarCaratula(caratula, id, usuarioId);
             Console.WriteLine("Caratula modificada con exito");
         }catch(Exception e){
-            Console.WriteLine($"Oops, algo salió mla. Error: {e.Message}");
+            Console.WriteLine($"Oops, algo salió mal. Error: {e.Message}");
         }
     }
 }
 
+public class ModificarTramite : Menu{
+    public ModificarTramite() : base("Modificar Tramite"){}
+
+    public override async Task Run(){
+        await base.Run();
+        Console.Write("Ingrese el id del tramite: ");
+        int id = int.Parse(Console.ReadLine()!);
+        int usuarioId = 1;
+        List<string> options = new();
+        options.Add("Modificar contenido");
+        options.Add("Modificar etiqueta");
+
+        int option = base.subMenu("Seleccione una opcion", options);
+
+        switch(option){
+            case 1:
+                await this.ModificacionContenido(id, usuarioId);
+                break;
+            case 2:
+                await this.ModificacionEtiqueta(id, usuarioId);
+                break;
+            default:
+                Console.WriteLine("Opcion invalida");
+                await this.Run();
+                break;
+        }
+    }
+
+    async private Task ModificacionEtiqueta(int id, int usuarioId)
+    {
+        Console.Write("Ingrese la nueva etiqueta: ");
+        List<string> etiquetas = new();
+        foreach (var item in Enum.GetValues(typeof(EtiquetaTramite)))
+        {
+            etiquetas.Add(item.ToString()!);
+        }
+        int etiquetaIndex = base.subMenu("Seleccione una etiqueta", etiquetas);
+        EtiquetaTramite etiqueta = (EtiquetaTramite)Enum.Parse(typeof(EtiquetaTramite), etiquetas[etiquetaIndex]);
+        try{
+            await ModificacionTramiteRepositorio.ModificarEtiqueta(etiqueta, id, usuarioId);
+            Console.WriteLine("Etiqueta modificada con exito");
+        }catch(Exception e){
+            Console.WriteLine($"Oops, algo salió mal. Error: {e.Message}");
+        }
+    }
+
+    async private Task ModificacionContenido(int id, int usuarioId)
+    {
+        Console.Write("Ingrese el nuevo contenido: ");
+        string contenido = Console.ReadLine()!;
+        try{
+            await ModificacionTramiteRepositorio.ModificarContenido(contenido, id, usuarioId);
+            Console.WriteLine("Contenido modificado con exito");
+        }catch(Exception e){
+            Console.WriteLine($"Oops, algo salió mal. Error: {e.Message}");
+        }
+
+    }
+}

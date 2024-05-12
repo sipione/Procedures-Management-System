@@ -4,11 +4,11 @@ internal class ValidacionExcepcion{
         return new Exception($"The expediente is not valid. {msg}");
     }
 
-    internal static Exception AltaUsuarioNotValid(string msg){
+    internal static Exception UsuarioNotValid(string msg){
         return new Exception($"The user is not valid. {msg}");
     }
 
-    internal static Exception AltaTramiteNotValid(string msg){
+    internal static Exception TramiteNotValid(string msg){
         return new Exception($"The tramite is not valid. {msg}");
     }
 }

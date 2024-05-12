@@ -17,7 +17,7 @@ public class CasoDeUsoTramiteAlta
         bool isValid = TramiteValidador.Validar(nuevotramite);
         if (!isValid)
         {
-            throw ValidacionExcepcion.AltaTramiteNotValid("Verifique los campos ingresados.");
+            throw ValidacionExcepcion.TramiteNotValid("Verifique los campos ingresados.");
         }
 
         return nuevotramite;

@@ -10,7 +10,6 @@ public class Tramite
     public DateTime FechaCreacion { get; set; }
     public DateTime FechaModificacion { get; set; }
     public int UsuarioModificacionId { get; set; }
-    public string Estado { get; set; }
 
     public Tramite(int idExpediente, string contenido, int usuarioId, int id)
     {
@@ -21,8 +20,20 @@ public class Tramite
         this.FechaCreacion = DateTime.Now;
         this.FechaModificacion = DateTime.Now;
         this.UsuarioModificacionId = usuarioId;
-        this.Estado = "RecienIniciado";
     }
 
     public Tramite(){}
+
+    public void SetContenido(string contenido, int usuarioId){
+        this.Contenido = contenido;
+        this.UsuarioModificacionId = usuarioId;
+        this.FechaModificacion = DateTime.Now;
+    }
+
+    public void SetEtiqueta(EtiquetaTramite etiqueta, int usuarioId)
+    {
+        this.Etiqueta = etiqueta;
+        this.UsuarioModificacionId = usuarioId;
+        this.FechaModificacion = DateTime.Now;
+    }
 }

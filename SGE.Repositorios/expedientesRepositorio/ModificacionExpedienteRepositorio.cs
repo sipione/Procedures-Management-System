@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using SGE.Aplicacion;
 using SGE.Aplicacion.Entidades;
 
 namespace SGE.Repositorios;
@@ -10,33 +11,30 @@ public class ModificacionExpedienteRepositorio
         return "../SGE.Repositorios/expedientesRepositorio/Expedientes.json";
     }
 
-    async public static Task<Task> ModificarCaratula(string caratula, int expedienteId, int usuarioId)
+    async public static Task ModificarCaratula(string caratula, int expedienteId, int usuarioId)
     {
         Expediente? expedienteRegistrado = ConsultaExpediente.ConsultarPorId(expedienteId) ?? throw GeneralExcepcion.NotFoundExcepcion("Expediente no encontrado");
 
-        expedienteRegistrado.SetCaratula(caratula, usuarioId);
 
         try{
-            await AtualizarExpediente(expedienteRegistrado, GetFilePath());
-            return Task.CompletedTask;
+            Expediente expedienteModificado = CasoDeUsoExpedienteModificacion.ModificarCaratula(expedienteRegistrado, caratula, usuarioId);
+            await AtualizarExpediente(expedienteModificado, GetFilePath());
 
-        }catch(Exception e){
-            return Task.FromException(e);
+        }catch(Exception){
+            throw;
         }
     }
 
-    async public static Task<Task> ModificarEstado(EstadoExpediente estado, int expedienteId, int usuarioId)
+    async public static Task ModificarEstado(EstadoExpediente estado, int expedienteId, int usuarioId)
     {
         Expediente? expedienteRegistrado = ConsultaExpediente.ConsultarPorId(expedienteId) ?? throw GeneralExcepcion.NotFoundExcepcion("Expediente no encontrado");
 
-        expedienteRegistrado.SetEstado(estado, usuarioId);
-
         try{
-            await AtualizarExpediente(expedienteRegistrado, GetFilePath());
-            return Task.CompletedTask;
+            Expediente expedienteModificado = CasoDeUsoExpedienteModificacion.ModificacionEstado(expedienteRegistrado, estado, usuarioId);
+            await AtualizarExpediente(expedienteModificado, GetFilePath());
 
-        }catch(Exception e){
-            return Task.FromException(e);
+        }catch(Exception){
+            throw;
         }
     }
 
