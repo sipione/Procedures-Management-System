@@ -29,4 +29,11 @@ public class Expediente{
         this.UsuarioModificacionId = usuarioId;
         this.FechaModificacion = DateTime.Now;
     }
+
+    public void SetEstado(EstadoExpediente estado, int usuarioId)
+    {
+        this.Estado = estado;
+        this.UsuarioModificacionId = usuarioId;
+        this.FechaModificacion = DateTime.Now;
+    }
 }

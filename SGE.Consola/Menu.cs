@@ -1,6 +1,7 @@
 
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.Marshalling;
 using SGE.Aplicacion.Entidades;
 using SGE.Repositorios;
 
@@ -13,9 +14,18 @@ public class Menu
         Name = name;
     }
     
-    public virtual void Run(){
+    public virtual async Task Run(){
         Console.Clear();
         Console.WriteLine(this.Name);
+    }
+
+    public virtual int subMenu(string titulo, List<string> options){
+        Console.WriteLine($"\n{titulo}");
+        for(int i = 0; i < options.Count; i++){
+            Console.WriteLine($"{i + 1}. {options[i]}");
+        }
+        Console.Write("Seleccione una opcion: ");
+        return int.Parse(Console.ReadLine()!);
     }
 }
 
@@ -25,8 +35,8 @@ public class CrearExpediente : Menu{
     {
     }
         
-    public override async void Run(){
-        base.Run();
+    public override async Task Run(){
+        await base.Run();
         Console.Write("Ingrese la caratula: ");
         string caratula = Console.ReadLine()!;
         Console.Write("Ingrese el id del usuario: ");
@@ -41,8 +51,8 @@ public class CrearUsuario : Menu{
 
     public CrearUsuario() : base("Crear Usuario"){}
 
-    public override async void Run(){
-        base.Run();
+    public override async Task Run(){
+        await base.Run();
         Console.Write("Ingrese el nombre: ");
         string nombre = Console.ReadLine()!;
         Console.Write("Ingrese el apellido: ");
@@ -64,8 +74,8 @@ public class CrearTramite : Menu{
 
     public CrearTramite() : base("Crear Tramite"){}
 
-    async public override void Run(){
-        base.Run();
+    public override async Task Run(){
+        await base.Run();
         Console.Write("Ingrese el id del expediente: ");
         int idExpediente = int.Parse(Console.ReadLine()!);
         Console.Write("Ingrese el contenido: ");
@@ -83,8 +93,8 @@ public class ConsultaExpedientePorId : Menu{
 
     public ConsultaExpedientePorId() : base("Consultar Expediente Por Id"){}
 
-    public override void Run(){
-        base.Run();
+    public override async Task Run(){
+        await base.Run();
         Console.Write("Ingrese el id del expediente: ");
         int id = int.Parse(Console.ReadLine()!);
         Expediente? expediente = ConsultaExpediente.ConsultarPorId(id);
@@ -105,8 +115,8 @@ public class ConsultarTodosExpedientes : Menu{
 
     public ConsultarTodosExpedientes() : base("Consultar Todos los expedientes"){}
 
-    public override void Run(){
-        base.Run();
+    public override async Task Run(){
+        await base.Run();
         List<Expediente> expedientes = ConsultaExpediente.ConsultarTodos();
         if(expedientes.Count > 0){
             foreach (var expediente in expedientes)
@@ -129,8 +139,8 @@ public class ConsultarTramitesPorId : Menu{
 
     public ConsultarTramitesPorId() : base("Consultar tramites por Id"){}
 
-    public override void Run(){
-        base.Run();
+    public override async Task Run(){
+        await base.Run();
         Console.Write("Ingrese el id del tramite: ");
         int id = int.Parse(Console.ReadLine()!);
         Tramite? tramite = ConsultaTramite.ConsultarPorId(id);
@@ -151,8 +161,8 @@ public class ConsultarTramitesPorExpediente : Menu{
 
     public ConsultarTramitesPorExpediente() : base("Consultar tramites por expediente"){}
 
-    public override void Run(){
-        base.Run();
+    public override async Task Run(){
+        await base.Run();
         Console.Write("Ingrese el id del expediente: ");
         int id = int.Parse(Console.ReadLine()!);
         List<Tramite>? tramites = ConsultaTramite.ConsultarPorExpediente(id);
@@ -176,8 +186,8 @@ public class ConsultarTramitesPorExpediente : Menu{
 public class ConsultaTodosTramites : Menu{
     public ConsultaTodosTramites(string name = "Consultar Tramites") : base("Consultar todos los tramites"){}
     
-    public override void Run(){
-        base.Run();
+    public override async Task Run(){
+        await base.Run();
         List<Tramite>? tramites = ConsultaTramite.ConsultaTodosTramites();
         if(tramites != null){
             foreach(Tramite tramite in tramites){
@@ -193,6 +203,66 @@ public class ConsultaTodosTramites : Menu{
             }
         }else{
             Console.WriteLine("No fue encontrado nungun tramite");
+        }
+    }
+}
+
+public class ModificarExpediente : Menu{
+    public ModificarExpediente() : base("Modificar Expediente"){}
+
+    public override async Task Run(){
+        await base.Run();
+        List<string> options = new();
+        options.Add("Modificar caratula");
+        options.Add("Modificar estado");
+        int option = base.subMenu("Seleccione una opcion", options);
+
+        Console.Write("Ingrese el id del expediente: ");
+        int id = int.Parse(Console.ReadLine()!);
+        int usuarioId = 1;
+
+        switch(option){
+            case 1:
+                await this.ModificacionCaratula(id, usuarioId);
+                break;
+            case 2:
+                await this.ModificacionEstado(id, usuarioId);
+                break;
+            default:
+                Console.WriteLine("Opcion invalida");
+                await this.Run();
+                break;
+        }
+    }
+
+    async private Task ModificacionEstado(int id, int usuarioId)
+    {
+         Console.Write("Ingrese el nuevo estado: ");
+        List<string> estados = new();
+        foreach (var item in Enum.GetValues(typeof(EstadoExpediente)))
+        {
+            estados.Add(item.ToString()!);
+        }
+        int estadoIndex = base.subMenu("Seleccione un estado", estados);
+        EstadoExpediente estado = (EstadoExpediente)Enum.Parse(typeof(EstadoExpediente), estados[estadoIndex]);
+
+        try{
+            await ModificacionExpedienteRepositorio.ModificarEstado(estado, id, usuarioId);
+            Console.WriteLine("Estado modificado con exito");
+        }catch(Exception e){
+            Console.WriteLine($"Oops, algo salió mla. Error: {e.Message}");
+        }
+    }
+
+    async private Task ModificacionCaratula(int id, int usuarioId)
+    {
+        Console.Write("Ingrese la nueva caratula: ");
+        string caratula = Console.ReadLine()!;
+        try{
+            await ModificacionExpedienteRepositorio.ModificarCaratula(caratula, id, usuarioId);
+            Console.WriteLine("Caratula modificada con exito");
+        }catch(Exception e){
+            Console.WriteLine($"Oops, algo salió mla. Error: {e.Message}");
         }
     }
 }

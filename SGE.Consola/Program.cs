@@ -10,9 +10,9 @@ menus.Add(new ConsultarTodosExpedientes());
 menus.Add(new ConsultarTramitesPorId());
 menus.Add(new ConsultarTramitesPorExpediente());
 menus.Add(new ConsultaTodosTramites());
+menus.Add(new ModificarExpediente());
 
-bool finish = false;
-while(!finish){
+while(true){
     for(int i = 0; i < menus.Count; i++){
         Console.WriteLine($"{i + 1}. {menus[i].Name}");
     }
@@ -20,13 +20,16 @@ while(!finish){
     Console.Write("Seleccione una opcion: ");
     int option = int.Parse(Console.ReadLine()!);
     if(option == menus.Count + 1){
-        finish = true;
+        Console.WriteLine("Saliendo ... Gracias por usar la aplicacion.");
+        break;
     }
     
     if(option > 0 && option <= menus.Count){
-        menus[option - 1].Run();
-    }else{
-        Console.WriteLine("Opcion invalida");
+        await menus[option - 1].Run();
+    }
+    
+    if(option > menus.Count + 1 || option < 1 ){
+        Console.WriteLine("\n---------- Opcion invalida ----------");
     }
 
     Console.WriteLine("\nPresione una tecla para continuar. Atencion, la consola se limpiará.");
