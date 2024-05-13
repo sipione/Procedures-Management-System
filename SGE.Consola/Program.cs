@@ -12,6 +12,8 @@ menus.Add(new ConsultarTramitesPorExpediente());
 menus.Add(new ConsultaTodosTramites());
 menus.Add(new ModificarExpediente());
 menus.Add(new ModificarTramite());
+menus.Add(new BajaExpediente());
+menus.Add(new BajaTramite());
 
 while(true){
     for(int i = 0; i < menus.Count; i++){

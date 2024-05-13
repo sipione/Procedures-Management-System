@@ -16,7 +16,7 @@ public class AltaExpedienteRepositorio{
     {
         try{
             string filePath = "../SGE.Repositorios/expedientesRepositorio/Expedientes.json"; // Specify the file path where you want to save the object
-            List<Expediente> expedientes = GetAllExpedientesFromTheFile(filePath);
+            List<Expediente> expedientes = ConsultaExpediente.GetAllExpedientesFromTheFile(filePath);
             int Id = GenerateExpedienteId(expedientes);
             Expediente expediente = CasoDeUsoExpedienteAlta.CrearNuevoExpediente(Caratula, UsuarioId, Id);
             
@@ -26,29 +26,6 @@ public class AltaExpedienteRepositorio{
             Console.WriteLine($"Error al crear expediente: {ex.Message}");
             return $"No fue posible crear el Expediente. Error: {ex.Message}";
         }
-    }
-    private static List<Expediente> GetAllExpedientesFromTheFile(string filePath)
-    {
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText(filePath);
-            if (!string.IsNullOrEmpty(json))
-            {
-                try
-                {
-                    // Deserialize JSON string into 'Expediente' object
-                    List<Expediente>? expedientes = JsonSerializer.Deserialize<List<Expediente>>(json, GetOptions());
-                    return expedientes == null ? new List<Expediente>() : expedientes;
-                }
-                catch (JsonException ex)
-                {
-                    // Handle JSON deserialization error
-                    Console.WriteLine($"Error deserializing JSON: {ex.Message}");
-                    throw new Exception(ex.Message);
-                }
-            }
-        }
-        return new List<Expediente>();
     }
     private static int GenerateExpedienteId(List<Expediente> expedientes)
     {

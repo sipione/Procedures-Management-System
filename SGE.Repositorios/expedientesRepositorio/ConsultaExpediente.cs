@@ -33,7 +33,7 @@ public class ConsultaExpediente
         }
     }
 
-    private static List<Expediente> GetAllExpedientesFromTheFile(string filePath)
+    public static List<Expediente> GetAllExpedientesFromTheFile(string filePath)
     {
         if (File.Exists(filePath))
         {

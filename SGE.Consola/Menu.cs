@@ -325,3 +325,36 @@ public class ModificarTramite : Menu{
 
     }
 }
+
+public class BajaExpediente : Menu{
+    public BajaExpediente() : base("Baja Expediente"){}
+
+    public override async Task Run(){
+        await base.Run();
+        Console.Write("Ingrese el id del expediente: ");
+        int id = int.Parse(Console.ReadLine()!);
+        int usuarioId = 1;
+        try{
+            await BajaExpedienteRepositorio.DeleteExpediente(id, usuarioId);
+        }catch(Exception e){
+            Console.WriteLine($"Oops, algo salió mal. Error: {e.Message}");
+        }
+    }
+}
+
+public class BajaTramite : Menu{
+    public BajaTramite() : base("Baja Tramite"){}
+
+    public override async Task Run(){
+        await base.Run();
+        Console.Write("Ingrese el id del tramite: ");
+        int id = int.Parse(Console.ReadLine()!);
+        int usuarioId = 1;
+        try{
+            await BajaTramiteRepositorio.DeleteTramite(id, usuarioId);
+        }catch(Exception e){
+            Console.WriteLine($"Oops, algo salió mal. Error: {e.Message}");
+        }
+    }
+}
+
