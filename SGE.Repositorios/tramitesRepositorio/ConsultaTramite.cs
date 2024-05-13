@@ -1,4 +1,5 @@
 using System.Text.Json;
+using SGE.Aplicacion;
 using SGE.Aplicacion.Entidades;
 
 public class ConsultaTramite{
@@ -10,21 +11,31 @@ public class ConsultaTramite{
         return CasoDeUsoTramiteConsultaPorId.ConsultarPorId(tramites, id);
     }
 
+    //consulta por etiqueta
+    public static List<Tramite>? ConsultarPorEtiqueta(EtiquetaTramite etiqueta){
+
+        List<Tramite>? tramites = GetAllTramitesFromFile(GetFilePath()) ?? throw GeneralExcepcion.NotFoundExcepcion("No se encontraron tramites");
+
+        List<Tramite>? tramitesPorEtiqueta = CasoDeUsoTramiteConsultaPorEtiqueta.ConsultarPorEtiqueta(tramites, etiqueta) ?? throw GeneralExcepcion.NotFoundExcepcion("No se encontraron tramites con la etiqueta especificada");
+        
+        return tramitesPorEtiqueta;
+    }
+
     public static List<Tramite>? ConsultarPorExpediente(int idExpediente){
         List<Tramite> tramites = GetAllTramitesFromFile(GetFilePath());
         return CasoDeUsoTramiteConsultaPorExpediente.ConsultarPorExpediente(tramites, idExpediente);
     }
 
     public static List<Tramite>? ConsultaTodosTramites(){
-        List<Tramite> tramites = GetAllTramitesFromFile(GetFilePath());
+        List<Tramite>? tramites = GetAllTramitesFromFile(GetFilePath());
         return CasoDeUsoTramiteConsultaTodos.ConsultaTodosTramites(tramites);
     }
 
-    private static List<Tramite> GetAllTramitesFromFile(string filePath){
+    private static List<Tramite>? GetAllTramitesFromFile(string filePath){
         if(File.Exists(filePath)){
             string json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<Tramite>>(json) ?? new List<Tramite>();
+            return JsonSerializer.Deserialize<List<Tramite>>(json) ?? null;
         }
-        return new List<Tramite>();
+        return null;
     }
 }

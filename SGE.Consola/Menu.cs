@@ -358,3 +358,34 @@ public class BajaTramite : Menu{
     }
 }
 
+//consulta tramite por etiqueta
+public class ConsultarTramitesPorEtiqueta : Menu{
+    public ConsultarTramitesPorEtiqueta() : base("Consultar Tramites por Etiqueta"){}
+
+    public override async Task Run(){
+        await base.Run();
+        List<string> etiquetas = new();
+        foreach (var item in Enum.GetValues(typeof(EtiquetaTramite)))
+        {
+            etiquetas.Add(item.ToString()!);
+        }
+        int etiquetaIndex = base.subMenu("Seleccione una etiqueta", etiquetas);
+        EtiquetaTramite etiqueta = (EtiquetaTramite)Enum.Parse(typeof(EtiquetaTramite), etiquetas[etiquetaIndex-1]);
+        List<Tramite>? tramites = ConsultaTramite.ConsultarPorEtiqueta(etiqueta);
+        
+        if(tramites != null && tramites.Count > 0){
+            foreach (var tramite in tramites)
+            {
+                Console.WriteLine($"Id: {tramite.Id}");
+                Console.WriteLine($"Contenido: {tramite.Contenido}");
+                Console.WriteLine($"Fecha de creacion: {tramite.FechaCreacion}");
+                Console.WriteLine($"Fecha de modificacion: {tramite.FechaModificacion}");
+                Console.WriteLine($"Usuario de modificacion: {tramite.UsuarioModificacionId}");
+                Console.WriteLine($"Etiqueta: {tramite.Etiqueta}");
+                Console.WriteLine("-------------------------------------------------");
+            }
+        }else{
+            Console.WriteLine("No hay tramites registrados con la etiqueta seleccionada");
+        }
+    }
+}

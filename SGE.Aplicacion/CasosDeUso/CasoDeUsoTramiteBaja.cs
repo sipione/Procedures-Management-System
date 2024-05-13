@@ -13,8 +13,9 @@ public class CasoDeUsoTramiteBaja
             throw AutorizacionExcepcion.NotAuthorizedException("No posee el permiso para eliminar trámites.");
         }
 
-        List<Tramite> tramitesRestantes = tramites;
+        List<Tramite> tramitesRestantes = new List<Tramite>(tramites);
         tramitesRestantes.RemoveAll(tramite => tramite.IdExpediente != IdExpediente);
+
         if (tramitesRestantes.Count == tramites.Count)
         {
             throw GeneralExcepcion.NotFoundExcepcion("Tramites no encontrados.");

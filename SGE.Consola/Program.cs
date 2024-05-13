@@ -5,13 +5,17 @@ List<Menu> menus = new();
 menus.Add(new CrearUsuario());
 menus.Add(new CrearTramite());
 menus.Add(new CrearExpediente());
+
 menus.Add(new ConsultaExpedientePorId());
 menus.Add(new ConsultarTodosExpedientes());
 menus.Add(new ConsultarTramitesPorId());
 menus.Add(new ConsultarTramitesPorExpediente());
+menus.Add(new ConsultarTramitesPorEtiqueta());
 menus.Add(new ConsultaTodosTramites());
+
 menus.Add(new ModificarExpediente());
 menus.Add(new ModificarTramite());
+
 menus.Add(new BajaExpediente());
 menus.Add(new BajaTramite());
 
