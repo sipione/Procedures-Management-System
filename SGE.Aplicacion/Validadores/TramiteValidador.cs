@@ -7,6 +7,7 @@ internal class TramiteValidador{
         if(tramite == null){
             return false;
         }
+        
         if(tramite.Id.GetType() != typeof(int) || tramite.Id <= 0){
             return false;
         }

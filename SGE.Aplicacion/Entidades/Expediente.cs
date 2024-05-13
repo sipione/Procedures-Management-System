@@ -36,4 +36,15 @@ public class Expediente{
         this.UsuarioModificacionId = usuarioId;
         this.FechaModificacion = DateTime.Now;
     }
+
+    public void SetEstado(EtiquetaTramite etiqueta, int usuarioId)
+    {
+        EstadoExpediente? estado = ServicioActualizacionEstado.EstadoPorEtiqueta(etiqueta);
+
+        if(estado != null){
+            this.Estado = (EstadoExpediente)estado;
+            this.UsuarioModificacionId = usuarioId;
+            this.FechaModificacion = DateTime.Now;
+        }
+    }
 }

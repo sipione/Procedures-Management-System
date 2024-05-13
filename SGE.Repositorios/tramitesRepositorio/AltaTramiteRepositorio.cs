@@ -10,21 +10,22 @@ public class AltaTramiteRepositorio
     {
         return new JsonSerializerOptions { WriteIndented = true };
     }
-    public static async Task<string> CrearTramite(int IdExpediente, string Contenido, int UsuarioId)
+    public static async Task CrearTramite(int IdExpediente, string Contenido, int UsuarioId)
     {
         try
         {
+            Expediente? expediente = ConsultaExpediente.ConsultarPorId(IdExpediente) ?? throw GeneralExcepcion.NotFoundExcepcion("Expediente no encontrado.");
             string filePath = "../SGE.Repositorios/tramitesRepositorio/Tramites.json"; // Specify the file path where you want to save the object
             List<Tramite> tramites = getAllTramitesFromTheFile(filePath);
             int Id = GenerateTramiteId(tramites);
             Tramite tramite = CasoDeUsoTramiteAlta.CrearTramite(IdExpediente, Contenido, UsuarioId, Id);
             await GuardarTramite(tramite, filePath, tramites);
-            return "Tramite creado con éxito";
+            
+            await ModificacionExpedienteRepositorio.ModificarEstado(tramite.Etiqueta, IdExpediente, UsuarioId);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Error al crear tramite: {ex.Message}");
-            return $"No fue posible crear el Tramite. Error: {ex.Message}";
+            throw;
         }
     }
 
@@ -37,12 +38,10 @@ public class AltaTramiteRepositorio
             string json = File.ReadAllText(filePath);
             try
             {
-                // Deserialize JSON string into 'Tramite' object
                 tramites = JsonSerializer.Deserialize<List<Tramite>>(json)!;
             }
             catch (JsonException ex)
             {
-                // Handle JSON deserialization error
                 Console.WriteLine($"Error deserializing JSON: {ex.Message}");
                 throw new Exception(ex.Message);
             }
@@ -77,7 +76,6 @@ public class AltaTramiteRepositorio
         }
         catch (JsonException ex)
         {
-            // Handle JSON serialization error
             Console.WriteLine($"Error serializing JSON: {ex.Message}");
             throw new Exception(ex.Message);
         }

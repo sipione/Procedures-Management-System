@@ -3,21 +3,18 @@ namespace SGE.Aplicacion;
 
 public class ServicioActualizacionEstado
 {
-    public static void ActualizarEstado(EtiquetaTramite etiqueta, Expediente expediente)
+    public static EstadoExpediente? EstadoPorEtiqueta(EtiquetaTramite etiqueta)
     {
         switch (etiqueta)
         {
             case EtiquetaTramite.Resolucion:
-                expediente.Estado = EstadoExpediente.ConResolucion;
-                break;
+                return EstadoExpediente.ConResolucion;
             case EtiquetaTramite.PaseAEstudio:
-                expediente.Estado = EstadoExpediente.ParaResolver;
-                break;
+                return EstadoExpediente.ParaResolver;
             case EtiquetaTramite.PaseAlArchivo:
-                expediente.Estado = EstadoExpediente.Finalizado;
-                break;
+                return EstadoExpediente.Finalizado;
             default:
-                break;
+                return null;
         }
     }
 }

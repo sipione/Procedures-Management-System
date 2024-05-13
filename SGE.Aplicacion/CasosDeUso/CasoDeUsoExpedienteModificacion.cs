@@ -33,16 +33,32 @@ public class CasoDeUsoExpedienteModificacion
             throw AutorizacionExcepcion.NotAuthorizedException("No posee permisos para modificar el expediente");
         }
 
-        Expediente expedienteModificado = expedienteRegistrado;
-        expedienteModificado.Estado = estado;
-        expedienteModificado.UsuarioModificacionId = usuarioId;
-        expedienteModificado.FechaModificacion = DateTime.Now;
-        bool esValido = ExpedienteValidador.IsValidExpedienteCreation(expedienteModificado);
+        expedienteRegistrado.SetEstado(estado, usuarioId);
+
+        bool esValido = ExpedienteValidador.IsValidExpedienteCreation(expedienteRegistrado);
         if (!esValido)
         {
             throw ValidacionExcepcion.ExpedienteNotValid("El estado no puede ser nulo");
         }
 
-        return expedienteModificado;
+        return expedienteRegistrado;
+    }
+    public static Expediente ModificacionEstado(Expediente expedienteRegistrado, EtiquetaTramite etiqueta, int usuarioId)
+    {
+        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
+        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(usuarioId, Permiso.ExpedienteModificacion);
+        if (!autorizado)
+        {
+            throw AutorizacionExcepcion.NotAuthorizedException("No posee permisos para modificar el expediente");
+        }
+
+        expedienteRegistrado.SetEstado(etiqueta, usuarioId);
+        bool esValido = ExpedienteValidador.IsValidExpedienteCreation(expedienteRegistrado);
+        if (!esValido)
+        {
+            throw ValidacionExcepcion.ExpedienteNotValid("El estado no puede ser nulo");
+        }
+
+        return expedienteRegistrado;
     }
 }

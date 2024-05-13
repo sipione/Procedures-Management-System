@@ -82,10 +82,13 @@ public class CrearTramite : Menu{
         string contenido = Console.ReadLine()!;
         Console.Write("Ingrese el id del usuario: ");
         int usuarioId = int.Parse(Console.ReadLine()!);
-
-        AltaTramiteRepositorio altaTramiteRepositorio = new();
-        string rsult = await AltaTramiteRepositorio.CrearTramite(idExpediente, contenido, usuarioId);
-        Console.WriteLine("Tramite creado con exito");
+        try{
+            AltaTramiteRepositorio altaTramiteRepositorio = new();
+            await AltaTramiteRepositorio.CrearTramite(idExpediente, contenido, usuarioId);
+            Console.WriteLine("Tramite creado con exito");
+        }catch(Exception e){
+            Console.WriteLine($"Oops, algo salió mal. Error: {e.Message}");
+        }
     }
 }
 
@@ -243,6 +246,10 @@ public class ModificarExpediente : Menu{
             estados.Add(item.ToString()!);
         }
         int estadoIndex = base.subMenu("Seleccione un estado", estados);
+        if(estadoIndex < 1 || estadoIndex > estados.Count){
+            Console.WriteLine("Opcion invalida");
+            return;
+        }
         EstadoExpediente estado = (EstadoExpediente)Enum.Parse(typeof(EstadoExpediente), estados[estadoIndex]);
 
         try{
@@ -303,7 +310,11 @@ public class ModificarTramite : Menu{
             etiquetas.Add(item.ToString()!);
         }
         int etiquetaIndex = base.subMenu("Seleccione una etiqueta", etiquetas);
-        EtiquetaTramite etiqueta = (EtiquetaTramite)Enum.Parse(typeof(EtiquetaTramite), etiquetas[etiquetaIndex]);
+        if(etiquetaIndex < 1 || etiquetaIndex > etiquetas.Count){
+            Console.WriteLine("Opcion invalida");
+            return;
+        }
+        EtiquetaTramite etiqueta = (EtiquetaTramite)Enum.Parse(typeof(EtiquetaTramite), etiquetas[etiquetaIndex-1]);
         try{
             await ModificacionTramiteRepositorio.ModificarEtiqueta(etiqueta, id, usuarioId);
             Console.WriteLine("Etiqueta modificada con exito");

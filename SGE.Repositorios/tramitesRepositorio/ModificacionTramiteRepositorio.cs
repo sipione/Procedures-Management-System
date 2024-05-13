@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel;
+using System.Text.Json;
 using SGE.Aplicacion;
 using SGE.Aplicacion.Entidades;
 
@@ -27,11 +28,25 @@ public class ModificacionTramiteRepositorio
         Tramite? tramiteRegistrado = ConsultaTramite.ConsultarPorId(tramiteId) ?? throw GeneralExcepcion.NotFoundExcepcion("Tramite no encontrado");
 
         try{
-            Tramite tramiteModificado = CasoDeUsoTramiteModificacion.ModificarEtiqueta(tramiteRegistrado, etiqueta, usuarioId);
+            tramiteRegistrado = CasoDeUsoTramiteModificacion.ModificarEtiqueta(tramiteRegistrado, etiqueta, usuarioId);
             await AtualizarTramite(tramiteRegistrado, GetFilePath());
         }catch(Exception){
             throw;
         }
+
+        if(EsUltimoTramite(tramiteRegistrado)){
+            try{
+                await ModificacionExpedienteRepositorio.ModificarEstado(etiqueta, tramiteRegistrado.IdExpediente, usuarioId);
+            }catch(Exception){
+                throw;
+            }
+        }
+    }
+
+    private static bool EsUltimoTramite(Tramite tramite)
+    {
+        List<Tramite>? tramites = ConsultaTramite.ConsultaTodosTramites();
+        return tramites?.Where(t=>t.IdExpediente == tramite.IdExpediente).Max(t => t.Id) == tramite.Id;
     }
 
     async private static Task AtualizarTramite(Tramite tramite, string filePath)

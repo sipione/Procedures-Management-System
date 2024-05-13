@@ -33,7 +33,10 @@ public class BajaTramiteRepositorio
 
     public async static Task DeleteTramite(int id, int UsuarioId){
         List<Tramite>? tramites = ConsultaTramite.ConsultaTodosTramites() ??  throw GeneralExcepcion.NotFoundExcepcion("Tramites no encontrados.");
-        
+        Tramite tramiteParaBajar = tramites.Find(t => t.Id == id)!;
+        Tramite ultimoTramitePorExpediente = GetUltimoTramite(tramites, tramiteParaBajar.IdExpediente);
+        bool BajaDelUltimoTramite = ultimoTramitePorExpediente.Id == id;
+
         try
         {
             tramites = CasoDeUsoTramiteBaja.DeleteTramite(id, tramites, UsuarioId);
@@ -45,6 +48,20 @@ public class BajaTramiteRepositorio
         {
             throw;
         }
+
+        if(BajaDelUltimoTramite){
+            try{
+                Tramite ultimoTramiteDespuesBaja = GetUltimoTramite(tramites, ultimoTramitePorExpediente.IdExpediente);
+                await ModificacionExpedienteRepositorio.ModificarEstado(ultimoTramiteDespuesBaja.Etiqueta, ultimoTramiteDespuesBaja.IdExpediente, UsuarioId);
+            }catch(Exception){
+                throw;
+            };
+        }
+    }
+
+    private static Tramite GetUltimoTramite(List<Tramite> tramites, int IdExpediente){
+
+        return tramites.Where(t => t.IdExpediente == IdExpediente).Last();
     }
 
     private static async Task SaveTramites(List<Tramite> tramites, string filePath)

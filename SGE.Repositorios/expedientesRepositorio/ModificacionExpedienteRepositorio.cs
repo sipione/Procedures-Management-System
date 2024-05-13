@@ -37,8 +37,20 @@ public class ModificacionExpedienteRepositorio
             throw;
         }
     }
+    async public static Task ModificarEstado(EtiquetaTramite etiqueta, int expedienteId, int usuarioId)
+    {
+        Expediente? expedienteRegistrado = ConsultaExpediente.ConsultarPorId(expedienteId) ?? throw GeneralExcepcion.NotFoundExcepcion("Expediente no encontrado");
 
-    async private static Task AtualizarExpediente(Expediente expediente, string filePath)
+        try{
+            Expediente expedienteModificado = CasoDeUsoExpedienteModificacion.ModificacionEstado(expedienteRegistrado, etiqueta, usuarioId);
+            await AtualizarExpediente(expedienteRegistrado, GetFilePath());
+
+        }catch(Exception){
+            throw;
+        }
+    }
+
+    async public static Task AtualizarExpediente(Expediente expediente, string filePath)
     {
         List<Expediente> expedientes = ConsultaExpediente.ConsultarTodos();
         expedientes.RemoveAll(e => e.Id == expediente.Id);
