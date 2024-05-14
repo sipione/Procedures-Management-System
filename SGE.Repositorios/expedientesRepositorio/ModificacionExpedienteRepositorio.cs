@@ -37,6 +37,7 @@ public class ModificacionExpedienteRepositorio
             throw;
         }
     }
+    
     async public static Task ModificarEstado(EtiquetaTramite etiqueta, int expedienteId, int usuarioId)
     {
         Expediente? expedienteRegistrado = ConsultaExpediente.ConsultarPorId(expedienteId) ?? throw GeneralExcepcion.NotFoundExcepcion("Expediente no encontrado");
