@@ -1,18 +1,13 @@
-﻿using SGE.Aplicacion.Entidades;
+﻿
 
-namespace SGE.Aplicacion;
-
-internal class ExpedienteValidador
+public class ExpedienteValidador
 {
-    internal static bool IsValidExpedienteCreation(Expediente expediente){
-        if(string.IsNullOrEmpty(expediente.Caratula)){
-            return false;
-        }
+    public void Validar(Expediente expediente)
+    {
+        if (string.IsNullOrWhiteSpace(expediente.Caratula))
+            throw new ValidacionException("La carátula del expediente no puede estar vacía.");
 
-        if(expediente.Id.GetType() != typeof(int) || expediente.Id <= 0){
-            return false;
-        }
-
-        return true;
+        if (expediente.UsuarioUltimaModificacionId <= 0)
+            throw new ValidacionException("El id del usuario debe ser válido.");
     }
 }

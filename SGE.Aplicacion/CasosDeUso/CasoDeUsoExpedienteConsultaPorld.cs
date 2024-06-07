@@ -1,18 +1,17 @@
-﻿using SGE.Aplicacion.Entidades;
-namespace SGE.Aplicacion;
-
-public class CasoDeUsoExpedienteConsultaPorld
+﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public static Expediente ConsultarPorId(List<Expediente> expedientes, int id)
+    public class CasoDeUsoExpedienteConsultaPorld
     {
-        Expediente? encontrado = expedientes.Find(expediente => expediente.Id == id);
-        if (encontrado == null)
+        private readonly IExpedienteRepositorio _expedienteRepositorio;
+
+        public CasoDeUsoExpedienteConsultaPorld(IExpedienteRepositorio expedienteRepositorio)
         {
-            throw GeneralExcepcion.NotFoundExcepcion("Expediente no encontrado");
+            _expedienteRepositorio = expedienteRepositorio;
         }
-        else
+
+        public Expediente Ejecutar(int expedienteId)
         {
-            return encontrado;
+            return _expedienteRepositorio.ObtenerPorId(expedienteId);
         }
     }
 }

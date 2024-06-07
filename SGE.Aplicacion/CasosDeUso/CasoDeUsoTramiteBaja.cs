@@ -1,40 +1,23 @@
-﻿using SGE.Aplicacion;
-using SGE.Aplicacion.Entidades;
-
-using System.Linq; // Add using directive for System.Linq
-public class CasoDeUsoTramiteBaja
+﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public static List<Tramite>  DeleteTramitesByExpedienteId(int IdExpediente, List<Tramite> tramites, int UsuarioId)
+    public class CasoDeUsoTramiteBaja
     {
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
-        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(UsuarioId, Permiso.TramiteBaja);
-        if (!autorizado)
+        private readonly ITramiteRepositorio _tramiteRepositorio;
+        private readonly IServicioAutorizacion _servicioAutorizacion;
+
+        public CasoDeUsoTramiteBaja(ITramiteRepositorio tramiteRepositorio, IServicioAutorizacion servicioAutorizacion)
         {
-            throw AutorizacionExcepcion.NotAuthorizedException("No posee el permiso para eliminar trámites.");
+            _tramiteRepositorio = tramiteRepositorio;
+            _servicioAutorizacion = servicioAutorizacion;
         }
 
-        List<Tramite> tramitesRestantes = new List<Tramite>(tramites);
-        tramitesRestantes.RemoveAll(tramite => tramite.IdExpediente != IdExpediente);
-
-        if (tramitesRestantes.Count == tramites.Count)
+        public void Ejecutar(int tramiteId, int usuarioId)
         {
-            throw GeneralExcepcion.NotFoundExcepcion("Tramites no encontrados.");
+            if (!_servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.TramiteBaja))
+            {
+                throw new UnauthorizedAccessException("El usuario no tiene permiso para eliminar tramites.");
+            }
+            _tramiteRepositorio.Eliminar(tramiteId);
         }
-        return tramitesRestantes;
-    }
-
-    public static List<Tramite> DeleteTramite(int id, List<Tramite> tramites, int UsuarioId)
-    {
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
-        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(UsuarioId, Permiso.TramiteBaja);
-        if (!autorizado)
-        {
-            throw AutorizacionExcepcion.NotAuthorizedException("No posee el permiso para eliminar trámites.");
-        }
- 
-        Tramite? tramite = tramites.FirstOrDefault(tramite => tramite.Id == id) ?? throw GeneralExcepcion.NotFoundExcepcion("Tramite no encontrado.");
-        
-        tramites.Remove(tramite);
-        return tramites;
     }
 }

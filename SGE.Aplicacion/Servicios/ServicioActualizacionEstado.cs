@@ -1,20 +1,38 @@
-﻿using SGE.Aplicacion.Entidades;
-namespace SGE.Aplicacion;
+﻿using SGE.Aplicacion;
 
-public class ServicioActualizacionEstado
+public class CambioEstadoExpedienteService
 {
-    public static EstadoExpediente? EstadoPorEtiqueta(EtiquetaTramite etiqueta)
+    private readonly IExpedienteRepositorio _expedienteRepositorio;
+    private readonly ITramiteRepositorio _tramiteRepositorio;
+
+    public CambioEstadoExpedienteService(IExpedienteRepositorio expedienteRepositorio, ITramiteRepositorio tramiteRepositorio)
     {
-        switch (etiqueta)
+        _expedienteRepositorio = expedienteRepositorio;
+        _tramiteRepositorio = tramiteRepositorio;
+    }
+
+    public void ActualizarEstado(int expedienteId)
+    {
+        var expediente = _expedienteRepositorio.ObtenerPorId(expedienteId);
+        var ultimoTramite = _tramiteRepositorio.ObtenerUltimoTramitePorExpediente(expedienteId);
+
+        if (ultimoTramite == null) return;
+
+        switch (ultimoTramite.Etiqueta)
         {
             case EtiquetaTramite.Resolucion:
-                return EstadoExpediente.ConResolucion;
+                expediente.Estado = EstadoExpediente.ConResolucion;
+                break;
             case EtiquetaTramite.PaseAEstudio:
-                return EstadoExpediente.ParaResolver;
+                expediente.Estado = EstadoExpediente.ParaResolver;
+                break;
             case EtiquetaTramite.PaseAlArchivo:
-                return EstadoExpediente.Finalizado;
+                expediente.Estado = EstadoExpediente.Finalizado;
+                break;
             default:
-                return null;
+                return;
         }
+
+        _expedienteRepositorio.Actualizar(expediente);
     }
 }

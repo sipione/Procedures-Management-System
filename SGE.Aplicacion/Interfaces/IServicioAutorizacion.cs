@@ -1,6 +1,4 @@
-﻿namespace SGE.Aplicacion;
-
-internal interface IServicioAutorizacion
+﻿public interface IServicioAutorizacion
 {
-    bool PoseeElPermiso(int usuarioId, Permiso permiso);
+    bool PoseeElPermiso(int idUsuario, Permiso permiso);
 }

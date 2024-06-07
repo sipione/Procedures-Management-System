@@ -5,6 +5,5 @@ public enum Permiso
     ExpedienteModificacion,
     TramiteAlta,
     TramiteBaja,
-    TramiteModificacion,
-    UsuarioAlta,
+    TramiteModificacion
 }

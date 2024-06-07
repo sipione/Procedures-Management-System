@@ -1,21 +1,11 @@
-using System.Reflection.Metadata;
-using SGE.Aplicacion.Entidades;
+public class TramiteValidador
+{
+    public void Validar(Tramite tramite)
+    {
+        if (string.IsNullOrWhiteSpace(tramite.Contenido))
+            throw new ValidacionException("El contenido del trámite no puede estar vacío.");
 
-internal class TramiteValidador{
-
-    internal static bool Validar(Tramite tramite){
-        if(tramite == null){
-            return false;
-        }
-        
-        if(tramite.Id.GetType() != typeof(int) || tramite.Id <= 0){
-            return false;
-        }
-
-        if(tramite.Contenido == null || tramite.Contenido.Length == 0){
-            return false;
-        }
-
-        return true;
+        if (tramite.UsuarioUltimaModificacionId <= 0)
+            throw new ValidacionException("El id del usuario debe ser válido.");
     }
 }

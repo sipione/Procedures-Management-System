@@ -1,64 +1,23 @@
-﻿using SGE.Aplicacion.Entidades;
-
-namespace SGE.Aplicacion;
-
-public class CasoDeUsoExpedienteModificacion
+﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public static Expediente ModificarCaratula(Expediente expedienteRegistrado, string caratula, int usuarioId){
-
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
-        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(usuarioId, Permiso.ExpedienteModificacion);
-        if (!autorizado)
-        {
-            throw AutorizacionExcepcion.NotAuthorizedException("No posee permisos para modificar el expediente");
-        }
-        
-        Expediente expedienteModificado = expedienteRegistrado;
-        expedienteModificado.SetCaratula(caratula, usuarioId);
-        bool esValido = ExpedienteValidador.IsValidExpedienteCreation(expedienteModificado);
-        if (!esValido)
-        {
-            throw ValidacionExcepcion.ExpedienteNotValid("La caratula no puede ser vacia");
-        }
-
-        return expedienteModificado;
-    }
-
-    public static Expediente ModificacionEstado(Expediente expedienteRegistrado, EstadoExpediente estado, int usuarioId)
+    public class CasoDeUsoExpedienteModificacion
     {
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
-        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(usuarioId, Permiso.ExpedienteModificacion);
-        if (!autorizado)
+        private readonly IExpedienteRepositorio _expedienteRepositorio;
+        private readonly IServicioAutorizacion _servicioAutorizacion;
+
+        public CasoDeUsoExpedienteModificacion(IExpedienteRepositorio expedienteRepositorio, IServicioAutorizacion servicioAutorizacion)
         {
-            throw AutorizacionExcepcion.NotAuthorizedException("No posee permisos para modificar el expediente");
+            _expedienteRepositorio = expedienteRepositorio;
+            _servicioAutorizacion = servicioAutorizacion;
         }
 
-        expedienteRegistrado.SetEstado(estado, usuarioId);
-
-        bool esValido = ExpedienteValidador.IsValidExpedienteCreation(expedienteRegistrado);
-        if (!esValido)
+        public void Ejecutar(Expediente expediente, int usuarioId)
         {
-            throw ValidacionExcepcion.ExpedienteNotValid("El estado no puede ser nulo");
+            if (!_servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.ExpedienteModificacion))
+            {
+                throw new UnauthorizedAccessException("El usuario no tiene permiso para modificar expedientes.");
+            }
+            _expedienteRepositorio.Actualizar(expediente);
         }
-
-        return expedienteRegistrado;
-    }
-    public static Expediente ModificacionEstado(Expediente expedienteRegistrado, EtiquetaTramite etiqueta, int usuarioId)
-    {
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
-        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(usuarioId, Permiso.ExpedienteModificacion);
-        if (!autorizado)
-        {
-            throw AutorizacionExcepcion.NotAuthorizedException("No posee permisos para modificar el expediente");
-        }
-
-        expedienteRegistrado.SetEstado(etiqueta, usuarioId);
-        bool esValido = ExpedienteValidador.IsValidExpedienteCreation(expedienteRegistrado);
-        if (!esValido)
-        {
-            throw ValidacionExcepcion.ExpedienteNotValid("El estado no puede ser nulo");
-        }
-
-        return expedienteRegistrado;
     }
 }

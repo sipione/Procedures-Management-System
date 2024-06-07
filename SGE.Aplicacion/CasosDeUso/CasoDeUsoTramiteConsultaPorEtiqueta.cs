@@ -1,11 +1,17 @@
-﻿using SGE.Aplicacion.Entidades;
-namespace SGE.Aplicacion;
-
-public class CasoDeUsoTramiteConsultaPorEtiqueta
+﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public static List<Tramite>? ConsultarPorEtiqueta(List<Tramite> tramites, EtiquetaTramite etiqueta)
+    public class CasoDeUsoTramiteConsultaPorEtiqueta
     {
-        return tramites.Where(tramite => tramite.Etiqueta == etiqueta).ToList() ?? null;
-    }
+        private readonly ITramiteRepositorio _tramiteRepositorio;
 
+        public CasoDeUsoTramiteConsultaPorEtiqueta(ITramiteRepositorio tramiteRepositorio)
+        {
+            _tramiteRepositorio = tramiteRepositorio;
+        }
+
+        public IEnumerable<Tramite> Ejecutar(EtiquetaTramite etiquetaTramite)
+        {
+            return _tramiteRepositorio.ObtenerPorEtiqueta(etiquetaTramite);
+        }
+    }
 }

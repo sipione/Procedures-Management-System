@@ -1,50 +1,29 @@
-﻿using SGE.Aplicacion.Entidades;
-
-namespace SGE.Aplicacion;
-
-public class CasoDeUsoTramiteModificacion
+﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public static Tramite ModificarContenido(Tramite tramiteRegistrado, string contenido, int usuarioId)
+    public class CasoDeUsoTramiteModificacion
     {
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
-        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(usuarioId, Permiso.TramiteModificacion);
-        if (!autorizado)
+        private readonly ITramiteRepositorio _tramiteRepositorio;
+        private readonly IServicioAutorizacion _servicioAutorizacion;
+        private readonly IExpedienteRepositorio _expedienteRepositorio;
+
+        public CasoDeUsoTramiteModificacion(ITramiteRepositorio tramiteRepositorio, IServicioAutorizacion servicioAutorizacion, IExpedienteRepositorio expedienteRepositorio)
         {
-            throw AutorizacionExcepcion.NotAuthorizedException("No posee permisos para modificar el tramite");
+            _tramiteRepositorio = tramiteRepositorio;
+            _servicioAutorizacion = servicioAutorizacion;
+            _expedienteRepositorio = expedienteRepositorio;
         }
 
-        Tramite tramiteModificado = tramiteRegistrado;
-        tramiteModificado.Contenido = contenido;
-        tramiteModificado.UsuarioModificacionId = usuarioId;
-        tramiteModificado.FechaModificacion = DateTime.Now;
-        bool esValido = TramiteValidador.Validar(tramiteModificado);
-        if (!esValido)
+        public void Ejecutar(Tramite tramite, int usuarioId)
         {
-            throw ValidacionExcepcion.TramiteNotValid("El contenido no puede ser vacio");
+            if (!_servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.TramiteModificacion))
+            {
+                throw new UnauthorizedAccessException("El usuario no tiene permiso para modificar tramites.");
+            }
+
+            _tramiteRepositorio.Actualizar(tramite);
+
+            CambioEstadoExpedienteService cambioEstadoExpedienteService = new CambioEstadoExpedienteService(_expedienteRepositorio, _tramiteRepositorio);
+            cambioEstadoExpedienteService.ActualizarEstado(tramite.ExpedienteId);
         }
-
-        return tramiteModificado;
-    }
-
-    public static Tramite ModificarEtiqueta(Tramite tramiteRegistrado, EtiquetaTramite etiqueta, int usuarioId)
-    {
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
-        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(usuarioId, Permiso.TramiteModificacion);
-        if (!autorizado)
-        {
-            throw AutorizacionExcepcion.NotAuthorizedException("No posee permisos para modificar el tramite");
-        }
-
-        Tramite tramiteModificado = tramiteRegistrado;
-        tramiteModificado.Etiqueta = etiqueta;
-        tramiteModificado.UsuarioModificacionId = usuarioId;
-        tramiteModificado.FechaModificacion = DateTime.Now;
-        bool esValido = TramiteValidador.Validar(tramiteModificado);
-        if (!esValido)
-        {
-            throw ValidacionExcepcion.TramiteNotValid("La etiqueta no puede ser nula");
-        }
-
-        return tramiteModificado;
     }
 }

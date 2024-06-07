@@ -1,11 +1,17 @@
-﻿using SGE.Aplicacion.Entidades;
-
-namespace SGE.Aplicacion;
-
-public class CasoDeUsoExpedienteConsultaTodos
+﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public static List<Expediente> ConsultarTodos(List<Expediente> expedientes)
+    public class CasoDeUsoExpedienteConsultaTodos
     {
-        return expedientes;
+        private readonly IExpedienteRepositorio _expedienteRepositorio;
+
+        public CasoDeUsoExpedienteConsultaTodos(IExpedienteRepositorio expedienteRepositorio)
+        {
+            _expedienteRepositorio = expedienteRepositorio;
+        }
+
+        public IEnumerable<Expediente> Ejecutar()
+        {
+            return _expedienteRepositorio.Listar();
+        }
     }
 }

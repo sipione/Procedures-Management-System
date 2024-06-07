@@ -1,6 +1,4 @@
-﻿namespace SGE.Aplicacion;
-
-public class RepositorioExcepcion
+﻿public class RepositorioException : Exception
 {
-
+    public RepositorioException(string mensaje) : base(mensaje) { }
 }

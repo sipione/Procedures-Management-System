@@ -1,25 +1,33 @@
-﻿using SGE.Aplicacion.Entidades;
-
-namespace SGE.Aplicacion;
-
-public class CasoDeUsoTramiteAlta
+﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public static Tramite CrearTramite(int idExpediente, string contenido, int usuarioId, int id)
+    public class CasoDeUsoTramiteAlta
     {
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new();
-        bool isAuthorized = servicioAutorizacionProvisorio.PoseeElPermiso(usuarioId, Permiso.TramiteAlta);
-        if (!isAuthorized)
+        private readonly ITramiteRepositorio _tramiteRepositorio;
+        private readonly IServicioAutorizacion _servicioAutorizacion;
+        private readonly IExpedienteRepositorio _expedienteRepositorio;
+
+        public CasoDeUsoTramiteAlta(ITramiteRepositorio tramiteRepositorio, IServicioAutorizacion servicioAutorizacion, IExpedienteRepositorio expedienteRepositorio)
         {
-            throw AutorizacionExcepcion.NotAuthorizedException($"El usuário de id {usuarioId} no posee el permiso para crear un tramite.");
+            _tramiteRepositorio = tramiteRepositorio;
+            _servicioAutorizacion = servicioAutorizacion;
+            _expedienteRepositorio = expedienteRepositorio;
         }
 
-        Tramite nuevotramite = new(idExpediente, contenido, usuarioId, id);
-        bool isValid = TramiteValidador.Validar(nuevotramite);
-        if (!isValid)
+        public void Ejecutar(Tramite tramite, int usuarioId)
         {
-            throw ValidacionExcepcion.TramiteNotValid("Verifique los campos ingresados.");
-        }
+            if (!_servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.TramiteAlta))
+            {
+                throw new UnauthorizedAccessException("El usuario no tiene permiso para crear tramites.");
+            }
 
-        return nuevotramite;
+            //verificar si el expediente existe
+            var expediente = _expedienteRepositorio.ObtenerPorId(tramite.ExpedienteId);
+            if (expediente == null)
+            {
+                throw new Exception("El expediente no existe");
+            }
+
+            _tramiteRepositorio.Crear(tramite);
+        }
     }
 }

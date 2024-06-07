@@ -1,25 +1,32 @@
-﻿using SGE.Aplicacion.Entidades;
-namespace SGE.Aplicacion;
-
-public class CasoDeUsoExpedienteBaja
+﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public static List<Expediente> DeleteExpediente(int id, List<Expediente> expedientes, int UsuarioId)
+    public class CasoDeUsoExpedienteBaja
     {
-        ServicioAutorizacionProvisorio servicioAutorizacionProvisorio = new ServicioAutorizacionProvisorio();
-        bool autorizado = servicioAutorizacionProvisorio.PoseeElPermiso(UsuarioId, Permiso.ExpedienteBaja);
-        if (!autorizado)
+        private readonly IExpedienteRepositorio _expedienteRepositorio;
+        private readonly IServicioAutorizacion _servicioAutorizacion;
+        private readonly ITramiteRepositorio _tramiteRepositorio;
+
+        public CasoDeUsoExpedienteBaja(IExpedienteRepositorio expedienteRepositorio, IServicioAutorizacion servicioAutorizacion, ITramiteRepositorio tramiteRepositorio)
         {
-            throw AutorizacionExcepcion.NotAuthorizedException("No posee el permiso para eliminar expedientes.");
+            _expedienteRepositorio = expedienteRepositorio;
+            _servicioAutorizacion = servicioAutorizacion;
+            _tramiteRepositorio = tramiteRepositorio;
         }
 
-        Expediente? expediente = expedientes.Find(expediente => expediente.Id == id);
-        if (expediente is null)
+        public void Ejecutar(int expedienteId, int usuarioId)
         {
-            throw GeneralExcepcion.NotFoundExcepcion("Expediente no encontrado.");
-        }
+            if (!_servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.ExpedienteBaja))
+            {
+                throw new UnauthorizedAccessException("El usuario no tiene permiso para eliminar expedientes.");
+            }
+            _expedienteRepositorio.Eliminar(expedienteId);
 
-        expedientes.Remove(expediente);
-        
-        return expedientes;
+            //Elimina Los tramites asociados al expediente
+            var tramites = _tramiteRepositorio.ObtenerPorExpediente(expedienteId);
+            foreach (var tramite in tramites)
+            {
+                _tramiteRepositorio.Eliminar(tramite.Id);
+            }
+        }
     }
 }

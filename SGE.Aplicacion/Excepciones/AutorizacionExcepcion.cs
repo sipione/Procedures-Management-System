@@ -1,8 +1,4 @@
-﻿namespace SGE.Aplicacion;
-
-public class AutorizacionExcepcion
+﻿public class AutorizacionException : Exception
 {
-    public static Exception NotAuthorizedException(string msg){
-        return new Exception($"User not authorized. {msg}");
-    }
+    public AutorizacionException(string mensaje) : base(mensaje) { }
 }

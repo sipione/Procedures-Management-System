@@ -42,3 +42,4 @@ appsettings.Production.json
 .vscode/
 
 *.json
+*.csv

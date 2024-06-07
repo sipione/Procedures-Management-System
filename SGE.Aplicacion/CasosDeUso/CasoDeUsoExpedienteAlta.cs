@@ -1,19 +1,24 @@
-using System.Runtime.CompilerServices;
-using SGE.Aplicacion.Entidades;
-namespace SGE.Aplicacion;
-
-public class CasoDeUsoExpedienteAlta
+namespace SGE.Aplicacion.CasosDeUso
 {
-    public static Expediente CrearNuevoExpediente(string caratula, int usuarioId, int id){
+    public class CasoDeUsoExpedienteAlta
+    {
+        private readonly IExpedienteRepositorio _expedienteRepositorio;
+        private readonly IServicioAutorizacion _servicioAutorizacion;
 
-        ServicioAutorizacionProvisorio servicioAutorizacion = new ServicioAutorizacionProvisorio();
-        bool isAuthorized = servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.ExpedienteAlta);
-        if(!isAuthorized) throw AutorizacionExcepcion.NotAuthorizedException("Usuario no autorizado");
+        public CasoDeUsoExpedienteAlta(IExpedienteRepositorio expedienteRepositorio, IServicioAutorizacion servicioAutorizacion)
+        {
+            _expedienteRepositorio = expedienteRepositorio;
+            _servicioAutorizacion = servicioAutorizacion;
+        }
 
-        Expediente nuevoExpediente = new Expediente(caratula, usuarioId, id);
-        bool isValid = ExpedienteValidador.IsValidExpedienteCreation(nuevoExpediente);
-        if(!isValid) throw ValidacionExcepcion.ExpedienteNotValid("Fields do not match with the validation requirements.");
+        public void Ejecutar(Expediente expediente, int usuarioId)
+        {
+            if (!_servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.ExpedienteAlta))
+            {
+                throw new UnauthorizedAccessException("El usuario no tiene permiso para crear expedientes.");
+            }
 
-        return nuevoExpediente;        
+            _expedienteRepositorio.Crear(expediente);
+        }
     }
 }
