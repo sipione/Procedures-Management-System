@@ -47,6 +47,7 @@ namespace SGE.Consola
                         ConsultarTramitesPorEtiqueta(tramiteRepositorio);
                         break;
                     case "10":
+                        Console.WriteLine("¡Hasta luego!");
                         return;
                     default:
                         Console.WriteLine("Opción no válida, por favor intente de nuevo.");

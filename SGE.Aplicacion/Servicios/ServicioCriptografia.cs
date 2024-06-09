@@ -1,9 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
 public class ServicioCriptografiaPassword : IServicioCriptografiaPassword{
-    public string EncriptarPassword(string texto)
+    public string EncriptarPassword(string password)
     {
-        byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(texto));
+        byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
         return Encoding.UTF8.GetString(bytes);
     }
 
