@@ -1,0 +1,35 @@
+@page "/usuarios"
+@using SGE.UI.Components.Pages
+@inject IUsuarioRepositorio repositorioUsuarios
+
+<h3>Usuarios</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usuario in UsuariosList)
+        {
+            <tr>
+                <td>@usuario.Id</td>
+                <td>@usuario.Nombre</td>
+                <td>@usuario.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Usuario> UsuariosList { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var casoDeUso = new CasoDeUsoUsuarioConsultaTodos(repositorioUsuarios);
+        UsuariosList = casoDeUso.Ejecutar();
+    }
+}

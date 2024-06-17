@@ -1,0 +1,56 @@
+
+@page "/login"
+@inject IServicioAutenticacion servicioAutenticacion
+@inject NavigationManager NavigationManager
+@inject IUsuarioRepositorio repositorioUsuarios
+@rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@using System.Text.Json;
+@using Microsoft.JSInterop;
+
+<h3>Login</h3>
+
+@if (_messageerror != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @_messageerror
+    </div>
+}
+
+<form>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" @bind="_email" />
+    </div>
+    <div class="form-group
+    ">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" @bind="_password" />
+    </div>
+    <button type="submit" class="btn btn-primary" @onclick="LogUser">Login</button>
+</form>
+
+@code {
+    private string _email;
+    private string _password;
+    private string _messageerror;
+
+    private async Task LogUser()
+    {
+        try{
+            var casoDeUso = new CasoDeUsoUsuarioLogin(repositorioUsuarios, servicioAutenticacion);
+            Usuario result = casoDeUso.Ejecutar(_email, _password);
+            if (result == null)
+            {
+                throw new Exception("Usuario o contraseña incorrectos");
+            }
+            await JSRuntime.InvokeVoidAsync("setCookie", "usuario", JsonSerializer.Serialize(result));
+
+            NavigationManager.NavigateTo("/tramites");
+        }catch (Exception ex)
+        {
+            _messageerror = ex.Message;
+        }
+    }
+} 
+

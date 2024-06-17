@@ -1,0 +1,143 @@
+@page "/tramites"
+@inject IExpedienteRepositorio ExpedienteRepositorio
+@inject ITramiteRepositorio TramiteRepositorio
+@inject NavigationManager NavigationManager
+@inject IServicioAutorizacion servicioAutorizacion
+@rendermode InteractiveServer
+
+<h3>Gestión de Trámites</h3>
+
+@if (TramitesList != null && TramitesList.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Etiqueta</th>
+                <th>Contenido</th>
+                <th>FechaCreacion</th>
+                <th>FechaUltimaModificacion</th>
+                <th>UsuarioUltimaModificacionId</th>
+                <th>ExpedienteId</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tramite in TramitesList)
+            {
+                <tr>
+                    <td>@tramite.Id</td>
+                    <td>@tramite.Etiqueta</td>
+                    <td>@tramite.Contenido</td>
+                    <td>@tramite.FechaCreacion</td>
+                    <td>@tramite.FechaUltimaModificacion</td>
+                    <td>@tramite.UsuarioUltimaModificacionId</td>
+                    <td>@tramite.ExpedienteId</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ViewExpediente(tramite.ExpedienteId)">Ver Expediente</button>
+                        <button class="btn btn-primary" @onclick="() => EditTramite(tramite.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => DeleteTramite(tramite.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        @_messageerror
+    </div>
+}
+
+<button class="btn btn-primary">Nuevo Trámite</button>
+
+@if (_expediente != null)
+{
+    <div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Expediente</h5>
+                    <button type="button" class="close" @onclick="()=>closeHandle()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Id: @_expediente.Id</p>
+                    <p>Nombre: @_expediente.Caratula</p>
+                    <p>FechaCreacion: @_expediente.FechaCreacion</p>
+                    <p>FechaUltimaModificacion: @_expediente.FechaUltimaModificacion</p>
+                    <p>UsuarioUltimaModificacionId: @_expediente.UsuarioUltimaModificacionId</p>
+                    <p>Estado: @_expediente.Estado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private IEnumerable<Tramite>? TramitesList;
+    private string _messageerror = string.Empty;
+    private Expediente? _expediente;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try{
+            var casoDeUso = new CasoDeUsoTramiteConsultaTodos(TramiteRepositorio);
+            var respuesta = casoDeUso.Ejecutar();
+            if (respuesta == null || !respuesta.Any()){
+                throw new Exception("No se encontraron trámites");
+            }
+            TramitesList = respuesta;
+        }
+        catch (Exception ex)
+        {
+            _messageerror = ex.Message;
+        }
+    }
+
+    private void CreateNewTramite()
+    {
+        NavigationManager.NavigateTo("/nuevo-tramite");
+    }
+
+    private void ViewExpediente( int id )
+    {
+        try{
+            var casoDeUso = new CasoDeUsoExpedienteConsultaPorld(ExpedienteRepositorio);
+            _expediente = casoDeUso.Ejecutar(id);
+            if (_expediente == null){
+                throw new Exception("No se encontró el expediente");
+            }
+        }
+        catch (Exception ex)
+        {
+            _messageerror = ex.Message;
+        
+        }
+    }
+
+    private void EditTramite(int id)
+    {
+        NavigationManager.NavigateTo($"/editar-tramite/{id}");
+    }
+
+    private void DeleteTramite(int tramiteId)
+    {
+        try{
+            var casoDeUso = new CasoDeUsoTramiteBaja(TramiteRepositorio, servicioAutorizacion);
+            casoDeUso.Ejecutar(tramiteId, 1);
+            NavigationManager.NavigateTo("/tramites");
+        }
+        catch (Exception ex)
+        {
+            _messageerror = ex.Message;
+        }
+    }
+
+    private void closeHandle()
+    {
+        _expediente = null;
+    }
+}

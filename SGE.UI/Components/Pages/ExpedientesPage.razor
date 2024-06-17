@@ -1,0 +1,230 @@
+<!-- Pages/GestionExpedientes.razor -->
+@page "/expedientes"
+@inject IExpedienteRepositorio ExpedienteRepositorio
+@inject ITramiteRepositorio TramiteRepositorio
+@inject NavigationManager NavigationManager
+@inject IServicioAutorizacion servicioAutorizacion
+@rendermode InteractiveServer
+@using SGE.Aplicacion.CasosDeUso
+
+<style>
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody + tbody {
+        border-top: 2px solid #dee2e6;
+    }
+
+    .table .table {
+        background-color: #fff;
+    }
+
+    .alert {
+        padding: 0.75rem 1.25rem;
+        margin: 2rem 0rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+</style>
+
+<h3>Gestão de Expedientes</h3>
+
+@if (Expedientes != null || Expedientes.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha de Creación</th>
+                <th>Fecha de Modificación</th>
+                <th>Usuário de Modificación</th>
+                <th>Estado</th>
+                <th>Tramites</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expediente in Expedientes)
+            {
+                <tr>
+                    <td>@expediente.Id</td>
+                    <td>@expediente.Caratula</td>
+                    <td>@expediente.FechaCreacion</td>
+                    <td>@expediente.FechaUltimaModificacion</td>
+                    <td>@expediente.UsuarioUltimaModificacionId</td>
+                    <td>@expediente.Estado</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ListarTramitesDelExpediente(expediente.Id)">Get tramites Asociados</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => EditarExpediente(expediente.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => EliminarExpediente(expediente.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+<button class="btn btn-primary" @onclick="() => CreateNewexpediente()">Nuevo Expediente</button>
+
+@if (Tramites != null && Tramites.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ExpedienteId</th>
+                <th>Etiqueta</th>
+                <th>Contenido</th>
+                <th>FechaCreacion</th>
+                <th>FechaUltimaModificacion</th>
+                <th>UsuarioUltimaModificacionId</th>
+                <th>Ir al Tramite</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tramite in Tramites)
+            {
+                <tr>
+                    <td>@tramite.Id</td>
+                    <td>@tramite.ExpedienteId</td>
+                    <td>@tramite.Etiqueta</td>
+                    <td>@tramite.Contenido</td>
+                    <td>@tramite.FechaCreacion</td>
+                    <td>@tramite.FechaUltimaModificacion</td>
+                    <td>@tramite.UsuarioUltimaModificacionId</td>
+                    <td>
+                        <button class="btn btn-primary">Ir al Tramite</button> 
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+@if (!string.IsNullOrEmpty(_mensajeError))
+{
+    <div class="alert alert-danger" role="alert">
+        @_mensajeError
+    </div>
+}
+
+@if (_editando)
+{
+    <div class="alert alert-primary" role="alert">
+        Editando expediente
+    </div>
+    <h4>Edit Expediente</h4>
+    <form>
+        <div class="form-group">
+            <label for="caratula">Caratula</label>
+            <input type="text" class="form-control" id="caratula" name="caratula" value="@_expediente.Caratula" @oninput="UpdateCaratula" />
+        </div>
+
+        <div class="form-group">
+            <label for="estado">Estado</label>
+            <input type="text" class="form-control" id="estado" name="estado" value="@_expediente.Estado" @oninput="UpdateEstado" />
+        </div>
+
+        <button class="btn btn-primary" @onclick="()=>EditarExpediente(_expediente.Id)">Guardar</button>
+        <button class="btn btn-secondary" @onclick="ResetExpediente">Reset</button>
+    </form>
+}
+
+@code {
+    public IEnumerable<Expediente>? Expedientes;
+    public IEnumerable<Tramite>? Tramites;
+    private Expediente _expediente;
+    private bool _editando = false;
+    private string _mensajeError = string.Empty;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try{
+            var casoDeUso = new CasoDeUsoExpedienteConsultaTodos(ExpedienteRepositorio);
+            Expedientes = casoDeUso.Ejecutar();
+
+        }catch(Exception e){
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    private void EditarExpediente(int id)
+    {
+        if(!_editando){
+            _expediente = Expedientes.FirstOrDefault(e => e.Id == id);
+            _editando = true;
+            return;
+        }
+
+        var casoDeUso = new CasoDeUsoExpedienteModificacion(ExpedienteRepositorio, servicioAutorizacion);
+        casoDeUso.Ejecutar(_expediente, 1);
+
+    }
+
+    private void EliminarExpediente(int id)
+    {
+        NavigationManager.NavigateTo($"/expedientes/eliminar/{id}");
+    }
+
+    private void ListarTramitesDelExpediente(int id)
+    {
+        _mensajeError = string.Empty;
+        try{
+            var casoDeuso = new CasoDeUsoTramiteConsultaPorExpediente(TramiteRepositorio, id);
+            Tramites = casoDeuso.Ejecutar();
+            if(Tramites == null || !Tramites.Any()){
+                throw new Exception($"No se encontraron tramites asociados al expediente con id {id}");
+            }
+        }catch(Exception e){
+            Console.WriteLine(e.Message);
+            _mensajeError = e.Message;
+        }
+    }
+
+    private void CreateNewexpediente()
+    {
+        NavigationManager.NavigateTo("/expedientes/nuevo");
+    }
+
+    private void ResetExpediente()
+    {
+        _expediente = new Expediente();
+        _editando = false;
+    }
+
+    private void UpdateCaratula(ChangeEventArgs e)
+    {
+        _expediente.Caratula = e.Value.ToString();
+    }
+
+    private void UpdateEstado(ChangeEventArgs e)
+    {
+        _expediente.Estado = Enum.Parse<EstadoExpediente>(e.Value.ToString());
+    }
+}
