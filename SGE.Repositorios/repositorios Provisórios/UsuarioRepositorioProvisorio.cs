@@ -2,6 +2,11 @@ public class UsuarioRepositorioProvisorio : IUsuarioRepositorio
 {
     private readonly string _path = "usuarios.csv";
 
+    public bool IsEmpty()
+    {
+        return false;
+    }
+
     public Usuario? ObtenerUsuarioPorEmail(string email)
     {
         return ObtenerUsuarios().FirstOrDefault(u => u.Email == email) ?? null;

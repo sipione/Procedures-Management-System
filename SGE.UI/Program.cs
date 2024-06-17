@@ -1,6 +1,13 @@
 using SGE.UI.Components;
 using SGE.Aplicacion;
 using SGE.Repositorios;
+using System.IO;
+
+string path = Path.Combine(Directory.GetCurrentDirectory(), "SGE.sqlite");
+if (!File.Exists(path))
+{
+    SGESqlite.Inicializar();
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddTransient<IExpedienteRepositorio, ExpedienteRepositorioArchivo>();
-builder.Services.AddTransient<ITramiteRepositorio, TramiteRepositorioArchivo>();
-builder.Services.AddTransient<IUsuarioRepositorio, UsuarioRepositorioProvisorio>();
-builder.Services.AddTransient<IServicioAutenticacion, ServicioAutenticacion>();
-builder.Services.AddTransient<IServicioAutorizacion, ServicioAutorizacion>();
+builder.Services.AddDbContext<SGEContexto>();
+
+builder.Services.AddScoped<IExpedienteRepositorio, ExpedienteRepositorioSqlite>();
+builder.Services.AddScoped<ITramiteRepositorio, TramiteRepositorioSqLite>();
+builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorioSqlite>();
+builder.Services.AddScoped<IServicioAutenticacion, ServicioAutenticacion>();
+builder.Services.AddScoped<IServicioAutorizacion, ServicioAutorizacion>();
 
 var app = builder.Build();
 

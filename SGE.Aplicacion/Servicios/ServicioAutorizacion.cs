@@ -12,4 +12,20 @@ public class ServicioAutorizacion : IServicioAutorizacion
         Usuario? usuario = _repositorioUsuarios.ObtenerUsuarioPorId(idUsuario) ?? throw new Exception($"Error 404. El usuario con id {idUsuario} no fue encontrado.");
         return usuario.Permisos.Contains(permiso);
     }
+
+    public List<Permiso> AdminitradorPermisos()
+    {
+        return new List<Permiso> (){ 
+            Permiso.ExpedienteAlta,
+            Permiso.ExpedienteBaja,
+            Permiso.ExpedienteModificacion,
+            Permiso.TramiteAlta,
+            Permiso.TramiteBaja,
+            Permiso.TramiteModificacion,
+            Permiso.UsuarioAlta,
+            Permiso.UsuarioBaja,
+            Permiso.UsuarioModificacion,
+            Permiso.UsuarioConsulta
+        };
+    }
 }

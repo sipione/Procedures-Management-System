@@ -13,7 +13,7 @@ public class CasoDeUsoUsuarioLogin
     {
         var usuario = _repositorioUsuarios.ObtenerUsuarioPorEmail(email) ?? throw new Exception($"El email {email} no se encuentra registrado o la contraseña es incorrecta.");
 
-        if (!_servicioAutenticacion.VerificarPassword(password, usuario.Password)) 
+        if (!_servicioAutenticacion.VerificarPassword(usuario.Password, password)) 
             throw new Exception($"El email {email} no se encuentra registrado o la contraseña es incorrecta.");
 
         return usuario;

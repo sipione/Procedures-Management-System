@@ -6,4 +6,5 @@ public interface IUsuarioRepositorio
     void GuardarUsuario(Usuario usuario);
     void ActualizarUsuario(Usuario usuario);
     void EliminarUsuario(Usuario usuario);
+    bool IsEmpty();
 }

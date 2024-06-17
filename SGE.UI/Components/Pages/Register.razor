@@ -1,0 +1,68 @@
+@page "/register"
+@inject IUsuarioRepositorio repositorioUsuarios
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IServicioAutenticacion servicioAutenticacion
+@inject IServicioAutorizacion servicioAutorizacion
+
+
+<h3>Registro de Usuario</h3>
+
+
+
+@if(!string.IsNullOrEmpty(successMessage)){
+    <div class="alert alert-success" role="alert">
+        @successMessage
+    </div>
+}
+
+<form @onsubmit="RegisterUser" @onsubmit:preventDefault>
+    <div class="form-group">
+        <label for="nombre">Nombre:</label>
+        <input type="text" class="form-control" id="nombre" @bind="@user.Nombre">
+    </div>
+    <div class="form-group">
+        <label for="apellido">Apellido:</label>
+        <input type="text" class="form-control" id="apellido" @bind="@user.Apellido">
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" @bind="@user.Email">
+    </div>
+    <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <input type="password" class="form-control" id="password" @bind="@user.Password">
+    </div>
+    <div class="form-group">
+        <label for="confirmPassword">Confirmar Contraseña:</label>
+        <input type="password" class="form-control" id="confirmPassword" @bind="@confirmPassword">
+    </div>
+    <button type="submit" class="btn btn-primary">Registrarse</button>
+</form>
+
+@if(!string.IsNullOrEmpty(errorMessage)){
+    <div class="alert alert-danger" role="alert">
+        @errorMessage
+    </div>
+}
+
+@code {
+    private Usuario user = new Usuario();
+    private string confirmPassword;
+    private string errorMessage;
+    private string successMessage;
+
+    private void RegisterUser()
+    {
+        try{
+            var casoDeUso = new CasoDeUsoUsuarioAlta(repositorioUsuarios, servicioAutenticacion, servicioAutorizacion);
+            casoDeUso.Ejecutar(user);
+            successMessage = "Usuario registrado correctamente";
+            NavigationManager.NavigateTo("/expedientes");
+
+        }catch(Exception e){
+            Console.WriteLine(e.Message);
+            errorMessage = e.Message;
+        }
+    }
+}

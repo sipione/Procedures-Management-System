@@ -1,56 +1,64 @@
-
 @page "/login"
 @inject IServicioAutenticacion servicioAutenticacion
 @inject NavigationManager NavigationManager
 @inject IUsuarioRepositorio repositorioUsuarios
 @rendermode InteractiveServer
 @inject IJSRuntime JSRuntime
-@using System.Text.Json;
-@using Microsoft.JSInterop;
 
 <h3>Login</h3>
 
-@if (_messageerror != null)
+@if (!string.IsNullOrEmpty(_messageerror))
 {
     <div class="alert alert-danger" role="alert">
         @_messageerror
     </div>
 }
 
-<form>
+@if (!string.IsNullOrEmpty(_successMessage))
+{
+    <div class="alert alert-success" role="alert">
+        @_successMessage
+    </div>
+}
+
+<form @onsubmit="LogUser" @onsubmit:preventDefault>
     <div class="form-group">
         <label for="email">Email</label>
         <input type="email" class="form-control" id="email" @bind="_email" />
     </div>
-    <div class="form-group
-    ">
+    <div class="form-group">
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" @bind="_password" />
     </div>
-    <button type="submit" class="btn btn-primary" @onclick="LogUser">Login</button>
+    <button type="submit" class="btn btn-primary">Login</button>
 </form>
 
 @code {
     private string _email;
     private string _password;
     private string _messageerror;
+    private string _successMessage;
 
     private async Task LogUser()
     {
-        try{
+        try
+        {
             var casoDeUso = new CasoDeUsoUsuarioLogin(repositorioUsuarios, servicioAutenticacion);
             Usuario result = casoDeUso.Ejecutar(_email, _password);
             if (result == null)
             {
                 throw new Exception("Usuario o contraseña incorrectos");
             }
-            await JSRuntime.InvokeVoidAsync("setCookie", "usuario", JsonSerializer.Serialize(result));
-
-            NavigationManager.NavigateTo("/tramites");
-        }catch (Exception ex)
+            _successMessage = "Usuario logueado correctamente";
+            Console.WriteLine("Usuario logueado correctamente");
+            _messageerror = null; // Limpar mensagem de erro
+            NavigationManager.NavigateTo("/expedientes");
+        }
+        catch (Exception ex)
         {
+            Console.WriteLine("Error al loguear usuario: " + ex.Message);
             _messageerror = ex.Message;
+            _successMessage = null; // Limpar mensagem de sucesso
         }
     }
-} 
-
+}
