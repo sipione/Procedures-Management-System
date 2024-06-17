@@ -7,4 +7,5 @@ public interface ITramiteRepositorio
     IEnumerable<Tramite> ObtenerPorExpediente(int expedienteId);
     Tramite ObtenerUltimoTramitePorExpediente(int expedienteId);
     IEnumerable<Tramite> ObtenerPorEtiqueta(EtiquetaTramite etiquetaTramite);
+    IEnumerable<Tramite> ObtenerTodos();
 }

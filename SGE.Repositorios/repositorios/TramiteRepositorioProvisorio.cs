@@ -13,6 +13,8 @@ public class TramiteRepositorioArchivo : ITramiteRepositorio
         return tramites.FirstOrDefault(t => t.Id == id);
     }
 
+    public IEnumerable<Tramite> ObtenerTodos() => LeerTramitesDesdeArchivo();
+
     public IEnumerable<Tramite> ObtenerPorEtiqueta(EtiquetaTramite etiquetaTramite)
     {
         var tramites = LeerTramitesDesdeArchivo();

@@ -7,7 +7,9 @@ namespace SGE.Repositorios;
 
 public class ExpedienteRepositorioArchivo : IExpedienteRepositorio
 {
-    private const string FilePath = "expedientes.csv";
+    //private const string FilePath = "expedientes.csv";
+    // new file path for the expedientes.csv file from the project root absoolute path
+    private static readonly string FilePath = Path.Combine(Directory.GetCurrentDirectory(), "expedientes.csv");
 
     public Expediente ObtenerPorId(int id)
     {

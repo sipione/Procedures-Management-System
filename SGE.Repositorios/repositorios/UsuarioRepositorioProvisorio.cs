@@ -1,4 +1,4 @@
-class UsuarioRepositorioProvisorio : IUsuarioRepositorio
+public class UsuarioRepositorioProvisorio : IUsuarioRepositorio
 {
     private readonly string _path = "usuarios.csv";
 

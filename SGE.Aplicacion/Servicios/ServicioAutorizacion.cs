@@ -1,4 +1,4 @@
-class ServicioAutorizacion : IServicioAutorizacion
+public class ServicioAutorizacion : IServicioAutorizacion
 {
     private readonly IUsuarioRepositorio _repositorioUsuarios;
 
