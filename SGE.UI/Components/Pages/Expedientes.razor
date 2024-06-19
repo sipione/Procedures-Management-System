@@ -1,0 +1,355 @@
+
+@page "/expedientes"
+@inject IExpedienteRepositorio ExpedienteRepositorio
+@inject ITramiteRepositorio TramiteRepositorio
+@inject NavigationManager NavigationManager
+@inject IServicioAutorizacion servicioAutorizacion
+@rendermode InteractiveServer
+@using SGE.Aplicacion.CasosDeUso
+@inject IJSRuntime JSRuntime
+
+<style>
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        vertical-align: top;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .table thead th {
+        vertical-align: bottom;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody+tbody {
+        border-top: 2px solid #dee2e6;
+    }
+
+    .table .table {
+        background-color: #fff;
+    }
+
+    .alert {
+        padding: 0.75rem 1.25rem;
+        margin: 2rem 0rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .form-box {
+        padding: 1rem .5rem;
+        margin: 2rem 0rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .form-box button.close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 1rem;
+        color: inherit;
+        outline: none;
+        border: none;
+        background-color: transparent;
+        font-size: 1.5rem;
+        color: red;
+        cursor: pointer;
+    }
+
+    .form-box h4 {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .form-group{
+        margin: 1rem 0rem;
+    }
+</style>
+
+<h3>Gestão de Expedientes</h3>
+
+@if(!string.IsNullOrEmpty(_mensajeExito))
+{
+    <div class="alert alert-success" role="alert">
+        @_mensajeExito
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_mensajeError))
+{
+    <div class="alert alert-danger" role="alert">
+        @_mensajeError
+    </div>
+}
+
+@if (_editando || _creando)
+{
+    <div class="form-box">
+        <button type="button" class="close" aria-label="Close" @onclick="CerrarFormulario">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4>@(_creando ? "Crear" : "Editar") Expediente</h4>
+        <form @onsubmit="GuardarExpediente" @onsubmit:preventDefault>
+            <div class="form-group">
+                <label for="caratula">Caratula</label>
+                <input type="text" class="form-control" id="caratula" name="caratula" @bind="_expediente.Caratula" required/>
+            </div>
+
+            @if (!_creando)
+            {
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select class="form-control" id="estado" name="estado" @bind="_expediente.Estado">
+                        @foreach (var estado in Enum.GetValues(typeof(EstadoExpediente)))
+                        {
+                            <option value="@estado">@estado</option>
+                        }
+                    </select>
+                </div>
+            }
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+        </form>
+    </div>
+}
+
+<button class="btn btn-primary" @onclick="() => AbrirEspacioParaCreacion()">Nuevo Expediente</button>
+
+@if (ExpedientesList != null && ExpedientesList.Any())
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Fecha de Creación</th>
+            <th>Fecha de Modificación</th>
+            <th>Usuário de Modificación</th>
+            <th>Estado</th>
+            <th>Tramites</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var expediente in ExpedientesList)
+            {
+                <tr>
+                    <td>@expediente.Id</td>
+                    <td>@expediente.Caratula</td>
+                    <td>@expediente.FechaCreacion</td>
+                    <td>@expediente.FechaUltimaModificacion</td>
+                    <td>@expediente.UsuarioUltimaModificacionId</td>
+                    <td>@expediente.Estado</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => ListarTramitesDelExpediente(expediente.Id)">Get tramites
+                            Asociados</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="() => AbrirEspacioDeEdicion(expediente.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => EliminarExpediente(expediente.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+    No se encontraron expedientes
+</div>
+}
+
+@if (Tramites != null && Tramites.Any())
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>ExpedienteId</th>
+            <th>Etiqueta</th>
+            <th>Contenido</th>
+            <th>FechaCreacion</th>
+            <th>FechaUltimaModificacion</th>
+            <th>UsuarioUltimaModificacionId</th>
+            <th>Ir al Tramite</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tramite in Tramites)
+            {
+                <tr>
+                    <td>@tramite.Id</td>
+                    <td>@tramite.ExpedienteId</td>
+                    <td>@tramite.Etiqueta</td>
+                    <td>@tramite.Contenido</td>
+                    <td>@tramite.FechaCreacion</td>
+                    <td>@tramite.FechaUltimaModificacion</td>
+                    <td>@tramite.UsuarioUltimaModificacionId</td>
+                    <td>
+                        <button class="btn btn-primary">Ir al Tramite</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+
+@code {
+    private IEnumerable<Expediente>? ExpedientesList;
+    private IEnumerable<Tramite>? Tramites;
+    private Expediente _expediente;
+    private bool _editando = false;
+    private string _mensajeError = string.Empty;
+    private string _mensajeExito = string.Empty;
+    private bool _creando = false;
+
+    private void CerrarFormulario()
+    {
+        _editando = false;
+        _creando = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var casoDeUso = new CasoDeUsoExpedienteConsultaTodos(ExpedienteRepositorio);
+            ExpedientesList = casoDeUso.Ejecutar();
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    private void AbrirEspacioDeEdicion(int id)
+    {
+            _expediente = ExpedientesList.FirstOrDefault(e => e.Id == id);
+            _editando = true;
+            _creando = false;
+    }
+
+    private void ActualizarExpediente()
+    {
+        try{
+            var casoDeUso = new CasoDeUsoExpedienteModificacion(ExpedienteRepositorio, servicioAutorizacion);
+            casoDeUso.Ejecutar(_expediente, 2);
+            _mensajeExito = "Expediente actualizado correctamente";
+            OnInitializedAsync();
+        }catch(Exception e){
+            Console.WriteLine(e.Message);
+            ShowError(e.Message);
+        }
+
+    }
+
+    private void EliminarExpediente(int id)
+    {
+        try
+        {
+            var casoDeUso = new CasoDeUsoExpedienteBaja(ExpedienteRepositorio, servicioAutorizacion, TramiteRepositorio);
+            casoDeUso.Ejecutar(id, 1);
+            _mensajeExito = "Expediente eliminado correctamente";
+            OnInitializedAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            ShowError(e.Message);
+            DismissErrorAfterDelay();
+        }
+    }
+
+    private void ListarTramitesDelExpediente(int id)
+    {
+        try
+        {
+            var casoDeuso = new CasoDeUsoTramiteConsultaPorExpediente(TramiteRepositorio, id);
+            Tramites = casoDeuso.Ejecutar();
+            if (Tramites == null || !Tramites.Any())
+            {
+                throw new Exception($"No se encontraron tramites asociados al expediente con id {id}");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            ShowError(e.Message);
+        }
+    }
+
+    private void AbrirEspacioParaCreacion()
+    {
+        _expediente = new Expediente();
+        _creando = true;
+        _editando = false;
+    }
+
+    private void CrearNuevoexpediente(){
+        try{
+            Expediente nuevoExpediente = new Expediente();
+            nuevoExpediente.Caratula = _expediente.Caratula;
+            var casoDeUso = new CasoDeUsoExpedienteAlta(ExpedienteRepositorio, servicioAutorizacion);
+            casoDeUso.Ejecutar(nuevoExpediente, 1);
+            _mensajeExito = "Expediente creado correctamente";
+            OnInitializedAsync();
+        }
+        catch(Exception e){
+            Console.WriteLine(e.Message);
+            ShowError(e.Message);
+        }
+    }
+
+    private void GuardarExpediente()
+    {
+        if (_creando)
+        {
+            _creando = false;
+            CrearNuevoexpediente();
+        }
+
+        if(_editando)
+        {
+            _editando = false;
+            ActualizarExpediente();
+        }
+    }
+
+    public void ShowError(string message)
+    {
+        _mensajeError = message;
+        // Start the timer to clear the message after 5 seconds
+        DismissErrorAfterDelay();
+    }
+
+    private async void DismissErrorAfterDelay()
+    {
+        await Task.Delay(5000);
+        _mensajeError = string.Empty;
+        // Notify the UI that the state has changed
+        InvokeAsync(StateHasChanged);
+    }
+}

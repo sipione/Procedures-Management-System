@@ -26,4 +26,19 @@ public class CasoDeUsoUsuarioAlta
 
         _repositorioUsuarios.GuardarUsuario(usuario);
     }
+
+    public void Ejecutar(Usuario usuario, int idUsuarioCreador)
+    {
+        if (!_servicioAutorizacion.PoseeElPermiso(idUsuarioCreador, Permiso.UsuarioAlta))
+            throw new Exception("No tiene permisos para realizar esta acción.");
+
+        if (_repositorioUsuarios.ObtenerUsuarioPorEmail(usuario.Email) != null)
+            throw new Exception($"El email {usuario.Email} ya se encuentra registrado.");
+
+        usuario.Permisos = new List<Permiso>();
+
+        usuario.Password = _servicioAutenticacion.EncriptarPassword(usuario.Password);
+
+        _repositorioUsuarios.GuardarUsuario(usuario);
+    }
 }

@@ -1,35 +1,223 @@
 @page "/usuarios"
-@using SGE.UI.Components.Pages
 @inject IUsuarioRepositorio repositorioUsuarios
+@inject IServicioAutenticacion servicioAutenticacion
+@inject IServicioAutorizacion servicioAutorizacion
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
-<h3>Usuarios</h3>
+<style>
+        .form-box {
+        padding: 1rem .5rem;
+        margin: 2rem 0rem;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
 
-<table>
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var usuario in UsuariosList)
-        {
+    .form-box .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 1rem;
+        color: inherit;
+        outline: none;
+        border: none;
+        background-color: transparent;
+        font-size: 1.5rem;
+        color: red;
+        cursor: pointer;
+    }
+
+    .form-box h4 {
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .form-group{
+        margin: 1rem 0rem;
+    }
+</style>
+
+<h3>Gestion de Usuarios</h3>
+
+@if(!string.IsNullOrEmpty(_mensajeExito))
+{
+    <div class="alert alert-success" role="alert">
+        @_mensajeExito
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_mensajeError))
+{
+    <div class="alert alert-danger" role="alert">
+        @_mensajeError
+    </div>
+}
+
+@if(_creando || _editando)
+{
+    <div class="form-box">
+        <button class="close" @onclick="()=>{_creando = false; _editando = false;}">X</button>
+        <h4>@(_creando ? "Crear" : "Editar") Usuario</h4>
+        <form @onsubmit="()=>GuardarUsuario()" @onsubmit:preventDefault>
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre" @bind="_usuario.Nombre" />
+            </div>
+            <div class="form-group">
+                <label for="apellido">Apellido:</label>
+                <input type="text" class="form-control" id="apellido" @bind="_usuario.Apellido">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" @bind="_usuario.Email" />
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" class="form-control" id="password" @bind="_usuario.Password" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+}
+
+<button class="btn btn-primary" @onclick="()=>AbrirEspacioParaCreacion()">Crear Nuevo Usuario</button>
+
+@if(UsuariosList != null && UsuariosList.Any()){
+    <table class="table">
+        <thead>
             <tr>
-                <td>@usuario.Id</td>
-                <td>@usuario.Nombre</td>
-                <td>@usuario.Email</td>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var usuario in UsuariosList)
+            {
+                <tr>
+                    <td>@usuario.Id</td>
+                    <td>@usuario.Nombre  @usuario.Apellido</td>
+                    <td>@usuario.Email</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=>AbrirEspacioParaEdicion(usuario.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="()=>EliminarUsuario(usuario.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
     private List<Usuario> UsuariosList { get; set; }
-
-    protected override void OnInitialized()
+    private string _mensajeError = string.Empty;
+    private string _mensajeExito = string.Empty;
+    private Usuario _usuario = new Usuario();
+    private bool _creando = false;
+    private bool _editando = false;
+    
+    protected override async Task OnInitializedAsync()
     {
-        var casoDeUso = new CasoDeUsoUsuarioConsultaTodos(repositorioUsuarios);
-        UsuariosList = casoDeUso.Ejecutar();
+        try{
+            var casoDeUso = new CasoDeUsoUsuarioConsultaTodos(repositorioUsuarios);
+            var resultado = casoDeUso.Ejecutar();
+            UsuariosList = resultado;
+        }catch(Exception ex){
+            ShowError(ex.Message);
+        }
+    }
+
+    private async Task GuardarUsuario()
+    {
+        if(_creando){
+            CrearNuevoUsuario();
+            _creando = false;
+        }
+
+        if(_editando){
+            EditarUsuario();
+            _editando = false;
+        }
+    }
+
+    private void EditarUsuario()
+    {
+        try{
+            var casoDeUso = new CasoDeUsoUsuarioModificacion(repositorioUsuarios);
+            casoDeUso.Ejecutar(_usuario, 20);
+            ShowExito("Usuario modificado con éxito");
+        }catch(Exception ex){
+            ShowError(ex.Message);
+        }finally{
+            OnInitializedAsync();
+        }
+    }
+    
+    private void CrearNuevoUsuario()
+    {
+       try{
+            var casoDeUso = new CasoDeUsoUsuarioAlta(repositorioUsuarios, servicioAutenticacion, servicioAutorizacion);
+            casoDeUso.Ejecutar(_usuario, 1);
+            ShowExito("Usuario creado con éxito");
+       }catch(Exception ex){
+           ShowError(ex.Message);
+       }finally{
+            OnInitializedAsync();
+        }
+    }
+
+    private void AbrirEspacioParaEdicion(int id)
+    {
+        _usuario = UsuariosList.FirstOrDefault(x => x.Id == id)
+        _editando = true;
+    }
+
+    private void AbrirEspacioParaCreacion()
+    {
+        _usuario = new Usuario();
+        _creando = true;
+    }
+
+    private void EliminarUsuario(int usuarioId)
+    {
+        try{
+            var casoDeUso = new CasoDeUsoUsuarioBaja(repositorioUsuarios);
+            casoDeUso.Ejecutar(usuarioId, 1);
+            ShowExito("Usuario eliminado con éxito");
+        }catch(Exception ex){
+            ShowError(ex.Message);
+        }
+    }
+    
+    private void ShowError(string message)
+    {
+        _mensajeError = message;
+        // Start the timer to clear the message after 5 seconds
+        DismissMessagesAfterDelay();
+    }
+
+    private void ShowExito(string message)
+    {
+        _mensajeExito = message;
+        // Start the timer to clear the message after 5 seconds
+        DismissMessagesAfterDelay();
+    }
+
+    private async void DismissMessagesAfterDelay()
+    {
+        await Task.Delay(5000);
+        _mensajeError = string.Empty;
+        _mensajeExito = string.Empty;
+
+        // Notify the UI that the state has changed
+        InvokeAsync(StateHasChanged);
     }
 }

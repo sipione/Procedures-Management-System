@@ -9,15 +9,21 @@ public class CasoDeUsoUsuarioModificacion
 
     public void Ejecutar(Usuario usuario, int idUsuarioQueModifica)
     {
-        Usuario? usuarioQueModifica = _repositorioUsuarios.ObtenerUsuarioPorId(idUsuarioQueModifica) ?? throw new Exception($"Error 404. El usuario con id {idUsuarioQueModifica} no fue encontrado.");
+        Usuario? usuarioQueModifica = _repositorioUsuarios.ObtenerUsuarioPorId(idUsuarioQueModifica);
 
-        if (!usuarioQueModifica.Permisos.Contains(Permiso.UsuarioModificacion))
+        if(usuarioQueModifica == null){
+            throw new Exception($"Error 404. El usuario con id {idUsuarioQueModifica} no fue encontrado.");
+        }
+
+        if (!usuarioQueModifica.Permisos.Contains(Permiso.UsuarioModificacion)){
             throw new Exception($"Error 403. El usuario con id {idUsuarioQueModifica} no tiene permisos para modificar a otros usuarios.");
+        }
         
-        Usuario? usuarioAModificar = _repositorioUsuarios.ObtenerUsuarioPorId(usuario.Id) ?? throw new Exception($"Error 404. El usuario con id {usuario.Id} no fue encontrado.");
+        Usuario? usuarioAModificar = _repositorioUsuarios.ObtenerUsuarioPorId(usuario.Id);
 
-        if (_repositorioUsuarios.ObtenerUsuarioPorEmail(usuario.Email) != null && usuario.Email != usuarioAModificar.Email)
-            throw new Exception($"El email {usuario.Email} ya se encuentra registrado.");
+        if(usuarioAModificar == null){
+            throw new Exception($"Error 404. El usuario con id {usuario.Id} no fue encontrado.");
+        }
 
         _repositorioUsuarios.ActualizarUsuario(usuario);
     }

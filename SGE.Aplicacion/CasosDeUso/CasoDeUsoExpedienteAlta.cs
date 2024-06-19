@@ -13,10 +13,24 @@ namespace SGE.Aplicacion.CasosDeUso
 
         public void Ejecutar(Expediente expediente, int usuarioId)
         {
-            if (!_servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.ExpedienteAlta))
+            bool autorizado;
+            try{
+                autorizado = _servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.ExpedienteAlta);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
+            if (!autorizado)
             {
                 throw new UnauthorizedAccessException("El usuario no tiene permiso para crear expedientes.");
             }
+
+            expediente.FechaCreacion = DateTime.Now;
+            expediente.FechaUltimaModificacion = DateTime.Now;
+            expediente.UsuarioUltimaModificacionId = usuarioId;
+            expediente.Estado = EstadoExpediente.RecienIniciado;
 
             _expedienteRepositorio.Crear(expediente);
         }
