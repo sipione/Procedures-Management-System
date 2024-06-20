@@ -1,10 +1,9 @@
 @page "/login"
-@inject IServicioAutenticacion servicioAutenticacion
 @inject NavigationManager NavigationManager
-@inject IUsuarioRepositorio repositorioUsuarios
 @rendermode InteractiveServer
 @inject IJSRuntime JSRuntime
 @inject IServicioDeSecion servicioDeSecion
+@inject CasoDeUsoUsuarioLogin CasoDeUsoUsuarioLogin
 
 <h3>Login</h3>
 
@@ -44,8 +43,7 @@
     {
         try
         {
-            var casoDeUso = new CasoDeUsoUsuarioLogin(repositorioUsuarios, servicioAutenticacion);
-            Usuario result = casoDeUso.Ejecutar(_email, _password);
+            Usuario result = CasoDeUsoUsuarioLogin.Ejecutar(_email, _password);
             if (result == null)
             {
                 throw new Exception("Usuario o contraseña incorrectos");

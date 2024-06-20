@@ -1,13 +1,13 @@
 
 @page "/expedientes"
-@inject IExpedienteRepositorio ExpedienteRepositorio
-@inject ITramiteRepositorio TramiteRepositorio
 @inject NavigationManager NavigationManager
-@inject IServicioAutorizacion servicioAutorizacion
 @rendermode InteractiveServer
-@using SGE.Aplicacion.CasosDeUso
-@inject IJSRuntime JSRuntime
 @inject IServicioDeSecion servicioDeSecion
+@inject CasoDeUsoExpedienteConsultaTodos CasoDeUsoExpedienteConsultaTodos
+@inject CasoDeUsoTramiteConsultaPorExpediente CasoDeUsoTramiteConsultaPorExpediente
+@inject CasoDeUsoExpedienteModificacion CasoDeUsoExpedienteModificacion
+@inject CasoDeUsoExpedienteBaja CasoDeUsoExpedienteBaja
+@inject CasoDeUsoExpedienteAlta CasoDeUsoExpedienteAlta
 
 <style>
     .table {
@@ -249,8 +249,7 @@ else
     {
         try
         {
-            var casoDeUso = new CasoDeUsoExpedienteConsultaTodos(ExpedienteRepositorio);
-            ExpedientesList = casoDeUso.Ejecutar();
+            ExpedientesList = CasoDeUsoExpedienteConsultaTodos.Ejecutar();
             if (ExpedientesList == null || !ExpedientesList.Any())
             {
                 throw new Exception("No se encontraron expedientes");
@@ -273,8 +272,7 @@ else
     private void ActualizarExpediente()
     {
         try{
-            var casoDeUso = new CasoDeUsoExpedienteModificacion(ExpedienteRepositorio, servicioAutorizacion);
-            casoDeUso.Ejecutar(_expediente, 2);
+            CasoDeUsoExpedienteModificacion.Ejecutar(_expediente, 2);
             _mensajeExito = "Expediente actualizado correctamente";
             ListarExpedientes();
         }catch(Exception e){
@@ -288,8 +286,7 @@ else
     {
         try
         {
-            var casoDeUso = new CasoDeUsoExpedienteBaja(ExpedienteRepositorio, servicioAutorizacion, TramiteRepositorio);
-            casoDeUso.Ejecutar(id, 1);
+            CasoDeUsoExpedienteBaja.Ejecutar(id, 1);
             _mensajeExito = "Expediente eliminado correctamente";
             ListarExpedientes();
         }
@@ -305,8 +302,7 @@ else
     {
         try
         {
-            var casoDeuso = new CasoDeUsoTramiteConsultaPorExpediente(TramiteRepositorio, id);
-            Tramites = casoDeuso.Ejecutar();
+            Tramites = CasoDeUsoTramiteConsultaPorExpediente.Ejecutar(id);
             if (Tramites == null || !Tramites.Any())
             {
                 throw new Exception($"No se encontraron tramites asociados al expediente con id {id}");
@@ -330,8 +326,7 @@ else
         try{
             Expediente nuevoExpediente = new Expediente();
             nuevoExpediente.Caratula = _expediente.Caratula;
-            var casoDeUso = new CasoDeUsoExpedienteAlta(ExpedienteRepositorio, servicioAutorizacion);
-            casoDeUso.Ejecutar(nuevoExpediente, 1);
+            CasoDeUsoExpedienteAlta.Ejecutar(nuevoExpediente, 1);
             _mensajeExito = "Expediente creado correctamente";
             ListarExpedientes();
         }

@@ -1,10 +1,11 @@
 @page "/usuarios"
-@inject IUsuarioRepositorio repositorioUsuarios
-@inject IServicioAutenticacion servicioAutenticacion
-@inject IServicioAutorizacion servicioAutorizacion
 @inject NavigationManager NavigationManager
 @inject IServicioDeSecion servicioDeSecion
 @rendermode InteractiveServer
+@inject CasoDeUsoUsuarioConsultaTodos CasoDeUsoUsuarioConsultaTodos
+@inject CasoDeUsoUsuarioModificacion CasoDeUsoUsuarioModificacion
+@inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
+@inject CasoDeUsoUsuarioBaja CasoDeUsoUsuarioBaja
 
 <style>
         .form-box {
@@ -129,8 +130,7 @@
     protected override async Task OnInitializedAsync()
     {
         try{
-            var casoDeUso = new CasoDeUsoUsuarioConsultaTodos(repositorioUsuarios);
-            var resultado = casoDeUso.Ejecutar();
+            var resultado = CasoDeUsoUsuarioConsultaTodos.Ejecutar();
             UsuariosList = resultado;
         }catch(Exception ex){
             ShowError(ex.Message);
@@ -168,8 +168,7 @@
     private void EditarUsuario()
     {
         try{
-            var casoDeUso = new CasoDeUsoUsuarioModificacion(repositorioUsuarios);
-            casoDeUso.Ejecutar(_usuario, 20);
+            CasoDeUsoUsuarioModificacion.Ejecutar(_usuario, 20);
             ShowExito("Usuario modificado con éxito");
         }catch(Exception ex){
             ShowError(ex.Message);
@@ -181,8 +180,7 @@
     private void CrearNuevoUsuario()
     {
        try{
-            var casoDeUso = new CasoDeUsoUsuarioAlta(repositorioUsuarios, servicioAutenticacion, servicioAutorizacion);
-            casoDeUso.Ejecutar(_usuario, 1);
+            CasoDeUsoUsuarioAlta.Ejecutar(_usuario, 1);
             ShowExito("Usuario creado con éxito");
        }catch(Exception ex){
            ShowError(ex.Message);
@@ -206,8 +204,7 @@
     private void EliminarUsuario(int usuarioId)
     {
         try{
-            var casoDeUso = new CasoDeUsoUsuarioBaja(repositorioUsuarios);
-            casoDeUso.Ejecutar(usuarioId, 1);
+            CasoDeUsoUsuarioBaja.Ejecutar(usuarioId, 1);
             ShowExito("Usuario eliminado con éxito");
         }catch(Exception ex){
             ShowError(ex.Message);

@@ -1,10 +1,7 @@
 @page "/register"
-@inject IUsuarioRepositorio repositorioUsuarios
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
-@inject IServicioAutenticacion servicioAutenticacion
-@inject IServicioAutorizacion servicioAutorizacion
-
+@inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
 
 <h3>Registro de Usuario</h3>
 
@@ -55,8 +52,7 @@
     private void RegisterUser()
     {
         try{
-            var casoDeUso = new CasoDeUsoUsuarioAlta(repositorioUsuarios, servicioAutenticacion, servicioAutorizacion);
-            casoDeUso.Ejecutar(user);
+            CasoDeUsoUsuarioAlta.Ejecutar(user);
             successMessage = "Usuario registrado correctamente";
             NavigationManager.NavigateTo("/expedientes");
 

@@ -1,9 +1,12 @@
 @page "/tramites"
-@inject IExpedienteRepositorio ExpedienteRepositorio
-@inject ITramiteRepositorio TramiteRepositorio
 @inject NavigationManager NavigationManager
-@inject IServicioAutorizacion servicioAutorizacion
 @rendermode InteractiveServer
+@inject CasoDeUsoTramiteConsultaTodos CasoDeUsoTramiteConsultaTodos
+@inject CasoDeUsoExpedienteConsultaTodos CasoDeUsoExpedienteConsultaTodos
+@inject CasoDeUsoExpedienteConsultaPorld CasoDeUsoExpedienteConsultaPorld
+@inject CasoDeUsoTramiteBaja CasoDeUsoTramiteBaja
+@inject CasoDeUsoTramiteAlta CasoDeUsoTramiteAlta
+@inject CasoDeUsoTramiteModificacion CasoDeUsoTramiteModificacion
 @inject IServicioDeSecion servicioDeSecion
 
 <style>
@@ -175,8 +178,7 @@
     protected override async Task OnInitializedAsync()
     {
         try{
-            var casoDeUso = new CasoDeUsoTramiteConsultaTodos(TramiteRepositorio);
-            var respuesta = casoDeUso.Ejecutar();
+            var respuesta = CasoDeUsoTramiteConsultaTodos.Ejecutar();
             if (respuesta == null || !respuesta.Any()){
                 throw new Exception("No se encontraron trámites");
             }
@@ -207,8 +209,7 @@
     protected void LoadExpedientes()
     {
         try{
-            var casoDeUso = new CasoDeUsoExpedienteConsultaTodos(ExpedienteRepositorio);
-            var respuesta = casoDeUso.Ejecutar();
+            var respuesta = CasoDeUsoExpedienteConsultaTodos.Ejecutar();
 
             if (respuesta == null || !respuesta.Any()){
                 throw new Exception("No se encontraron expedientes");
@@ -239,8 +240,7 @@
     private void ViewExpediente( int id )
     {
         try{
-            var casoDeUso = new CasoDeUsoExpedienteConsultaPorld(ExpedienteRepositorio);
-            _expediente = casoDeUso.Ejecutar(id);
+            _expediente = CasoDeUsoExpedienteConsultaPorld.Ejecutar(id);
             if (_expediente == null){
                 throw new Exception("No se encontró el expediente");
             }
@@ -255,8 +255,7 @@
     private void DeleteTramite(int tramiteId)
     {
         try{
-            var casoDeUso = new CasoDeUsoTramiteBaja(TramiteRepositorio, servicioAutorizacion);
-            casoDeUso.Ejecutar(tramiteId, 1);
+            CasoDeUsoTramiteBaja.Ejecutar(tramiteId, 1);
             ShowExito("Trámite eliminado correctamente");
             OnInitializedAsync();
         }
@@ -296,8 +295,7 @@
     {
         try
         {
-            var casoDeUso = new CasoDeUsoTramiteAlta(TramiteRepositorio, servicioAutorizacion, ExpedienteRepositorio);
-            casoDeUso.Ejecutar(_tramite, 1);
+            CasoDeUsoTramiteAlta.Ejecutar(_tramite, 1);
             ShowExito("Trámite creado correctamente");
             OnInitializedAsync();
         }
@@ -311,8 +309,7 @@
     {
         try
         {
-            var casoDeUso = new CasoDeUsoTramiteModificacion(TramiteRepositorio, servicioAutorizacion, ExpedienteRepositorio);
-            casoDeUso.Ejecutar(_tramite, 1);
+            CasoDeUsoTramiteModificacion.Ejecutar(_tramite, 1);
             ShowExito("Trámite actualizado correctamente");
             OnInitializedAsync();
         }
