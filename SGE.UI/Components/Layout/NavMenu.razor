@@ -1,6 +1,9 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject IServicioAutorizacion servicioAutorizacion
+@inject IServicioDeSecion servicioDeSecion
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">SGE.UI</a>
+        <a class="navbar-brand" href="">SGE</a>
     </div>
 </div>
 
@@ -20,11 +23,40 @@
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="usuarios">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Usuários
-            </NavLink>
-        </div>
+        @if(poseePermisoUsuarios)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="usuarios">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Usuários
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 
+@code{
+    private bool poseePermisoUsuarios = false;
+    public Usuario UsuarioRegistrado;
+
+    protected override void OnInitialized()
+    {
+        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+        if (UsuarioRegistrado != null){
+            VerificarPermisosDeUsuario();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (UsuarioRegistrado != null){
+            VerificarPermisosDeUsuario();
+        }
+    }
+
+    private void VerificarPermisosDeUsuario()
+    {
+        poseePermisoUsuarios = servicioAutorizacion.PoseeElPermiso(UsuarioRegistrado.Id, Permiso.UsuarioConsulta);
+        StateHasChanged();
+    }
+    
+}

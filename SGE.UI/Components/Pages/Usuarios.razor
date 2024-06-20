@@ -3,6 +3,7 @@
 @inject IServicioAutenticacion servicioAutenticacion
 @inject IServicioAutorizacion servicioAutorizacion
 @inject NavigationManager NavigationManager
+@inject IServicioDeSecion servicioDeSecion
 @rendermode InteractiveServer
 
 <style>
@@ -123,6 +124,7 @@
     private Usuario _usuario = new Usuario();
     private bool _creando = false;
     private bool _editando = false;
+    private EstadoUsuario _estadoUsuario;
     
     protected override async Task OnInitializedAsync()
     {
@@ -135,6 +137,21 @@
         }
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        LoadSession();
+    }
+
+    protected void LoadSession()
+    {
+        _estadoUsuario = servicioDeSecion.obtenerEstadoUsuario();
+        
+        if (_estadoUsuario == EstadoUsuario.Desconectado)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+    
     private async Task GuardarUsuario()
     {
         if(_creando){
@@ -175,8 +192,8 @@
     }
 
     private void AbrirEspacioParaEdicion(int id)
-    {
-        _usuario = UsuariosList.FirstOrDefault(x => x.Id == id)
+    {      
+        _usuario = UsuariosList.FirstOrDefault(x => x.Id == id);
         _editando = true;
     }
 

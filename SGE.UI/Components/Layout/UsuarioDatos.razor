@@ -1,0 +1,53 @@
+
+@inherits LayoutComponentBase
+@using System
+@inject NavigationManager NavigationManager
+@inject IServicioDeSecion servicioDeSecion
+
+<style>
+    .top-user{
+        display: flex;
+        justify-content: end;
+        margin-bottom: 1rem;
+        padding: 1rem 2rem;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #202020;
+    }
+    .top-row .bi {
+        font-size: 1.25rem;
+    }
+
+    .box{
+        display: flex;
+        justify-content: end;
+        align-items: center;
+    }
+</style>
+
+<div class="top-user">
+    @if (UsuarioRegistrado != null)
+    {
+        <div class="box">
+            <span class="bi bi-person-fill" aria-hidden="true">Bienvenido @UsuarioRegistrado.Nombre @UsuarioRegistrado.Apellido</span>
+        </div>
+    }
+    else
+    {
+        <span class="bi bi-person-fill" aria-hidden="true"> <NavLink href="login">Login</NavLink></span>
+    }
+</div>
+
+@code {
+    public Usuario UsuarioRegistrado;
+
+    protected override void OnInitialized()
+    {
+        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+    }
+
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+    }
+
+}

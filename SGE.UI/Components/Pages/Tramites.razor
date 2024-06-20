@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IServicioAutorizacion servicioAutorizacion
 @rendermode InteractiveServer
+@inject IServicioDeSecion servicioDeSecion
 
 <style>
         .form-box {
@@ -47,6 +48,7 @@
 @if(!string.IsNullOrEmpty(_mensajeExito))
 {
     <div class="alert alert-success" role="alert">
+        <Icon Name="IconName.InfoCircleFill" class="me-2"/>
         @_mensajeExito
     </div>
 }
@@ -168,6 +170,7 @@
     private bool _editando = false;
     private bool _creando = false;
     private Tramite? _tramite;
+    private EstadoUsuario _estadoUsuario;
 
     protected override async Task OnInitializedAsync()
     {
@@ -186,6 +189,22 @@
     }
 
     protected override async Task OnParametersSetAsync()
+    {
+        LoadSession();
+        LoadExpedientes();
+    }
+
+
+    protected void LoadSession()
+    {
+        _estadoUsuario = servicioDeSecion.obtenerEstadoUsuario();
+        if (_estadoUsuario == EstadoUsuario.Desconectado)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    protected void LoadExpedientes()
     {
         try{
             var casoDeUso = new CasoDeUsoExpedienteConsultaTodos(ExpedienteRepositorio);

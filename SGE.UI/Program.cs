@@ -22,6 +22,7 @@ builder.Services.AddScoped<ITramiteRepositorio, TramiteRepositorioSqLite>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorioSqlite>();
 builder.Services.AddScoped<IServicioAutenticacion, ServicioAutenticacion>();
 builder.Services.AddScoped<IServicioAutorizacion, ServicioAutorizacion>();
+builder.Services.AddSingleton<IServicioDeSecion, ServicioDeSecionInterna>();
 
 var app = builder.Build();
 

@@ -7,6 +7,7 @@
 @rendermode InteractiveServer
 @using SGE.Aplicacion.CasosDeUso
 @inject IJSRuntime JSRuntime
+@inject IServicioDeSecion servicioDeSecion
 
 <style>
     .table {
@@ -225,23 +226,40 @@ else
     private string _mensajeExito = string.Empty;
     private bool _creando = false;
 
+    [CascadingParameter]
+    public Usuario UsuarioRegistrado { get; set; }
+
     private void CerrarFormulario()
     {
         _editando = false;
         _creando = false;
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
+    {
+        if (servicioDeSecion.obtenerUsuarioRegistrado() == null)
+        {
+            NavigationManager.NavigateTo("/");
+        }else{
+            ListarExpedientes();
+        }
+    }
+
+    private void ListarExpedientes()
     {
         try
         {
             var casoDeUso = new CasoDeUsoExpedienteConsultaTodos(ExpedienteRepositorio);
             ExpedientesList = casoDeUso.Ejecutar();
-
+            if (ExpedientesList == null || !ExpedientesList.Any())
+            {
+                throw new Exception("No se encontraron expedientes");
+            }
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
+            ShowError(e.Message);
         }
     }
 
@@ -258,7 +276,7 @@ else
             var casoDeUso = new CasoDeUsoExpedienteModificacion(ExpedienteRepositorio, servicioAutorizacion);
             casoDeUso.Ejecutar(_expediente, 2);
             _mensajeExito = "Expediente actualizado correctamente";
-            OnInitializedAsync();
+            ListarExpedientes();
         }catch(Exception e){
             Console.WriteLine(e.Message);
             ShowError(e.Message);
@@ -273,7 +291,7 @@ else
             var casoDeUso = new CasoDeUsoExpedienteBaja(ExpedienteRepositorio, servicioAutorizacion, TramiteRepositorio);
             casoDeUso.Ejecutar(id, 1);
             _mensajeExito = "Expediente eliminado correctamente";
-            OnInitializedAsync();
+            ListarExpedientes();
         }
         catch (Exception e)
         {
@@ -315,7 +333,7 @@ else
             var casoDeUso = new CasoDeUsoExpedienteAlta(ExpedienteRepositorio, servicioAutorizacion);
             casoDeUso.Ejecutar(nuevoExpediente, 1);
             _mensajeExito = "Expediente creado correctamente";
-            OnInitializedAsync();
+            ListarExpedientes();
         }
         catch(Exception e){
             Console.WriteLine(e.Message);

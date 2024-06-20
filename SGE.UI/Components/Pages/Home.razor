@@ -1,12 +1,43 @@
 ﻿@page "/"
 @inject IServicioAutenticacion _servicioAutenticacion
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JSRuntime
-
+@inject IServicioDeSecion servicioDeSecion
+@rendermode InteractiveServer
 
 <h3>Welcome</h3>
 
-<div class="button-container">
-    <NavLink href="/login"><button class="btn btn-primary">Login</button></NavLink>
-    <NavLink href="/register"><button class="btn btn-primary">Registrar</button></NavLink>
-</div>
+@if (UsuarioRegistrado != null)
+{
+    <div class="button-container">
+        <NavLink href="/expedientes"><button class="btn btn-primary">Expedientes</button></NavLink>
+        <button class="btn btn-primary" @onclick="Logout">Logout</button>
+    </div>
+}
+else
+{
+    <div class="button-container">
+        <NavLink href="/login"><button class="btn btn-primary">Login</button></NavLink>
+        <NavLink href="/register"><button class="btn btn-primary">Registrar</button></NavLink>
+    </div>
+}
+
+@code {
+    public Usuario UsuarioRegistrado;
+
+    protected override void OnInitialized()
+    {
+        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+    }
+
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+    }
+
+    private void Logout()
+    {
+        Console.WriteLine("Logout");
+        servicioDeSecion.cerrarSesion(UsuarioRegistrado);
+        NavigationManager.NavigateTo("/login");
+    }
+}
