@@ -1,10 +1,12 @@
 public class CasoDeUsoUsuarioModificacion
 {
     private readonly IUsuarioRepositorio _repositorioUsuarios;
+    private readonly UsuarioValidador _usuarioValidador;
 
-    public CasoDeUsoUsuarioModificacion(IUsuarioRepositorio repositorioUsuarios)
+    public CasoDeUsoUsuarioModificacion(IUsuarioRepositorio repositorioUsuarios, UsuarioValidador usuarioValidador)
     {
         _repositorioUsuarios = repositorioUsuarios;
+        _usuarioValidador = usuarioValidador;
     }
 
     public void Ejecutar(Usuario usuario, int idUsuarioQueModifica)
@@ -24,6 +26,8 @@ public class CasoDeUsoUsuarioModificacion
         if(usuarioAModificar == null){
             throw new Exception($"Error 404. El usuario con id {usuario.Id} no fue encontrado.");
         }
+        
+        _usuarioValidador.Validar(usuario);
 
         _repositorioUsuarios.ActualizarUsuario(usuario);
     }

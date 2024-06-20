@@ -3,12 +3,14 @@ public class CasoDeUsoUsuarioAlta
     private readonly IUsuarioRepositorio _repositorioUsuarios;
     private readonly IServicioAutenticacion _servicioAutenticacion;
     private readonly IServicioAutorizacion _servicioAutorizacion;
+    private readonly UsuarioValidador _usuarioValidador;
 
-    public CasoDeUsoUsuarioAlta(IUsuarioRepositorio repositorioUsuarios, IServicioAutenticacion servicioAutenticacion, IServicioAutorizacion servicioAutorizacion)
+    public CasoDeUsoUsuarioAlta(IUsuarioRepositorio repositorioUsuarios, IServicioAutenticacion servicioAutenticacion, IServicioAutorizacion servicioAutorizacion, UsuarioValidador usuarioValidador)
     {
         _repositorioUsuarios = repositorioUsuarios;
         _servicioAutenticacion = servicioAutenticacion;
         _servicioAutorizacion = servicioAutorizacion;
+        _usuarioValidador = usuarioValidador;
     }
 
     public void Ejecutar(Usuario usuario)
@@ -24,6 +26,8 @@ public class CasoDeUsoUsuarioAlta
 
         usuario.Password = _servicioAutenticacion.EncriptarPassword(usuario.Password);
 
+        _usuarioValidador.Validar(usuario);
+
         _repositorioUsuarios.GuardarUsuario(usuario);
     }
 
@@ -38,6 +42,8 @@ public class CasoDeUsoUsuarioAlta
         usuario.Permisos = new List<Permiso>();
 
         usuario.Password = _servicioAutenticacion.EncriptarPassword(usuario.Password);
+
+        _usuarioValidador.Validar(usuario);
 
         _repositorioUsuarios.GuardarUsuario(usuario);
     }

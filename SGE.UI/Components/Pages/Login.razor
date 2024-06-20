@@ -49,7 +49,6 @@
                 throw new Exception("Usuario o contraseña incorrectos");
             }
             _successMessage = "Usuario logueado correctamente";
-            Console.WriteLine("Usuario logueado correctamente");
             servicioDeSecion.registrarSesion(result);
             NavigationManager.NavigateTo("/expedientes");
         }

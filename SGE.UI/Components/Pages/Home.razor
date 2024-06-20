@@ -36,7 +36,6 @@ else
 
     private void Logout()
     {
-        Console.WriteLine("Logout");
         servicioDeSecion.cerrarSesion(UsuarioRegistrado);
         NavigationManager.NavigateTo("/login");
     }
