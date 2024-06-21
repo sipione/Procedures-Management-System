@@ -3,23 +3,95 @@
 @inject NavigationManager NavigationManager
 @inject IServicioDeSecion servicioDeSecion
 @rendermode InteractiveServer
+@inject IServicioAutorizacion servicioAutorizacion
 
-<h3>Welcome</h3>
+<style>
+    .home-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .home-main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+    }
+
+    .home-main-container-logout{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .home-main-container .btn-primary{
+        margin-bottom: 2rem;
+    }
+
+    .home-content {
+        text-align: center;
+    }
+
+    .button-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+    }
+</style>
+
+<div class="home-container">
 
 @if (UsuarioRegistrado != null)
 {
-    <div class="button-container">
-        <NavLink href="/expedientes"><button class="btn btn-primary">Expedientes</button></NavLink>
-        <button class="btn btn-primary" @onclick="Logout">Logout</button>
+    <div class="home-main-container">
+        <h3>Bienvenido(a), @UsuarioRegistrado.Nombre</h3>
+        <div class="home-main-container-logout">
+            <p>Si deseas salir del sistema, puedes hacerlo aqui</p>
+            <button class="btn btn-danger" @onclick="Logout">Logout</button>
+        </div>
+        <p>Ahi tenes las opciones de lo que puedes hacer en el sistema</p>
+        <ul>
+            <li>
+                <p>Se puede ver los expedientes, asi como eliminarlos, modificarlos y crear nuevos</p>
+                <NavLink href="/expedientes"><button class="btn btn-primary">Expedientes</button></NavLink>
+            </li>
+            @if(servicioAutorizacion.PoseeElPermiso(UsuarioRegistrado.Id, Permiso.UsuarioConsulta)){
+                <li>
+                    <p>Se puede ver los usuarios, asi como eliminarlos, modificarlos y crear nuevos</p>
+                    <NavLink href="/usuarios"><button class="btn btn-primary">Usuarios</button></NavLink>
+                </li>
+            }
+            <li>
+                <p>Se puede ver los tramites, asi como eliminarlos, modificarlos y crear nuevos</p>
+                <NavLink href="/tramites"><button class="btn btn-primary">Tramites</button></NavLink>
+            </li>
+            <li>
+                <p>Se puede ver y modificar tu perfil</p>
+                <NavLink href="/perfil"><button class="btn btn-primary">Perfil</button></NavLink>
+            </li>
+        </ul>
     </div>
 }
 else
 {
+    <div class="home-content">
+        <h1>Bienvenido al Sistema de Gestion de Expedientes</h1>
+        <p>En este sistema podras gestionar los expedientes, los usuarios y los tramites</p>
+        <p>Para poder acceder a las opciones del sistema, por favor logueate o registrate</p>
+    </div>
     <div class="button-container">
         <NavLink href="/login"><button class="btn btn-primary">Login</button></NavLink>
         <NavLink href="/register"><button class="btn btn-primary">Registrar</button></NavLink>
     </div>
 }
+
+</div>
 
 @code {
     public Usuario UsuarioRegistrado;

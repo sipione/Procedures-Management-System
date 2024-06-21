@@ -43,9 +43,17 @@
     .form-group{
         margin: 1rem 0rem;
     }
+
+    .usuario-acciones{
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+    }
 </style>
 
 <h3>Gestion de Usuarios</h3>
+
+<DialogoConfirmacion @ref=dialogo />
 
 @if(!string.IsNullOrEmpty(_mensajeExito))
 {
@@ -61,47 +69,7 @@
     </div>
 }
 
-@if(_creando || _editando)
-{
-    <div class="form-box">
-        <button class="close" @onclick="()=>{_creando = false; _editando = false;}">X</button>
-        <h4>@(_creando ? "Crear" : "Editar") Usuario</h4>
-        <form @onsubmit="()=>GuardarUsuario()" @onsubmit:preventDefault>
-            <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input type="text" class="form-control" id="nombre" @bind="_usuario.Nombre" />
-            </div>
-            <div class="form-group">
-                <label>Permisos</label>
-                @foreach (Permiso permiso in Enum.GetValues(typeof(Permiso)))
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="@permiso.ToString()" checked="@(_usuario.Permisos.Contains(permiso))" @onchange="@(e => TogglePermiso(permiso, e))" />
-                        <label class="form-check-label" for="@permiso.ToString()">
-                            @permiso.ToString()
-                        </label>
-                    </div>
-                }
-            </div>
-            <div class="form-group">
-                <label for="apellido">Apellido:</label>
-                <input type="text" class="form-control" id="apellido" @bind="_usuario.Apellido">
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" @bind="_usuario.Email" />
-            </div>
-            <div class="form-group">
-                <label for="password">Contraseña</label>
-                <input type="password" class="form-control" id="password" @bind="_usuario.Password" />
-            </div>
-            
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-        </form>
-    </div>
-}
+<UsuarioCrearEditar @ref="crearEditarUsuario" OnUpdate="Updated" _usuario="@_usuario" OnError="ShowError" UsuarioRegistrado="@UsuarioRegistrado" _creando="@_creando" _editando="@_editando"/>
 
 <button class="btn btn-primary" @onclick="()=>AbrirEspacioParaCreacion()">Crear Nuevo Usuario</button>
 
@@ -122,9 +90,9 @@
                     <td>@usuario.Id</td>
                     <td>@usuario.Nombre  @usuario.Apellido</td>
                     <td>@usuario.Email</td>
-                    <td>
+                    <td class="usuario-acciones">
                         <button class="btn btn-primary" @onclick="()=>AbrirEspacioParaEdicion(usuario.Id)">Editar</button>
-                        <button class="btn btn-danger" @onclick="()=>EliminarUsuario(usuario.Id)">Eliminar</button>
+                        <button class="btn btn-danger" @onclick="()=>AbrirDialogo(usuario.Id)">Eliminar</button>
                     </td>
                 </tr>
             }
@@ -140,8 +108,26 @@
     private bool _creando = false;
     private bool _editando = false;
     private Usuario UsuarioRegistrado;
+    DialogoConfirmacion dialogo = null!;
+    UsuarioCrearEditar crearEditarUsuario = null!;
+
+    private void AbrirDialogo(int id){
+        dialogo.Mensaje = "¿Está seguro que desea eliminar el usuario?";
+        dialogo.OnConfirmado = EventCallback.Factory.Create(this,() => EliminarUsuario(id));
+        dialogo.Mostrar();
+    }
     
     protected override async Task OnInitializedAsync()
+    {
+       LoadUsuarios();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        LoadSession();
+    }
+
+    private void LoadUsuarios()
     {
         try{
             var resultado = CasoDeUsoUsuarioConsultaTodos.Ejecutar();
@@ -149,11 +135,6 @@
         }catch(Exception ex){
             ShowError(ex.Message);
         }
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        LoadSession();
     }
 
     protected void LoadSession()
@@ -165,54 +146,31 @@
             NavigationManager.NavigateTo("/");
         }
     }
-    
-    private async Task GuardarUsuario()
-    {
-        if(_creando){
-            CrearNuevoUsuario();
-            _creando = false;
-        }
-
-        if(_editando){
-            EditarUsuario();
-            _editando = false;
-        }
-    }
-
-    private void EditarUsuario()
-    {
-        try{
-            CasoDeUsoUsuarioModificacion.Ejecutar(_usuario, UsuarioRegistrado.Id);
-            ShowExito("Usuario modificado con éxito");
-        }catch(Exception ex){
-            ShowError(ex.Message);
-        }finally{
-            OnInitializedAsync();
-        }
-    }
-    
-    private void CrearNuevoUsuario()
-    {
-       try{
-            CasoDeUsoUsuarioAlta.Ejecutar(_usuario, UsuarioRegistrado.Id);
-            ShowExito("Usuario creado con éxito");
-       }catch(Exception ex){
-           ShowError(ex.Message);
-       }finally{
-            OnInitializedAsync();
-        }
-    }
 
     private void AbrirEspacioParaEdicion(int id)
     {      
         _usuario = UsuariosList.FirstOrDefault(x => x.Id == id).Clone();
         _editando = true;
+        _creando = false;
+        crearEditarUsuario.AbrirFormulario();
     }
 
     private void AbrirEspacioParaCreacion()
     {
         _usuario = new Usuario();
         _creando = true;
+        _editando = false;
+        crearEditarUsuario.AbrirFormulario();
+    }
+
+    private void Updated()
+    {
+        if(_creando){
+            ShowExito("Usuario creado con éxito");
+        }else{
+            ShowExito("Usuario actualizado con éxito");
+        }
+        LoadUsuarios();
     }
 
     private void EliminarUsuario(int usuarioId)
@@ -222,18 +180,8 @@
             ShowExito("Usuario eliminado con éxito");
         }catch(Exception ex){
             ShowError(ex.Message);
-        }
-    }
-
-    private void TogglePermiso(Permiso permiso, ChangeEventArgs e)
-    {
-        if ((bool)e.Value)
-        {
-            _usuario.Permisos.Add(permiso);
-        }
-        else
-        {
-            _usuario.Permisos.Remove(permiso);
+        }finally{
+            LoadUsuarios();
         }
     }
     

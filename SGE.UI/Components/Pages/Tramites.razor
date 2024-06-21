@@ -8,6 +8,8 @@
 @inject CasoDeUsoTramiteAlta CasoDeUsoTramiteAlta
 @inject CasoDeUsoTramiteModificacion CasoDeUsoTramiteModificacion
 @inject IServicioDeSecion servicioDeSecion
+@inject CasoDeUsoTramiteConsultaPorEtiqueta CasoDeUsoTramiteConsultaPorEtiqueta
+@inject CasoDeUsoTramiteConsultaPorExpediente CasoDeUsoTramiteConsultaPorExpediente
 
 <style>
         .form-box {
@@ -36,17 +38,45 @@
         cursor: pointer;
     }
 
+    .close-custom{
+        position: absolute;
+        top: -10px;
+        left: 0;
+        padding: 1rem;
+        color: inherit;
+        outline: none;
+        border: none;
+        background-color: transparent;
+        font-size: 1.5rem;
+        color: red;
+        cursor: pointer;
+    }
+
     .form-box h4 {
         margin-bottom: 1rem;
         text-align: center;
     }
 
+    .tramites-custom-form-box{
+        padding-top: 2rem;
+        position: relative;
+    }
+
     .form-group{
+        margin: 1rem 0rem;
+    }
+
+    .tramites-custom-search{
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin: 1rem 0rem;
     }
 </style>
 
 <h3>Gestión de Trámites</h3>
+
+<DialogoConfirmacion @ref=dialogo />
 
 @if(!string.IsNullOrEmpty(_mensajeExito))
 {
@@ -63,45 +93,55 @@
     </div>
 }
 
-@if (_editando || _creando)
-{
-    <div class="form-box">
-        <span class="close" @onclick="CerrarFormulario">&times;</span>
-        <h4>@(_creando ? "Crear Nuevo" : "Editar") Trámite</h4>
-        <form @onsubmit="GuardarTramite" @onsubmit:preventDefault>
-            @if (!_creando)
-            {
-                <div class="form-group">
-                    <label for="etiqueta">Etiqueta</label>
-                    <select class="form-control" id="etiqueta" @bind="_tramite.Etiqueta">
-                        @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
-                        {
-                            <option value="@etiqueta">@etiqueta</option>
-                        }
-                    </select>
-                </div>
-            }
-            <div class="form-group">
-                <label for="contenido">Contenido</label>
-                <input type="text" class="form-control" id="contenido" placeholder="Escriba el Contenido" @bind="_tramite.Contenido" required>
-            </div>
-            <div class="form-group">
-                <label for="expedienteId">ExpedienteId</label>
-                <select class="form-control" id="expedienteId" @bind="_tramite.ExpedienteId" required>
-                    @foreach (var expediente in ExpedientesList)
-                    {
-                        <option value="@expediente.Id">@expediente.Caratula</option>
-                    }
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <button class="btn btn-secondary" type="reset">Reset</button>
-        </form>
-    </div>
-
-}
+<TramiteEditarCrear 
+    @ref=editarCrearTramite
+    _creando="_creando" 
+    _editando="_editando" 
+    _tramite="_tramite" 
+    ExpedientesList="@ExpedientesList" 
+    OnUpdate="LoadTramites" 
+    UsuarioRegistrado="@UsuarioRegistrado" 
+    OnError="ShowError" 
+/>
 
 <button class="btn btn-primary" @onclick="() => AbrirEspacioParaCreacion()" >Nuevo Trámite</button>
+<button class="btn btn-primary" @onclick="mostrarEtiquetas">Buscar por Etiqueta</button>
+<button class="btn btn-primary" @onclick="mostrarExpedeidnte">Buscar por Expediente</button>
+<button class="btn btn-primary" @onclick="LoadTramites">Recargar</button>
+
+@if(etiquetasVisible || expedientesVisible)
+{
+    <div class="form-box tramites-custom-form-box">
+        <button class="close-custom" @onclick="closeEtiquetas">X</button>
+
+        @if(etiquetasVisible)
+        {
+            <div class="tramites-custom-search">
+                <select @bind="EtiquetaSeleccionada" class="form-control">
+                    <option value="">Seleccione una etiqueta</option>
+                    @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
+                    {
+                        <option value="@etiqueta">@etiqueta</option>
+                    }
+                </select>
+                <button class="btn btn-primary" @onclick="()=>buscarPorEtiqueta(EtiquetaSeleccionada)">Buscar</button>
+            </div>
+        }
+        @if(expedientesVisible)
+        {
+        <div class="tramites-custom-search">
+            <select @bind="IdExpedienteSeleccionado" class="form-control">
+                <option value="">Seleccione un expediente</option>
+                @foreach (var expediente in ExpedientesList)
+                {
+                    <option value="@expediente.Id">@expediente.Caratula</option>
+                }
+            </select>
+            <button class="btn btn-primary" @onclick="()=>buscarPorExpediente(IdExpedienteSeleccionado.ToString())">Buscar</button>
+        </div>
+        }
+    </div>
+}
 
 @if (TramitesList != null && TramitesList.Any())
 {
@@ -132,7 +172,7 @@
                     <td>
                         <button class="btn btn-primary" @onclick="() => ViewExpediente(tramite.ExpedienteId)">Ver Expediente</button>
                         <button class="btn btn-primary" @onclick="() => AbrirEspacioParaEdicion(tramite.Id)">Editar</button>
-                        <button class="btn btn-danger" @onclick="() => DeleteTramite(tramite.Id)">Eliminar</button>
+                        <button class="btn btn-danger" @onclick="() => abrirDialogo(tramite.Id)">Eliminar</button>
                     </td>
                 </tr>
             }
@@ -174,6 +214,19 @@
     private bool _creando = false;
     private Tramite? _tramite;
     private Usuario UsuarioRegistrado;
+    private bool etiquetasVisible = false;
+    private bool expedientesVisible = false;
+    private EtiquetaTramite EtiquetaSeleccionada;
+    private int IdExpedienteSeleccionado;
+    DialogoConfirmacion dialogo = null!;
+    TramiteEditarCrear editarCrearTramite = null!;
+
+    private void abrirDialogo(int id)
+    {
+        dialogo.Mensaje = "¿Está seguro que desea eliminar el Trámite?";
+        dialogo.OnConfirmado = EventCallback.Factory.Create(this, () => DeleteTramite(id));
+        dialogo.Mostrar();
+    }
 
     protected override void OnInitialized()
     {
@@ -234,6 +287,7 @@
         _tramite = new Tramite();
         _creando = true;
         _editando = false;
+        editarCrearTramite.AbrirFormulario();
     }
 
     private void AbrirEspacioParaEdicion(int id)
@@ -241,6 +295,17 @@
         _tramite = TramitesList.FirstOrDefault(t => t.Id == id).Clone();
         _editando = true;
         _creando = false;
+        editarCrearTramite.AbrirFormulario();
+    }
+
+     private void UpdatedExitoso()
+    {
+        if(_creando){
+            _mensajeExito = "Expediente creado correctamente";
+        }else{
+            _mensajeExito = "Expediente actualizado correctamente";
+        }
+        LoadTramites();
     }
 
     private void ViewExpediente( int id )
@@ -276,34 +341,32 @@
         _expediente = null;
     }
 
-    private void CerrarFormulario()
+    private void mostrarEtiquetas()
     {
-        _editando = false;
-        _creando = false;
+        etiquetasVisible = true;
+        expedientesVisible = false;
     }
 
-    private void GuardarTramite()
+    private void mostrarExpedeidnte()
     {
-        if (_creando)
-        {
-            _creando = false;
-            CrearNuevoTramite();
-        }
-
-        if (_editando)
-        {
-            _editando = false;
-            ActualizarTramite();
-        }
+        etiquetasVisible = false;
+        expedientesVisible = true;
     }
 
-    private void CrearNuevoTramite()
+    private void closeEtiquetas()
     {
-        try
-        {
-            CasoDeUsoTramiteAlta.Ejecutar(_tramite, UsuarioRegistrado.Id);
-            ShowExito("Trámite creado correctamente");
-            LoadTramites();
+        etiquetasVisible = false;
+        expedientesVisible = false;
+    }
+
+    private void buscarPorEtiqueta(EtiquetaTramite etiqueta)
+    {
+        try{
+            var respuesta = CasoDeUsoTramiteConsultaPorEtiqueta.Ejecutar(etiqueta);
+            if (respuesta == null || !respuesta.Any()){
+                throw new Exception("No se encontraron trámites con la etiqueta seleccionada");
+            }
+            TramitesList = respuesta;
         }
         catch (Exception ex)
         {
@@ -311,13 +374,14 @@
         }
     }
 
-    private void ActualizarTramite()
+    private void buscarPorExpediente(string id)
     {
-        try
-        {
-            CasoDeUsoTramiteModificacion.Ejecutar(_tramite, UsuarioRegistrado.Id);
-            ShowExito("Trámite actualizado correctamente");
-            LoadTramites();
+        try{
+            IEnumerable<Tramite> respuesta = CasoDeUsoTramiteConsultaPorExpediente.Ejecutar(int.Parse(id));
+            if (respuesta == null || !respuesta.Any()){
+                throw new Exception("No se encontraron trámites con el expediente seleccionado");
+            }
+            TramitesList = respuesta;
         }
         catch (Exception ex)
         {

@@ -1,0 +1,117 @@
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject CasoDeUsoTramiteAlta CasoDeUsoTramiteAlta
+@inject CasoDeUsoTramiteModificacion CasoDeUsoTramiteModificacion
+
+
+@if (mostrar)
+{
+    <div class="form-box">
+        <span class="close" @onclick="CerrarFormulario">&times;</span>
+        <h4>@(_creando ? "Crear Nuevo" : "Editar") Trámite</h4>
+        <form @onsubmit="GuardarTramite" @onsubmit:preventDefault>
+            @if (!_creando)
+            {
+                <div class="form-group">
+                    <label for="etiqueta">Etiqueta</label>
+                    <select class="form-control" id="etiqueta" @bind="_tramite.Etiqueta">
+                        @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
+                        {
+                            <option value="@etiqueta">@etiqueta</option>
+                        }
+                    </select>
+                </div>
+            }
+            <div class="form-group">
+                <label for="contenido">Contenido</label>
+                <input type="text" class="form-control" id="contenido" placeholder="Escriba el Contenido" @bind="_tramite.Contenido" required>
+            </div>
+            <div class="form-group">
+                <label for="expedienteId">ExpedienteId</label>
+                <select class="form-control" id="expedienteId" @bind="_tramite.ExpedienteId" required>
+                    @foreach (var expediente in ExpedientesList)
+                    {
+                        <option value="@expediente.Id">@expediente.Caratula</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button class="btn btn-secondary" type="reset">Reset</button>
+        </form>
+    </div>
+
+}
+
+@code{
+    private bool mostrar = false;
+    [Parameter]
+    public bool _editando { get; set; }
+    [Parameter]
+    public bool _creando { get; set; }
+    [Parameter]
+    public Tramite _tramite { get; set; }
+    [Parameter]
+    public IEnumerable<Expediente> ExpedientesList { get; set; }
+    [Parameter]
+    public EventCallback OnUpdate { get; set; }
+    [Parameter]
+    public Usuario UsuarioRegistrado { get; set; }
+    [Parameter]
+    public EventCallback<string> OnError { get; set; }
+
+
+    public void CerrarFormulario()
+    {
+        mostrar = false;
+    }
+
+    public void AbrirFormulario()
+    {
+        mostrar = true;
+    }
+
+     private void GuardarTramite()
+    {
+        if (_creando)
+        {
+            _creando = false;
+            CrearNuevoTramite();
+        }
+
+        if (_editando)
+        {
+            _editando = false;
+            ActualizarTramite();
+        }
+    }
+
+    private void CrearNuevoTramite()
+    {
+        try
+        {
+            CasoDeUsoTramiteAlta.Ejecutar(_tramite, UsuarioRegistrado.Id);
+            OnUpdate.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            OnError.InvokeAsync(ex.Message);
+        }finally{
+            CerrarFormulario();
+        }
+    }
+
+    private void ActualizarTramite()
+    {
+        try
+        {
+            CasoDeUsoTramiteModificacion.Ejecutar(_tramite, UsuarioRegistrado.Id);
+            OnUpdate.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            OnError.InvokeAsync(ex.Message);
+        }finally{
+            CerrarFormulario();
+        }
+    }
+}

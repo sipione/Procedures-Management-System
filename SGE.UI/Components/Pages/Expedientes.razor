@@ -101,37 +101,16 @@
     </div>
 }
 
-@if (_editando || _creando)
-{
-    <div class="form-box">
-        <button type="button" class="close" aria-label="Close" @onclick="CerrarFormulario">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <h4>@(_creando ? "Crear" : "Editar") Expediente</h4>
-        <form @onsubmit="GuardarExpediente" @onsubmit:preventDefault>
-            <div class="form-group">
-                <label for="caratula">Caratula</label>
-                <input type="text" class="form-control" id="caratula" name="caratula" @bind="_expediente.Caratula" required/>
-            </div>
 
-            @if (!_creando)
-            {
-                <div class="form-group">
-                    <label for="estado">Estado</label>
-                    <select class="form-control" id="estado" name="estado" @bind="_expediente.Estado">
-                        @foreach (var estado in Enum.GetValues(typeof(EstadoExpediente)))
-                        {
-                            <option value="@estado">@estado</option>
-                        }
-                    </select>
-                </div>
-            }
-
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <button type="reset" class="btn btn-secondary">Reset</button>
-        </form>
-    </div>
-}
+<ExpedienteEditarCrear 
+    @ref=editarCrearExpediente 
+    OnUpdate="UpdatedExitoso" 
+    OnError="ShowError"
+    UsuarioRegistrado="UsuarioRegistrado" 
+    _expediente="_expediente" 
+    _editando="_editando" 
+    _creando="_creando"
+/>
 
 <button class="btn btn-primary" @onclick="() => AbrirEspacioParaCreacion()">Nuevo Expediente</button>
 
@@ -166,14 +145,15 @@
                     </td>
                     <td>
                         <button class="btn btn-primary" @onclick="() => AbrirEspacioDeEdicion(expediente.Id)">Editar</button>
-                        <button class="btn btn-danger" @onclick="() => EliminarExpediente(expediente.Id)">Eliminar</button>
+                        <button class="btn btn-danger" @onclick="() => ConfirmarReseteo(expediente.Id)">Eliminar</button>
                     </td>
                 </tr>
             }
         </tbody>
-
     </table>
 }
+
+<DialogoConfirmacion @ref=dialogo Mensaje="¿Está seguro que desea deletar el Expediente?"/>
 
 @if (Tramites != null && Tramites.Any())
 {
@@ -202,7 +182,7 @@
                     <td>@tramite.FechaUltimaModificacion</td>
                     <td>@tramite.UsuarioUltimaModificacionId</td>
                     <td>
-                        <button class="btn btn-primary">Ir al Tramite</button>
+                        <button class="btn btn-primary" @onclick="goToTramites">Ir al Tramites</button>
                     </td>
                 </tr>
             }
@@ -220,6 +200,14 @@
     private string _mensajeExito = string.Empty;
     private bool _creando = false;
     public Usuario UsuarioRegistrado;
+    DialogoConfirmacion dialogo = null!;
+    ExpedienteEditarCrear editarCrearExpediente = null!;
+
+    private void ConfirmarReseteo(int id)
+    {
+        dialogo.OnConfirmado = EventCallback.Factory.Create(this,() => EliminarExpediente(id));
+        dialogo.Mostrar();
+    }
 
     private void CerrarFormulario()
     {
@@ -236,6 +224,16 @@
         }else{
             ListarExpedientes();
         }
+    }
+
+    private void UpdatedExitoso()
+    {
+        if(_creando){
+            _mensajeExito = "Expediente creado correctamente";
+        }else{
+            _mensajeExito = "Expediente actualizado correctamente";
+        }
+        ListarExpedientes();
     }
 
     private void ListarExpedientes()
@@ -257,22 +255,10 @@
 
     private void AbrirEspacioDeEdicion(int id)
     {
-            _expediente = ExpedientesList.FirstOrDefault(e => e.Id == id).Clone();
-            _editando = true;
-            _creando = false;
-    }
-
-    private void ActualizarExpediente()
-    {
-        try{
-            CasoDeUsoExpedienteModificacion.Ejecutar(_expediente, UsuarioRegistrado.Id);
-            _mensajeExito = "Expediente actualizado correctamente";
-            ListarExpedientes();
-        }catch(Exception e){
-            Console.WriteLine(e.Message);
-            ShowError(e.Message);
-        }
-
+        _expediente = ExpedientesList.FirstOrDefault(e => e.Id == id).Clone();
+        _creando = false;
+        _editando = true;
+        editarCrearExpediente.AbrirFormulario();
     }
 
     private void EliminarExpediente(int id)
@@ -313,35 +299,12 @@
         _expediente = new Expediente();
         _creando = true;
         _editando = false;
+        editarCrearExpediente.AbrirFormulario();
     }
 
-    private void CrearNuevoexpediente(){
-        try{
-            Expediente nuevoExpediente = new Expediente();
-            nuevoExpediente.Caratula = _expediente.Caratula;
-            CasoDeUsoExpedienteAlta.Ejecutar(nuevoExpediente, UsuarioRegistrado.Id);
-            _mensajeExito = "Expediente creado correctamente";
-            ListarExpedientes();
-        }
-        catch(Exception e){
-            Console.WriteLine(e.Message);
-            ShowError(e.Message);
-        }
-    }
-
-    private void GuardarExpediente()
+    private void goToTramites()
     {
-        if (_creando)
-        {
-            _creando = false;
-            CrearNuevoexpediente();
-        }
-
-        if(_editando)
-        {
-            _editando = false;
-            ActualizarExpediente();
-        }
+        NavigationManager.NavigateTo("/tramites");
     }
 
     public void ShowError(string message)

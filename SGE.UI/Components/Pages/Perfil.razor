@@ -4,6 +4,21 @@
 @inject IServicioDeSecion servicioDeSecion
 @inject NavigationManager NavigationManager
 
+<style>
+    .form-group {
+        margin: 1rem 0rem;
+    }
+
+    .form-group input {
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-danger{
+        margin-top: 1rem;
+    }
+</style>
+
 <h3>Perfil</h3>
 
 @if (!string.IsNullOrEmpty(_mensajeExito))

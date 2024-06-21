@@ -1,0 +1,112 @@
+
+@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@inject IServicioDeSecion servicioDeSecion
+@inject CasoDeUsoExpedienteConsultaTodos CasoDeUsoExpedienteConsultaTodos
+@inject CasoDeUsoTramiteConsultaPorExpediente CasoDeUsoTramiteConsultaPorExpediente
+@inject CasoDeUsoExpedienteModificacion CasoDeUsoExpedienteModificacion
+@inject CasoDeUsoExpedienteBaja CasoDeUsoExpedienteBaja
+@inject CasoDeUsoExpedienteAlta CasoDeUsoExpedienteAlta
+
+@if(mostrar){
+<div class="form-box">
+    <button type="button" class="close" aria-label="Close" @onclick="CerrarFormulario">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4>@(_creando ? "Crear" : "Editar") Expediente</h4>
+    <form @onsubmit="GuardarExpediente" @onsubmit:preventDefault>
+        <div class="form-group">
+            <label for="caratula">Caratula</label>
+            <input type="text" class="form-control" id="caratula" name="caratula" @bind="_expediente.Caratula" required/>
+        </div>
+
+        @if (!_creando)
+        {
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <select class="form-control" id="estado" name="estado" @bind="_expediente.Estado">
+                    @foreach (var estado in Enum.GetValues(typeof(EstadoExpediente)))
+                    {
+                        <option value="@estado">@estado</option>
+                    }
+                </select>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="reset" class="btn btn-secondary">Reset</button>
+    </form>
+</div>
+}
+
+@code{
+    private bool mostrar = false;
+    [Parameter]
+    public bool _editando { get; set; }
+    [Parameter]
+    public bool _creando { get; set; }
+    [Parameter]
+    public Expediente _expediente { get; set; }
+    [Parameter]
+    public EventCallback OnUpdate { get; set; }
+    [Parameter]
+    public Usuario UsuarioRegistrado { get; set; }
+    [Parameter]
+    public EventCallback<string> OnError { get; set; }
+
+    private void OnParametersSet()
+    {
+        StateHasChanged();
+    }
+
+    public void AbrirFormulario()
+    {
+        mostrar = true;
+    }
+
+    private void CerrarFormulario()
+    {
+        mostrar = false;
+    }
+
+    private void GuardarExpediente()
+    {
+        if (_creando)
+        {
+            CrearNuevoexpediente();
+        }
+
+        if(_editando)
+        {
+            ActualizarExpediente();
+        }
+    }
+
+    private void CrearNuevoexpediente(){
+        try{
+            Expediente nuevoExpediente = new Expediente();
+            nuevoExpediente.Caratula = _expediente.Caratula;
+            CasoDeUsoExpedienteAlta.Ejecutar(nuevoExpediente, UsuarioRegistrado.Id);
+            OnUpdate.InvokeAsync();
+        }
+        catch(Exception e){
+            Console.WriteLine(e.Message);
+            OnError.InvokeAsync(e.Message);
+        }finally{
+            CerrarFormulario();
+        }
+    }
+
+    private void ActualizarExpediente()
+    {
+        try{
+            CasoDeUsoExpedienteModificacion.Ejecutar(_expediente, UsuarioRegistrado.Id);
+            OnUpdate.InvokeAsync();
+        }catch(Exception e){
+            Console.WriteLine(e.Message);
+            OnError.InvokeAsync(e.Message);
+        }finally{
+            CerrarFormulario();
+        }
+    }
+}
