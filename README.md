@@ -1,45 +1,98 @@
-# Sistema de Gestión de Expedientes - SGE
+# Procedures Management System
 
-## Descripción
+Este repositorio contiene el código fuente de un sistema de gestión de procedimientos desarrollado con Blazor y ASP.NET Core. El sistema permite a los usuarios gestionar trámites, expedientes y usuarios, ofreciendo una interfaz web intuitiva y funcional.
 
-Este proyecto es un Sistema de Gestión de Trámites y Expedientes, diseñado para gestionar y organizar los con acciones de crear, leer, actualizar y deletar.
+## Características
 
-## Ejecución
-Ejecutando el Program.cs (el cual se encuentra dentro de SGE.Consola) es posible hacer todo por el menú de la consola. Así se puede crear los registros que quiera, así como ingresar los datos de modo incorrecto para mirar las salidas de excepciones.
+- **Gestión de Trámites**: Crear, modificar, eliminar y consultar trámites.
+- **Gestión de Expedientes**: Crear, modificar, eliminar y consultar expedientes.
+- **Gestión de Usuarios**: Registro, autenticación, autorización y gestión de usuarios.
+- **Almacenamiento de Sesión**: Uso de `sessionStorage` para mantener la sesión del usuario.
 
-El flujo de las informaciones salen de la consola para los repositorios y sus respectivos métodos. Los repositorios llaman los casos de uso y manejan el proceso de guardar los datos. Los casos de uso manejan las reglas del negocio dentro de la Aplicación.
+## Tecnologías Utilizadas
 
-La aplicación no conoce repositorios ni consola. Repositorios conoce Aplicacion pero no Consola. Consola conoce repositorio y aplicación.
+- **Blazor Server**: Framework para crear aplicaciones web interactivas del lado del servidor.
+- **ASP.NET Core**: Framework para construir aplicaciones web modernas.
+- **Entity Framework Core**: ORM para manejar la base de datos SQLite.
+- **SQLite**: Base de datos ligera y eficiente.
+- **C#**: Lenguaje de programación utilizado para el desarrollo backend y frontend.
 
-### Expediente
-Cuando creados empiezan automáticamente con la data de modificación y creación iguales, así como con el estado de recién iniciado.
-Cuando se elige modificar se puede modificar la carátula o el estado (entre los listados para elegir). la fecha de modificación se actualiza, así como el id del usuario que hace la modificación.
-Cuando se elige dar baja basta poner el id del expediente para dar baja, todos los trámites asociados también son eliminados.El estado es automáticamente cambiado cuando haya una creación, baja o modificación de trámites que involucren etiqueta, entonces, si está dentro de las reglas del negocio y es el último trámite, el estado se cambia.
+## Requisitos Previos
 
-Para probar la funcionalidad se puede seguir estos pasos:
-- crear un expediente
-- consultar el expediente y verificar que estado es recién iniciado- crear un trámites asociados a el expediente creado- modificar el trámite y elegir la etiqueta PaseAEstudio- consultar el expediente creado y verificar que el estado se cambió para ParaResolver
-- crear un tramite nuevo
-- consultar el trámite y verificar que el estado no se cambió
-- modificar la etiqueta del primero tramite para PaseAlArchivo
-consultar el expediente y verificar que el estado todavía no modificó, porque el trámite cambiado no era el último
-- dar baja en el último trámite
-- consultar el expediente y verificar que el estado se cambió para Finalizado, porque ahora el último trámite tiene la etiqueta de archivo.
+- [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Node.js](https://nodejs.org/) (opcional, para desarrollo frontend adicional)
+- [SQLite](https://www.sqlite.org/download.html) (opcional, si deseas interactuar con la base de datos directamente)
 
-Si intenta crear/modificar/bajar con id de usuário que no sea de id 1 sale error de autenticaciónSi intenta crear/modificar con la carátula vacía sale un error de validación
-Si intenta consultar/modificar/bajar un expediente por Id que no existe entonces sale error general de no encontrado
+## Instalación y Configuración
 
-### Trámite
-Cuando creados empiezan automáticamente con la data de modificación y creación iguales, así como con el estado de recién iniciado.
-Cuando se elige modificar se puede modificar el contenido o la etiqueta (entre los listados para elegir). la fecha de modificación se actualiza, así como el id del usuario que hace la modificación.
-Cuando se elige dar baja basta poner el id del expediente o del trámite para dar baja individual o en bloque.
+Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local:
 
+### Clonar el Repositorio
 
-Si intenta crear/modificar/bajar  con id de usuário que no sea de id 1 sale error de autenticación
-Si intenta crear/modificar con el contenido vacío sale un error de validación
-Si intenta crear con un Id de expediente no válido, sale un error general de no encontrado
-Si intenta modificar/bajar/consultar un trámite por Id que no existe entonces sale error general de no encontradoSi intenta modificar/bajar/consultar por id de expediente que no existe sale un error de no encontrado
+```sh
+git clone https://github.com/sipione/Procedures-Management-System.git
+cd Procedures-Management-System
+```
 
-## Aclaraciones
-- Usuário no es una entidad implementada con detalles como las demás, solo fue implementada para que se pueda crear usuarios y guardar los valores
-- Las interfaces de los repositorios no fueron implementadas una vez que estos van cambiar para banco de datos y toda la lógica se modifica
+### Configurar la Base de Datos
+
+El proyecto utiliza SQLite como base de datos. Asegúrate de que el archivo de la base de datos `SGE.sqlite` esté en el directorio raíz del proyecto. Si no existe, se creará automáticamente.
+
+### Ejecutar la Aplicación
+
+1. Navega al directorio del proyecto:
+
+    ```sh
+    cd Procedures-Management-System
+    ```
+
+2. Restaura las dependencias:
+
+    ```sh
+    dotnet restore
+    ```
+
+3. Construye el proyecto:
+
+    ```sh
+    dotnet build
+    ```
+
+4. Inicia la aplicación:
+
+    ```sh
+    dotnet run
+    ```
+
+   La aplicación estará disponible en `http://localhost:5000`.
+
+## Uso
+
+### Funcionalidades Principales
+
+- **Inicio de Sesión**: Navega a `http://localhost:5000/login` para iniciar sesión.
+- **Gestión de Trámites**: Navega a `http://localhost:5000/tramites` para gestionar trámites.
+- **Gestión de Expedientes**: Navega a `http://localhost:5000/expedientes` para gestionar expedientes.
+- **Perfil de Usuario**: Navega a `http://localhost:5000/perfil` para ver y editar tu perfil de usuario.
+
+## Estructura del Proyecto
+
+El proyecto está dividido en tres principales carpetas:
+
+- **Client**: Contiene la lógica del lado del cliente y los componentes Blazor.
+- **Server**: Contiene la lógica del lado del servidor, controladores y configuración de la API.
+- **Shared**: Contiene modelos y clases compartidas entre el cliente y el servidor.
+
+## Contribuir
+
+Si deseas contribuir a este proyecto, por favor sigue estos pasos:
+
+1. Haz un fork del repositorio.
+2. Crea una nueva rama (`git checkout -b feature/nueva-funcionalidad`).
+3. Realiza tus cambios y haz commits descriptivos (`git commit -m 'Añadida nueva funcionalidad'`).
+4. Sube tus cambios a tu fork (`git push origin feature/nueva-funcionalidad`).
+5. Abre un Pull Request describiendo tus cambios.
+
+## Contacto
+
+Si tienes alguna pregunta o sugerencia, no dudes en contactarnos a través de [ricardo@sipionetech.com](mailto:tu_email@dominio.com).

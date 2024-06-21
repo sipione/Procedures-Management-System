@@ -11,7 +11,7 @@ public class CasoDeUsoUsuarioLogin
 
     public Usuario Ejecutar(string email, string password)
     {
-        Usuario usuario = _repositorioUsuarios.ObtenerUsuarioPorEmail(email);
+        Usuario? usuario = _repositorioUsuarios.ObtenerUsuarioPorEmail(email);
         
         if (usuario == null){
             throw new Exception($"El email {email} no se encuentra registrado o la contraseña es incorrecta.");

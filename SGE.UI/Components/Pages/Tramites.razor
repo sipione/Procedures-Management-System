@@ -213,7 +213,7 @@
     private bool _editando = false;
     private bool _creando = false;
     private Tramite? _tramite;
-    private Usuario UsuarioRegistrado;
+    private Usuario? UsuarioRegistrado;
     private bool etiquetasVisible = false;
     private bool expedientesVisible = false;
     private EtiquetaTramite EtiquetaSeleccionada;
@@ -406,7 +406,6 @@
         await Task.Delay(5000);
         _mensajeError = string.Empty;
         _mensajeExito = string.Empty;
-
-        InvokeAsync(StateHasChanged);
+        StateHasChanged();
     }
 }

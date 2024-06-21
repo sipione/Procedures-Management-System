@@ -55,15 +55,15 @@
     [Parameter]
     public bool _creando { get; set; }
     [Parameter]
-    public Usuario _usuario { get; set; }
+    public Usuario? _usuario { get; set; }
     [Parameter]
     public EventCallback OnUpdate { get; set; }
     [Parameter]
-    public Usuario UsuarioRegistrado { get; set; }
+    public Usuario? UsuarioRegistrado { get; set; }
     [Parameter]
     public EventCallback<string> OnError { get; set; }
 
-    private void OnParametersSet()
+    protected override void OnParametersSet()
     {
         StateHasChanged();
     }

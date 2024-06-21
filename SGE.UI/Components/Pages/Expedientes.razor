@@ -194,12 +194,12 @@
 @code {
     private IEnumerable<Expediente>? ExpedientesList;
     private IEnumerable<Tramite>? Tramites;
-    private Expediente _expediente;
+    private Expediente? _expediente;
     private bool _editando = false;
     private string _mensajeError = string.Empty;
     private string _mensajeExito = string.Empty;
     private bool _creando = false;
-    public Usuario UsuarioRegistrado;
+    public Usuario? UsuarioRegistrado;
     DialogoConfirmacion dialogo = null!;
     ExpedienteEditarCrear editarCrearExpediente = null!;
 
@@ -318,7 +318,6 @@
     {
         await Task.Delay(5000);
         _mensajeError = string.Empty;
-        // Notify the UI that the state has changed
-        InvokeAsync(StateHasChanged);
+        StateHasChanged();
     }
 }

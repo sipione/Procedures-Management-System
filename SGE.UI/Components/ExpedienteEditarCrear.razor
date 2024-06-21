@@ -54,7 +54,7 @@
     [Parameter]
     public EventCallback<string> OnError { get; set; }
 
-    private void OnParametersSet()
+    protected override void OnParametersSet()
     {
         StateHasChanged();
     }
