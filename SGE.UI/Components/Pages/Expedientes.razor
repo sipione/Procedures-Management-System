@@ -174,12 +174,6 @@
 
     </table>
 }
-else
-{
-    <div class="alert alert-danger" role="alert">
-    No se encontraron expedientes
-</div>
-}
 
 @if (Tramites != null && Tramites.Any())
 {
@@ -225,9 +219,7 @@ else
     private string _mensajeError = string.Empty;
     private string _mensajeExito = string.Empty;
     private bool _creando = false;
-
-    [CascadingParameter]
-    public Usuario UsuarioRegistrado { get; set; }
+    public Usuario UsuarioRegistrado;
 
     private void CerrarFormulario()
     {
@@ -237,7 +229,8 @@ else
 
     protected override void OnInitialized()
     {
-        if (servicioDeSecion.obtenerUsuarioRegistrado() == null)
+        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+        if (UsuarioRegistrado == null)
         {
             NavigationManager.NavigateTo("/");
         }else{
@@ -264,7 +257,7 @@ else
 
     private void AbrirEspacioDeEdicion(int id)
     {
-            _expediente = ExpedientesList.FirstOrDefault(e => e.Id == id);
+            _expediente = ExpedientesList.FirstOrDefault(e => e.Id == id).Clone();
             _editando = true;
             _creando = false;
     }
@@ -272,7 +265,7 @@ else
     private void ActualizarExpediente()
     {
         try{
-            CasoDeUsoExpedienteModificacion.Ejecutar(_expediente, 2);
+            CasoDeUsoExpedienteModificacion.Ejecutar(_expediente, UsuarioRegistrado.Id);
             _mensajeExito = "Expediente actualizado correctamente";
             ListarExpedientes();
         }catch(Exception e){
@@ -286,7 +279,7 @@ else
     {
         try
         {
-            CasoDeUsoExpedienteBaja.Ejecutar(id, 1);
+            CasoDeUsoExpedienteBaja.Ejecutar(id, UsuarioRegistrado.Id);
             _mensajeExito = "Expediente eliminado correctamente";
             ListarExpedientes();
         }
@@ -326,7 +319,7 @@ else
         try{
             Expediente nuevoExpediente = new Expediente();
             nuevoExpediente.Caratula = _expediente.Caratula;
-            CasoDeUsoExpedienteAlta.Ejecutar(nuevoExpediente, 1);
+            CasoDeUsoExpedienteAlta.Ejecutar(nuevoExpediente, UsuarioRegistrado.Id);
             _mensajeExito = "Expediente creado correctamente";
             ListarExpedientes();
         }

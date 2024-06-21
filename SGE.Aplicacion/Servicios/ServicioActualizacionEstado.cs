@@ -2,16 +2,8 @@
 
 public class CambioEstadoExpedienteService
 {
-    private readonly IExpedienteRepositorio _expedienteRepositorio;
-    private readonly ITramiteRepositorio _tramiteRepositorio;
 
-    public CambioEstadoExpedienteService(IExpedienteRepositorio expedienteRepositorio, ITramiteRepositorio tramiteRepositorio)
-    {
-        _expedienteRepositorio = expedienteRepositorio;
-        _tramiteRepositorio = tramiteRepositorio;
-    }
-
-    public void ActualizarEstado(int expedienteId)
+    public static void ActualizarEstado(int expedienteId, IExpedienteRepositorio _expedienteRepositorio, ITramiteRepositorio _tramiteRepositorio)
     {
         var expediente = _expedienteRepositorio.ObtenerPorId(expedienteId);
         var ultimoTramite = _tramiteRepositorio.ObtenerUltimoTramitePorExpediente(expedienteId);

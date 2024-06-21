@@ -30,11 +30,17 @@ public class UsuarioRepositorioSqlite : IUsuarioRepositorio
         var existingEntity = _contexto.Usuarios.Local.FirstOrDefault(e => e.Id == usuario.Id);
         if (existingEntity != null)
         {
-            _contexto.Entry(existingEntity).State = EntityState.Detached;
+            existingEntity.Nombre = usuario.Nombre;
+            existingEntity.Apellido = usuario.Apellido;
+            existingEntity.Email = usuario.Email;
+            existingEntity.Password = usuario.Password;
+            existingEntity.Permisos = new List<Permiso>(usuario.Permisos);
+            _contexto.SaveChanges();
         }
-
-        _contexto.Usuarios.Update(usuario);
-        _contexto.SaveChanges();
+        else
+        {
+            throw new Exception("El usuario no existe");
+        }
     }
 
     public void EliminarUsuario(Usuario usuario)

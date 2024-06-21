@@ -65,14 +65,7 @@
             NavigationManager.NavigateTo("/login");
         }else
         {
-            UsuarioModificado = new Usuario{
-                Nombre = UsuarioRegistrado.Nombre,
-                Apellido = UsuarioRegistrado.Apellido,
-                Email = UsuarioRegistrado.Email,
-                Password = "",
-                Id = UsuarioRegistrado.Id,
-                Permisos = UsuarioRegistrado.Permisos,
-            };
+            UsuarioModificado = UsuarioRegistrado.Clone();
         }
     }
 
@@ -86,14 +79,7 @@
         Console.WriteLine("Actualizar");
         try{
             CasoDeUsoUsuarioModificacion.Ejecutar(UsuarioModificado, UsuarioRegistrado.Id);
-            UsuarioModificado = new Usuario{
-                Nombre = UsuarioModificado.Nombre,
-                Apellido = UsuarioModificado.Apellido,
-                Email = UsuarioModificado.Email,
-                Password = "",
-                Id = UsuarioModificado.Id,
-                Permisos = UsuarioModificado.Permisos,
-            };
+            UsuarioModificado = UsuarioModificado.Clone(); 
             servicioDeSecion.ActualizarUsuarioRegistrado(UsuarioModificado);
             ShowMensajeExito("Usuario actualizado correctamente");
             NavigationManager.NavigateTo("/perfil", forceLoad: true);

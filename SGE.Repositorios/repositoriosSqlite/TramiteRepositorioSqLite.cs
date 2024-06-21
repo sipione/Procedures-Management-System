@@ -35,8 +35,22 @@ public class TramiteRepositorioSqLite : ITramiteRepositorio
 
     public void Actualizar(Tramite tramite)
     {
-        _contexto.Tramites.Update(tramite);
-        _contexto.SaveChanges();
+        var tramiteExistente = _contexto.Tramites.FirstOrDefault(t => t.Id == tramite.Id);
+        if (tramiteExistente != null)
+        {
+
+            tramiteExistente.ExpedienteId = tramite.ExpedienteId;
+            tramiteExistente.Etiqueta = tramite.Etiqueta;
+            tramiteExistente.Contenido = tramite.Contenido;
+            tramiteExistente.FechaCreacion = tramite.FechaCreacion;
+            tramiteExistente.FechaUltimaModificacion = tramite.FechaUltimaModificacion;
+            tramiteExistente.UsuarioUltimaModificacionId = tramite.UsuarioUltimaModificacionId;
+            _contexto.SaveChanges();
+        }
+        else
+        {
+            throw new Exception("El tramite no existe");
+        }
     }
 
     public void Eliminar(int id)

@@ -28,8 +28,7 @@
             _tramiteValidador.Validar(tramite);
             _tramiteRepositorio.Actualizar(tramite);
 
-            CambioEstadoExpedienteService cambioEstadoExpedienteService = new CambioEstadoExpedienteService(_expedienteRepositorio, _tramiteRepositorio);
-            cambioEstadoExpedienteService.ActualizarEstado(tramite.ExpedienteId);
+            CambioEstadoExpedienteService.ActualizarEstado(tramite.ExpedienteId, _expedienteRepositorio, _tramiteRepositorio);
         }
     }
 }

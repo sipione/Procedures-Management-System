@@ -173,16 +173,29 @@
     private bool _editando = false;
     private bool _creando = false;
     private Tramite? _tramite;
-    private EstadoUsuario _estadoUsuario;
+    private Usuario UsuarioRegistrado;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
+    {
+        if(TramitesList == null || !TramitesList.Any())
+        {
+            LoadTramites();
+        }
+        if(ExpedientesList == null || !ExpedientesList.Any())
+        {
+            LoadExpedientes();
+        }
+        LoadSession();
+    }
+
+    protected void LoadTramites()
     {
         try{
             var respuesta = CasoDeUsoTramiteConsultaTodos.Ejecutar();
             if (respuesta == null || !respuesta.Any()){
-                throw new Exception("No se encontraron trámites");
-            }
-            TramitesList = respuesta;
+            throw new Exception("No se encontraron trámites");
+        }
+        TramitesList = respuesta;
         }
         catch (Exception ex)
         {
@@ -190,17 +203,10 @@
         }
     }
 
-    protected override async Task OnParametersSetAsync()
-    {
-        LoadSession();
-        LoadExpedientes();
-    }
-
-
     protected void LoadSession()
     {
-        _estadoUsuario = servicioDeSecion.obtenerEstadoUsuario();
-        if (_estadoUsuario == EstadoUsuario.Desconectado)
+        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+        if (UsuarioRegistrado == null)
         {
             NavigationManager.NavigateTo("/");
         }
@@ -232,7 +238,7 @@
 
     private void AbrirEspacioParaEdicion(int id)
     {
-        _tramite = TramitesList.FirstOrDefault(t => t.Id == id);
+        _tramite = TramitesList.FirstOrDefault(t => t.Id == id).Clone();
         _editando = true;
         _creando = false;
     }
@@ -255,9 +261,9 @@
     private void DeleteTramite(int tramiteId)
     {
         try{
-            CasoDeUsoTramiteBaja.Ejecutar(tramiteId, 1);
+            CasoDeUsoTramiteBaja.Ejecutar(tramiteId, UsuarioRegistrado.Id);
             ShowExito("Trámite eliminado correctamente");
-            OnInitializedAsync();
+            LoadTramites();
         }
         catch (Exception ex)
         {
@@ -295,9 +301,9 @@
     {
         try
         {
-            CasoDeUsoTramiteAlta.Ejecutar(_tramite, 1);
+            CasoDeUsoTramiteAlta.Ejecutar(_tramite, UsuarioRegistrado.Id);
             ShowExito("Trámite creado correctamente");
-            OnInitializedAsync();
+            LoadTramites();
         }
         catch (Exception ex)
         {
@@ -309,9 +315,9 @@
     {
         try
         {
-            CasoDeUsoTramiteModificacion.Ejecutar(_tramite, 1);
+            CasoDeUsoTramiteModificacion.Ejecutar(_tramite, UsuarioRegistrado.Id);
             ShowExito("Trámite actualizado correctamente");
-            OnInitializedAsync();
+            LoadTramites();
         }
         catch (Exception ex)
         {
@@ -322,24 +328,21 @@
     public void ShowError(string message)
     {
         _mensajeError = message;
-        // Start the timer to clear the message after 5 seconds
-        DismissMessagesAfterDelay();
+        BorrarMensajeConDelay();
     }
 
     private void ShowExito(string message)
     {
         _mensajeExito = message;
-        // Start the timer to clear the message after 5 seconds
-        DismissMessagesAfterDelay();
+        BorrarMensajeConDelay();
     }
 
-    private async void DismissMessagesAfterDelay()
+    private async void BorrarMensajeConDelay()
     {
         await Task.Delay(5000);
         _mensajeError = string.Empty;
         _mensajeExito = string.Empty;
 
-        // Notify the UI that the state has changed
         InvokeAsync(StateHasChanged);
     }
 }

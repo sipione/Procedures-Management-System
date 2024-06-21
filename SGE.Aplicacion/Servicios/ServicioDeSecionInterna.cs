@@ -52,7 +52,12 @@ public class ServicioDeSecionInterna : IServicioDeSecion
 
     public Usuario? obtenerUsuarioRegistrado()
     {
-        return this.usuarioRegistrado;
+        if(usuarioRegistrado == null)
+        {
+           return usuarioRegistrado;
+        }
+
+        return this.usuarioRegistrado.Clone();
     }
 
     public EstadoUsuario obtenerEstadoUsuario()

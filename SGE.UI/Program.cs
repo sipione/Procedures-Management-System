@@ -20,7 +20,6 @@ using (var dbContext = builder.Services.BuildServiceProvider().GetRequiredServic
 {
     if (!File.Exists(path)){
         SGESqlite.Inicializar(dbContext);
-        
     }
 }
 
@@ -32,7 +31,7 @@ builder.Services.AddScoped<IExpedienteRepositorio, ExpedienteRepositorioSqlite>(
 //INJECCION DE SERVICIOS
 builder.Services.AddScoped<IServicioAutenticacion, ServicioAutenticacion>();
 builder.Services.AddScoped<IServicioAutorizacion, ServicioAutorizacion>();
-builder.Services.AddSingleton<IServicioDeSecion, ServicioDeSecionInterna>();
+builder.Services.AddScoped<IServicioDeSecion, ServicioDeSecionInterna>();
 
 //INJECCION DE VALIDADORES
 builder.Services.AddTransient<TramiteValidador>();

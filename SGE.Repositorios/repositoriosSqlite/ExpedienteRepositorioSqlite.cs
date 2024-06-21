@@ -35,7 +35,11 @@ namespace SGE.Repositorios
                 expedienteExistente.FechaUltimaModificacion = expediente.FechaUltimaModificacion;
                 expedienteExistente.UsuarioUltimaModificacionId = expediente.UsuarioUltimaModificacionId;
                 expedienteExistente.Estado = expediente.Estado;
+                expedienteExistente.Tramites = new List<Tramite>(expediente.Tramites);
                 _contexto.SaveChanges();
+            }else
+            {
+                throw new Exception("El expediente no existe");
             }
         }
 
