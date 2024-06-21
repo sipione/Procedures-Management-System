@@ -1,9 +1,8 @@
 
 public class SGESqlite
 {
-    public static void Inicializar()
+    public static void Inicializar(SGEContexto context)
     {
-        using var context = new SGEContexto();
         if (context.Database.EnsureCreated())
         {
             Console.WriteLine("Se creó base de datos");

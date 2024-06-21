@@ -4,21 +4,27 @@ using SGE.Repositorios;
 using System.IO;
 using SGE.Aplicacion.CasosDeUso;
 
-string path = Path.Combine(Directory.GetCurrentDirectory(), "SGE.sqlite");
-if (!File.Exists(path))
-{
-    SGESqlite.Inicializar();
-}
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+string path = Path.Combine(Directory.GetCurrentDirectory(), "SGE.sqlite");
 
-//INJECCION DE REPORITORIOS
-builder.Services.AddDbContext<SGEContexto>();
+// Configuracion del DbContext
+builder.Services.AddDbContext<SGEContexto>(); 
+
+
+using (var dbContext = builder.Services.BuildServiceProvider().GetRequiredService<SGEContexto>())
+{
+    if (!File.Exists(path)){
+        SGESqlite.Inicializar(dbContext);
+        
+    }
+}
+
+// INJECCION DE REPOSITORIOS
 builder.Services.AddScoped<ITramiteRepositorio, TramiteRepositorioSqLite>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorioSqlite>();
 builder.Services.AddScoped<IExpedienteRepositorio, ExpedienteRepositorioSqlite>();

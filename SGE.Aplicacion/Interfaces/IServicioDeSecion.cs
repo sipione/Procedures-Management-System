@@ -4,4 +4,5 @@ public interface IServicioDeSecion
     void cerrarSesion(Usuario usuario);
     Usuario? obtenerUsuarioRegistrado();
     EstadoUsuario obtenerEstadoUsuario();
+    void ActualizarUsuarioRegistrado(Usuario usuario);
 }

@@ -7,5 +7,5 @@ public class Usuario{
     public List<Permiso> Permisos { get; set; }
 
     public override string ToString() =>
-        $"Usuario(Id: {Id}, Nombre: {Nombre}, Apellido: {Apellido}, Email: {Email})";
+        $"Usuario(Id: {Id}, Nombre: {Nombre}, Apellido: {Apellido}, Email: {Email}, Password: {Password}, Permisos: {Permisos})";
 }

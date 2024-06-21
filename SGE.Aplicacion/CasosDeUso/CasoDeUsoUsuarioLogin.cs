@@ -11,10 +11,15 @@ public class CasoDeUsoUsuarioLogin
 
     public Usuario Ejecutar(string email, string password)
     {
-        var usuario = _repositorioUsuarios.ObtenerUsuarioPorEmail(email) ?? throw new Exception($"El email {email} no se encuentra registrado o la contraseña es incorrecta.");
-
-        if (!_servicioAutenticacion.VerificarPassword(usuario.Password, password)) 
+        Usuario usuario = _repositorioUsuarios.ObtenerUsuarioPorEmail(email);
+        
+        if (usuario == null){
             throw new Exception($"El email {email} no se encuentra registrado o la contraseña es incorrecta.");
+        }
+
+        if (!_servicioAutenticacion.VerificarPassword(usuario.Password, password)){
+            throw new Exception($"El email {email} no se encuentra registrado o la contraseña es incorrecta.");
+        }
 
         return usuario;
     }

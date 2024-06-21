@@ -1,0 +1,134 @@
+@page "/perfil"
+@rendermode InteractiveServer
+@inject CasoDeUsoUsuarioModificacion CasoDeUsoUsuarioModificacion
+@inject IServicioDeSecion servicioDeSecion
+@inject NavigationManager NavigationManager
+
+<h3>Perfil</h3>
+
+@if (!string.IsNullOrEmpty(_mensajeExito))
+{
+    <div class="alert alert-success" role="alert">
+        @_mensajeExito
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_mensajeError))
+{
+    <div class="alert alert-danger" role="alert">
+        @_mensajeError
+    </div>
+}
+
+@if (UsuarioModificado != null)
+{
+    <form @onsubmit="Actualizar" @onsubmit:preventDefault>
+        <div class="form-group
+        ">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control" id="nombre" value="@UsuarioModificado.Nombre" @oninput="@(e => UsuarioModificado.Nombre = e.Value.ToString())" required>
+        </div>
+        <div class="form-group">
+            <label for="apellido">Apellido</label>
+            <input type="text" class="form-control" id="apellido" value="@UsuarioModificado.Apellido" @oninput="@(e => UsuarioModificado.Apellido = e.Value.ToString())" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" value="@UsuarioModificado.Email" @oninput="@(e => UsuarioModificado.Email = e.Value.ToString())" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Nueva Contraseña</label>
+            <input type="password" class="form-control" id="password" value="@UsuarioModificado.Password" @oninput="@(e => UsuarioModificado.Password = e.Value.ToString())">
+        </div>
+        <div class="form-group">
+            <label for="password">Repetir Contraseña</label>
+            <input type="password" class="form-control" id="password" value="@UsuarioModificado.Password" @oninput="@(e => UsuarioModificado.Password = e.Value.ToString())" required=@(string.IsNullOrEmpty(UsuarioModificado.Password) ? false : true)>
+        </div>
+        <button class="btn btn-primary" type="submit">Actualizar</button>
+    </form>
+
+    <button class="btn btn-danger" @onclick="Logout">Logout</button>
+
+}
+
+@code {
+    public Usuario UsuarioRegistrado;
+    private Usuario UsuarioModificado;
+    private string _mensajeExito;
+    private string _mensajeError;
+
+    protected override void OnInitialized()
+    {
+        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+        if (UsuarioRegistrado == null)
+        {
+            NavigationManager.NavigateTo("/login");
+        }else
+        {
+            UsuarioModificado = new Usuario{
+                Nombre = UsuarioRegistrado.Nombre,
+                Apellido = UsuarioRegistrado.Apellido,
+                Email = UsuarioRegistrado.Email,
+                Password = "",
+                Id = UsuarioRegistrado.Id,
+                Permisos = UsuarioRegistrado.Permisos,
+            };
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        StateHasChanged();
+    }
+
+    private void Actualizar()
+    {
+        Console.WriteLine("Actualizar");
+        try{
+            CasoDeUsoUsuarioModificacion.Ejecutar(UsuarioModificado, UsuarioRegistrado.Id);
+            UsuarioModificado = new Usuario{
+                Nombre = UsuarioModificado.Nombre,
+                Apellido = UsuarioModificado.Apellido,
+                Email = UsuarioModificado.Email,
+                Password = "",
+                Id = UsuarioModificado.Id,
+                Permisos = UsuarioModificado.Permisos,
+            };
+            servicioDeSecion.ActualizarUsuarioRegistrado(UsuarioModificado);
+            ShowMensajeExito("Usuario actualizado correctamente");
+            NavigationManager.NavigateTo("/perfil", forceLoad: true);
+        }catch (Exception e)
+        {
+            ShowMensajeError(e.Message);
+        }
+    }
+
+    private void Logout()
+    {
+        servicioDeSecion.cerrarSesion(UsuarioRegistrado);
+        NavigationManager.NavigateTo("/login");
+    }
+
+    private void ShowMensajeExito(string mensaje)
+    {
+        _mensajeExito = mensaje;
+        BlanquearMensajeDepouesDeUnTiempo();
+    }
+
+    private void ShowMensajeError(string mensaje)
+    {
+        _mensajeError = mensaje;
+        BlanquearMensajeDepouesDeUnTiempo();
+    }
+
+    private void BlanquearMensajeDepouesDeUnTiempo()
+    {
+        Task.Delay(5000).ContinueWith(t =>
+        {
+            _mensajeExito = null;
+            _mensajeError = null;
+            StateHasChanged();
+        });
+    }
+
+}

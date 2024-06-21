@@ -27,7 +27,7 @@
     @if (UsuarioRegistrado != null)
     {
         <div class="box">
-            <span class="bi bi-person-fill" aria-hidden="true">Bienvenido @UsuarioRegistrado.Nombre @UsuarioRegistrado.Apellido</span>
+            <NavLink class="bi bi-person-fill" href="perfil" aria-hidden="true">@UsuarioRegistrado.Nombre @UsuarioRegistrado.Apellido</NavLink>
         </div>
     }
     else
@@ -48,5 +48,4 @@
     {
         StateHasChanged();
     }
-
 }

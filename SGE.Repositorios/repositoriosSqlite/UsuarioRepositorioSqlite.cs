@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 public class UsuarioRepositorioSqlite : IUsuarioRepositorio
 {
     private readonly SGEContexto _contexto;
@@ -25,6 +27,12 @@ public class UsuarioRepositorioSqlite : IUsuarioRepositorio
 
     public void ActualizarUsuario(Usuario usuario)
     {
+        var existingEntity = _contexto.Usuarios.Local.FirstOrDefault(e => e.Id == usuario.Id);
+        if (existingEntity != null)
+        {
+            _contexto.Entry(existingEntity).State = EntityState.Detached;
+        }
+
         _contexto.Usuarios.Update(usuario);
         _contexto.SaveChanges();
     }
