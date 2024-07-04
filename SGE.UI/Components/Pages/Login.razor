@@ -4,6 +4,7 @@
 @inject IJSRuntime JSRuntime
 @inject IServicioDeSecion servicioDeSecion
 @inject CasoDeUsoUsuarioLogin CasoDeUsoUsuarioLogin
+@inject IJSRuntime JS
 
 <h3>Login</h3>
 
@@ -39,7 +40,7 @@
     private string _messageerror;
     private string _successMessage;
 
-   private void LogUser()
+   private async Task LogUser()
     {
         try
         {
@@ -49,8 +50,12 @@
                 throw new Exception("Usuario o contraseña incorrectos");
             }
             _successMessage = "Usuario logueado correctamente";
-            servicioDeSecion.registrarSesion(result);
-            NavigationManager.NavigateTo("/expedientes");
+
+            @* servicioDeSecion.registrarSesion(result); *@
+
+            await JS.InvokeAsync<string>("setUsuario", result);
+
+            NavigationManager.NavigateTo("/expedientes", forceLoad: true);
         }
         catch (Exception ex)
         {

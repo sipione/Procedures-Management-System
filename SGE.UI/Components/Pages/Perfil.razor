@@ -3,6 +3,7 @@
 @inject CasoDeUsoUsuarioModificacion CasoDeUsoUsuarioModificacion
 @inject IServicioDeSecion servicioDeSecion
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 
 <style>
     .form-group {
@@ -72,15 +73,19 @@
     private string? _mensajeExito;
     private string? _mensajeError;
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
-        if (UsuarioRegistrado == null)
-        {
-            NavigationManager.NavigateTo("/login");
-        }else
-        {
-            UsuarioModificado = UsuarioRegistrado.Clone();
+        if(firstRender){
+            UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
+            if (UsuarioRegistrado == null)
+            {
+                NavigationManager.NavigateTo("/login");
+            }
+            else
+            {
+                UsuarioModificado = UsuarioRegistrado.Clone();
+            }
+            StateHasChanged();
         }
     }
 
@@ -95,7 +100,7 @@
         try{
             CasoDeUsoUsuarioModificacion.Ejecutar(UsuarioModificado, UsuarioRegistrado.Id);
             UsuarioModificado = UsuarioModificado.Clone(); 
-            servicioDeSecion.ActualizarUsuarioRegistrado(UsuarioModificado);
+            JS.InvokeVoidAsync("setUsuario", UsuarioModificado);
             ShowMensajeExito("Usuario actualizado correctamente");
             NavigationManager.NavigateTo("/perfil", forceLoad: true);
         }catch (Exception e)

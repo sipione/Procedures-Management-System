@@ -7,6 +7,8 @@
 @inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
 @inject CasoDeUsoUsuarioBaja CasoDeUsoUsuarioBaja
 @inject IServicioAutorizacion servicioAutorizacion
+@inject IJSRuntime JS
+
 
 <style>
         .form-box {
@@ -117,14 +119,14 @@
         dialogo.Mostrar();
     }
     
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-       LoadUsuarios();
-    }
-
-    protected override void OnParametersSet()
-    {
-        LoadSession();
+        if (firstRender)
+        {
+            await LoadSession();
+            LoadUsuarios();
+            StateHasChanged();
+        }
     }
 
     private void LoadUsuarios()
@@ -137,9 +139,9 @@
         }
     }
 
-    protected void LoadSession()
+    protected async Task LoadSession()
     {
-        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+        UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
         
         if (UsuarioRegistrado == null || !servicioAutorizacion.PoseeElPermiso(UsuarioRegistrado.Id, Permiso.UsuarioConsulta))
         {

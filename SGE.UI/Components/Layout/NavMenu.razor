@@ -1,5 +1,7 @@
 ﻿@inject IServicioAutorizacion servicioAutorizacion
 @inject IServicioDeSecion servicioDeSecion
+@inject IJSRuntime JS
+@rendermode InteractiveServer
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -38,19 +40,21 @@
     private bool poseePermisoUsuarios = false;
     public Usuario? UsuarioRegistrado;
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
-        if (UsuarioRegistrado != null){
-            VerificarPermisosDeUsuario();
+        if (firstRender)
+        {
+            await getUsuarioRegistrado();
+            if (UsuarioRegistrado != null){
+                VerificarPermisosDeUsuario();
+            }
         }
     }
 
-    protected override void OnParametersSet()
+    private async Task getUsuarioRegistrado()
     {
-        if (UsuarioRegistrado != null){
-            VerificarPermisosDeUsuario();
-        }
+        UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
+        StateHasChanged();
     }
 
     private void VerificarPermisosDeUsuario()

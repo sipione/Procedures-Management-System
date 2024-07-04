@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IServicioDeSecion servicioDeSecion
-
+@inject IJSRuntime JS
 
 <div class="page">
         <div class="sidebar">
@@ -11,13 +11,30 @@
             <UsuarioDatos/>
 
             <article class="content px-4">
-                @Body
+            @Body
             </article>
         </main>
-    </div>
+</div>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+<script>
+    window.setUsuario = (usuario) => {
+        window.sessionStorage.setItem('usuario', JSON.stringify(usuario));
+        return;
+    };
+
+    window.getUsuario = () => {
+        const stringResult = window.sessionStorage.getItem('usuario');
+        return stringResult ? JSON.parse(stringResult) : null;
+    };
+
+    window.removeUsuario = () => {
+        window.sessionStorage.removeItem('usuario');
+        return;
+    };
+</script>

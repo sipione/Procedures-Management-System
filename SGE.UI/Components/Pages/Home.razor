@@ -4,6 +4,8 @@
 @inject IServicioDeSecion servicioDeSecion
 @rendermode InteractiveServer
 @inject IServicioAutorizacion servicioAutorizacion
+@inject IJSRuntime JS
+@using System.Text.Json;
 
 <style>
     .home-container {
@@ -94,21 +96,25 @@ else
 </div>
 
 @code {
-    public Usuario? UsuarioRegistrado;
+    public Usuario? UsuarioRegistrado { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+        if (firstRender)
+        {
+            await getUsuarioRegistrado();
+        }
     }
-
-    protected override void OnParametersSet()
+    
+    private async Task getUsuarioRegistrado()
     {
+        UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
         StateHasChanged();
     }
 
-    private void Logout()
+    private async Task Logout()
     {
-        servicioDeSecion.cerrarSesion(UsuarioRegistrado);
-        NavigationManager.NavigateTo("/login");
+        await JS.InvokeVoidAsync("removeUsuario");
+        NavigationManager.NavigateTo("/login", forceLoad: true);
     }
 }

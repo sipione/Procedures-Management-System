@@ -8,6 +8,7 @@
 @inject CasoDeUsoExpedienteModificacion CasoDeUsoExpedienteModificacion
 @inject CasoDeUsoExpedienteBaja CasoDeUsoExpedienteBaja
 @inject CasoDeUsoExpedienteAlta CasoDeUsoExpedienteAlta
+@inject IJSRuntime JS
 
 <style>
     .table {
@@ -215,9 +216,18 @@
         _creando = false;
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+        if (firstRender)
+        {
+            await getUsuarioRegistrado();
+            StateHasChanged();
+        }
+    }
+
+    private async Task getUsuarioRegistrado()
+    {
+        UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
         if (UsuarioRegistrado == null)
         {
             NavigationManager.NavigateTo("/");

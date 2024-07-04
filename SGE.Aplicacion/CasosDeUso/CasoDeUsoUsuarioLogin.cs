@@ -21,6 +21,8 @@ public class CasoDeUsoUsuarioLogin
             throw new Exception($"El email {email} no se encuentra registrado o la contraseña es incorrecta.");
         }
 
+        usuario.Password = "";
+
         return usuario;
     }
 }

@@ -10,6 +10,7 @@
 @inject IServicioDeSecion servicioDeSecion
 @inject CasoDeUsoTramiteConsultaPorEtiqueta CasoDeUsoTramiteConsultaPorEtiqueta
 @inject CasoDeUsoTramiteConsultaPorExpediente CasoDeUsoTramiteConsultaPorExpediente
+@inject IJSRuntime JS
 
 <style>
         .form-box {
@@ -228,17 +229,28 @@
         dialogo.Mostrar();
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(TramitesList == null || !TramitesList.Any())
+
+        if (firstRender)
         {
-            LoadTramites();
+            await LoadSession();
+
+            if(TramitesList == null || !TramitesList.Any())
+            {
+                LoadTramites();
+            }
+            if(ExpedientesList == null || !ExpedientesList.Any())
+            {
+                LoadExpedientes();
+            }
+            StateHasChanged();
         }
-        if(ExpedientesList == null || !ExpedientesList.Any())
-        {
-            LoadExpedientes();
-        }
-        LoadSession();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        StateHasChanged();
     }
 
     protected void LoadTramites()
@@ -256,9 +268,9 @@
         }
     }
 
-    protected void LoadSession()
+    protected async Task LoadSession()
     {
-        UsuarioRegistrado = servicioDeSecion.obtenerUsuarioRegistrado();
+        UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
         if (UsuarioRegistrado == null)
         {
             NavigationManager.NavigateTo("/");
