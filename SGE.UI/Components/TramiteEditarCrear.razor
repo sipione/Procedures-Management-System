@@ -9,7 +9,7 @@
     <div class="form-box">
         <span class="close" @onclick="CerrarFormulario">&times;</span>
         <h4>@(_creando ? "Crear Nuevo" : "Editar") Trámite</h4>
-        <form @onsubmit="GuardarTramite" @onsubmit:preventDefault>
+        <form class="form-content" @onsubmit="GuardarTramite" @onsubmit:preventDefault>
             @if (!_creando)
             {
                 <div class="form-group">
@@ -35,8 +35,10 @@
                     }
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <button class="btn btn-secondary" type="reset">Reset</button>
+            <div class="content-btns">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button class="btn btn-secondary" type="reset">Reset</button>
+            </div>
         </form>
     </div>
 

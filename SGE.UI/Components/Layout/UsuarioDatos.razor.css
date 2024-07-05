@@ -1,0 +1,24 @@
+.top-user{
+    display: flex;
+    justify-content: end;
+    margin-bottom: 1rem;
+    padding: 1rem 2rem;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #8C0011;
+}
+.top-row .bi {
+    font-size: 1.25rem;
+}
+
+.box{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.box-top-user{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 2rem;
+}

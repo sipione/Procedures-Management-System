@@ -3,13 +3,12 @@
 @inject CasoDeUsoUsuarioModificacion CasoDeUsoUsuarioModificacion
 @inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
 
-
 @if(mostrar)
 {
     <div class="form-box">
         <button class="close" @onclick="CerrarFormulario">&times;</button>
         <h4>@(_creando ? "Crear" : "Editar") Usuario</h4>
-        <form @onsubmit="()=>GuardarUsuario()" @onsubmit:preventDefault>
+        <form class="form-content" @onsubmit="()=>GuardarUsuario()" @onsubmit:preventDefault>
             <div class="form-group">
                 <label for="nombre">Nombre</label>
                 <input type="text" class="form-control" id="nombre" @bind="_usuario.Nombre" />

@@ -15,8 +15,9 @@ public class CasoDeUsoUsuarioAlta
 
     public Usuario Ejecutar(Usuario usuario)
     {
-        if (_repositorioUsuarios.ObtenerUsuarioPorEmail(usuario.Email) != null)
+        if (_repositorioUsuarios.ObtenerUsuarioPorEmail(usuario.Email) != null){
             throw new Exception($"El email {usuario.Email} ya se encuentra registrado.");
+        }
 
         if(_repositorioUsuarios.IsEmpty()){
             usuario.Permisos = _servicioAutorizacion.AdminitradorPermisos();

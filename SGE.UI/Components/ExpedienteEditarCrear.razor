@@ -14,7 +14,7 @@
         <span aria-hidden="true">&times;</span>
     </button>
     <h4>@(_creando ? "Crear" : "Editar") Expediente</h4>
-    <form @onsubmit="GuardarExpediente" @onsubmit:preventDefault>
+    <form class="form-content" @onsubmit="GuardarExpediente" @onsubmit:preventDefault>
         <div class="form-group">
             <label for="caratula">Caratula</label>
             <input type="text" class="form-control" id="caratula" name="caratula" @bind="_expediente.Caratula" required/>
@@ -32,9 +32,11 @@
                 </select>
             </div>
         }
-
-        <button type="submit" class="btn btn-primary">Guardar</button>
-        <button type="reset" class="btn btn-secondary">Reset</button>
+        
+        <div class="content-btns">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+        </div>
     </form>
 </div>
 }

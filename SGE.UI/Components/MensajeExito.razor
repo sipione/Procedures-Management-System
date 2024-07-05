@@ -1,0 +1,28 @@
+@if(mostrar)
+{
+    <div class="alert alert-success" role="alert">
+        @_mensajeExito
+    </div>
+}
+
+@code {
+    private bool mostrar;
+
+    [Parameter]
+    public string _mensajeExito { get; set; }
+
+    public void Mostrar()
+    {
+        mostrar = true;
+        StateHasChanged();
+        BorrarMensajeConDelay();
+    }
+
+    private async void BorrarMensajeConDelay()
+    {
+        await Task.Delay(3000);
+        mostrar = false;
+        _mensajeExito = "";
+        StateHasChanged();
+    }
+}

@@ -7,19 +7,8 @@
 
 <h3>Perfil</h3>
 
-@if (!string.IsNullOrEmpty(_mensajeExito))
-{
-    <div class="alert alert-success" role="alert">
-        @_mensajeExito
-    </div>
-}
-
-@if (!string.IsNullOrEmpty(_mensajeError))
-{
-    <div class="alert alert-danger" role="alert">
-        @_mensajeError
-    </div>
-}
+<MensajeExito @ref=mensajeExito />
+<MensajeError @ref=mensajeError />
 
 @if (UsuarioModificado != null)
 {
@@ -59,8 +48,8 @@
     public Usuario? UsuarioRegistrado;
     private Usuario? UsuarioModificado;
     private string? _confirmacionPassword;
-    private string? _mensajeExito;
-    private string? _mensajeError;
+    MensajeExito mensajeExito;
+    MensajeError mensajeError;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -87,7 +76,7 @@
     {
         if (!string.IsNullOrEmpty(UsuarioModificado.Password) && _confirmacionPassword != UsuarioModificado.Password)
         {
-            ShowMensajeError("Las contraseñas no coinciden");
+            ExibirMensaje("Las contraseñas no coinciden", "error");
             return;
         }
 
@@ -95,11 +84,11 @@
             CasoDeUsoUsuarioModificacion.Ejecutar(UsuarioModificado, UsuarioRegistrado.Id);
             UsuarioModificado = UsuarioModificado.Clone(); 
             JS.InvokeVoidAsync("setUsuario", UsuarioModificado);
-            ShowMensajeExito("Usuario actualizado correctamente");
+            ExibirMensaje("Usuario actualizado correctamente", "exito");
 
         }catch (Exception e)
         {
-            ShowMensajeError(e.Message);
+            ExibirMensaje(e.Message, "error");
         }
     }
 
@@ -109,26 +98,18 @@
         NavigationManager.NavigateTo("/login", forceLoad: true);
     }
 
-    private void ShowMensajeExito(string mensaje)
+    private void ExibirMensaje(string mensaje, string tipo)
     {
-        _mensajeExito = mensaje;
-        BlanquearMensajeDepouesDeUnTiempo();
-    }
-
-    private void ShowMensajeError(string mensaje)
-    {
-        _mensajeError = mensaje;
-        BlanquearMensajeDepouesDeUnTiempo();
-    }
-
-    private void BlanquearMensajeDepouesDeUnTiempo()
-    {
-        Task.Delay(5000).ContinueWith(t =>
+        if (tipo == "exito")
         {
-            _mensajeExito = null;
-            _mensajeError = null;
-            StateHasChanged();
-        });
+            mensajeExito._mensajeExito = mensaje;
+            mensajeExito.Mostrar();
+        }
+        else
+        {
+            mensajeError._mensajeError = mensaje;
+            mensajeError.Mostrar();
+        }
     }
 
 }

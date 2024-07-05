@@ -4,56 +4,59 @@
 @inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
 @inject IJSRuntime JS
 
-<h1>Registro de Usuario</h1>
+<section class="container">
 
+    <h1>Registro de Usuario</h1>
 
-@if(!string.IsNullOrEmpty(successMessage)){
-    <div class="alert alert-success" role="alert">
-        @successMessage
-    </div>
-}
+    <MensajeError @ref="mensajeError" />
 
-<form @onsubmit="RegisterUser" @onsubmit:preventDefault>
-    <div class="form-group">
-        <label for="nombre">Nombre:</label>
-        <input type="text" class="form-control" id="nombre" @bind="@user.Nombre">
-    </div>
-    <div class="form-group">
-        <label for="apellido">Apellido:</label>
-        <input type="text" class="form-control" id="apellido" @bind="@user.Apellido">
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" @bind="@user.Email">
-    </div>
-    <div class="form-group">
-        <label for="password">Contraseña:</label>
-        <input type="password" class="form-control" id="password" @bind="@user.Password">
-    </div>
-    <div class="form-group">
-        <label for="confirmPassword">Confirmar Contraseña:</label>
-        <input type="password" class="form-control" id="confirmPassword" @bind="@confirmPassword">
-    </div>
-    <button type="submit" class="btn btn-primary">Registrarse</button>
-</form>
-
-@if(!string.IsNullOrEmpty(errorMessage)){
-    <div class="alert alert-danger" role="alert">
-        @errorMessage
-    </div>
-}
+    <form class="form" @onsubmit="RegisterUser" @onsubmit:preventDefault>
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" @bind="@user.Nombre">
+        </div>
+        <div class="form-group">
+            <label for="apellido">Apellido:</label>
+            <input type="text" class="form-control" id="apellido" @bind="@user.Apellido">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" @bind="@user.Email">
+        </div>
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" class="form-control" id="password" @bind="@user.Password">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirmar Contraseña:</label>
+            <input type="password" class="form-control @(!string.IsNullOrEmpty(user.Password) && confirmPassword != user.Password ? "is-invalid" : "")" id="password" value="@confirmPassword" @oninput="@(e => confirmPassword = e.Value.ToString())" required=@(string.IsNullOrEmpty(user.Password) ? false : true)>
+            <div class="invalid-feedback">
+                Las contraseñas no coinciden
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+    </form>
+</section>
 
 @code {
     private Usuario user = new Usuario();
     private string? confirmPassword;
-    private string? errorMessage;
-    private string? successMessage;
+    MensajeError mensajeError;
+
+    private void ExibirMensaje(string mensaje)
+    {
+        mensajeError._mensajeError = mensaje;
+        mensajeError.Mostrar();
+    }
 
     private async Task RegisterUser()
     {
         try{
+            if(!string.IsNullOrEmpty(user.Password) && confirmPassword != user.Password){
+                throw new Exception("Las contraseñas no coinciden");
+            }
+            
             Usuario result = CasoDeUsoUsuarioAlta.Ejecutar(user);
-            successMessage = "Usuario registrado correctamente";
 
             await JS.InvokeAsync<string>("setUsuario", result);
 
@@ -61,7 +64,7 @@
 
         }catch(Exception e){
             Console.WriteLine(e.Message);
-            errorMessage = e.Message;
+            ExibirMensaje(e.Message);
         }
     }
 }

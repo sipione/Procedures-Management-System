@@ -6,39 +6,35 @@
 @inject CasoDeUsoUsuarioLogin CasoDeUsoUsuarioLogin
 @inject IJSRuntime JS
 
-<h3>Login</h3>
 
-@if (!string.IsNullOrEmpty(_messageerror))
-{
-    <div class="alert alert-danger" role="alert">
-        @_messageerror
-    </div>
-}
+<section class="container">
+    <h3>Login</h3>
 
-@if (!string.IsNullOrEmpty(_successMessage))
-{
-    <div class="alert alert-success" role="alert">
-        @_successMessage
-    </div>
-}
+    <MensajeError @ref="mensajeError" />
 
-<form @onsubmit="LogUser" @onsubmit:preventDefault>
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" class="form-control" id="email" @bind="_email" />
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" @bind="_password" />
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+    <form class="form" @onsubmit="LogUser" @onsubmit:preventDefault>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" @bind="_email" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" @bind="_password" />
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</section>
 
 @code {
     private string _email;
     private string _password;
-    private string _messageerror;
-    private string _successMessage;
+    MensajeError mensajeError = null!;
+
+    private void ExibirMensaje(string mensaje)
+    {
+        mensajeError._mensajeError = mensaje;
+        mensajeError.Mostrar();
+    }
 
    private async Task LogUser()
     {
@@ -49,7 +45,6 @@
             {
                 throw new Exception("Usuario o contraseña incorrectos");
             }
-            _successMessage = "Usuario logueado correctamente";
 
             @* servicioDeSecion.registrarSesion(result); *@
 
@@ -60,7 +55,7 @@
         catch (Exception ex)
         {
             Console.WriteLine("Error al loguear usuario: " + ex.Message);
-            _messageerror = ex.Message;
+            ExibirMensaje(ex.Message);
         }
     }
 }
