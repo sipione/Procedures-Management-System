@@ -15,14 +15,13 @@ public class CasoDeUsoUsuarioModificacion
     {        
         PrepararNuevoUsuario(usuario, idUsuarioQueModifica);
 
-
         _usuarioValidador.Validar(usuario);
 
         Console.WriteLine("usuario prepado: " + usuario);
         _repositorioUsuarios.ActualizarUsuario(usuario);
     }
 
-    private Usuario PrepararNuevoUsuario(Usuario usuario, int idUsuarioQueModifica)
+    private Usuario PrepararNuevoUsuario(Usuario nuevoUsuario, int idUsuarioQueModifica)
     {
         Usuario? usuarioQueModifica = _repositorioUsuarios.ObtenerUsuarioPorId(idUsuarioQueModifica);
 
@@ -30,28 +29,32 @@ public class CasoDeUsoUsuarioModificacion
             throw new Exception($"Error 404. El usuario con id {idUsuarioQueModifica} no fue encontrado.");
         }
 
-        if (idUsuarioQueModifica != usuario.Id && !usuarioQueModifica.Permisos.Contains(Permiso.UsuarioModificacion)){
-            throw new Exception($"Error 403. El usuario con id {idUsuarioQueModifica} no tiene permisos para modificar a otros usuarios.");
+        if (idUsuarioQueModifica != nuevoUsuario.Id && !usuarioQueModifica.Permisos.Contains(Permiso.UsuarioModificacion)){
+            throw new AutorizacionException($"Error 403. El usuario con id {idUsuarioQueModifica} no tiene permisos para modificar a otros usuarios.");
         }
         
-        Usuario? usuarioAModificar = _repositorioUsuarios.ObtenerUsuarioPorId(usuario.Id);
+        Usuario? usuarioAModificar = _repositorioUsuarios.ObtenerUsuarioPorId(nuevoUsuario.Id);
         if(usuarioAModificar == null){
-            throw new Exception($"Error 404. El usuario con id {usuario.Id} no fue encontrado.");
+            throw new Exception($"Error 404. El usuario con id {nuevoUsuario.Id} no fue encontrado.");
         }
 
         if(idUsuarioQueModifica == usuarioAModificar.Id){
-            usuario.Permisos = usuarioAModificar.Permisos;
+            nuevoUsuario.Permisos = usuarioAModificar.Permisos;
         }
 
-        Console.WriteLine("usuarioAModificar: " + usuarioAModificar);
-        Console.WriteLine("usuario: " + usuario);
+        if(nuevoUsuario.Email != usuarioAModificar.Email){
+            Usuario? usuarioConMismoEmail = _repositorioUsuarios.ObtenerUsuarioPorEmail(nuevoUsuario.Email);
+            if(usuarioConMismoEmail != null){
+                throw new Exception($"Error 409. Ya existe un usuario con el email {nuevoUsuario.Email}.");
+            }
+        }
         
-        if(string.IsNullOrEmpty(usuario.Password)){
-            usuario.Password = usuarioAModificar.Password;
+        if(string.IsNullOrEmpty(nuevoUsuario.Password)){
+            nuevoUsuario.Password = usuarioAModificar.Password;
         }else{
-            usuario.Password = _servicioAutenticacion.EncriptarPassword(usuario.Password);
+            nuevoUsuario.Password = _servicioAutenticacion.EncriptarPassword(nuevoUsuario.Password);
         }
 
-        return usuario;
+        return nuevoUsuario;
     }
 }

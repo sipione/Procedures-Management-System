@@ -13,7 +13,7 @@ public class CasoDeUsoUsuarioAlta
         _usuarioValidador = usuarioValidador;
     }
 
-    public void Ejecutar(Usuario usuario)
+    public Usuario Ejecutar(Usuario usuario)
     {
         if (_repositorioUsuarios.ObtenerUsuarioPorEmail(usuario.Email) != null)
             throw new Exception($"El email {usuario.Email} ya se encuentra registrado.");
@@ -29,6 +29,8 @@ public class CasoDeUsoUsuarioAlta
         _usuarioValidador.Validar(usuario);
 
         _repositorioUsuarios.GuardarUsuario(usuario);
+
+        return usuario;
     }
 
     public void Ejecutar(Usuario usuario, int idUsuarioCreador)

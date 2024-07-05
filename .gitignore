@@ -41,5 +41,4 @@ appsettings.Production.json
 # Ignore Visual Studio Code files
 .vscode/
 
-*.json
 *.csv

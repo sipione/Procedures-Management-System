@@ -133,7 +133,8 @@
     {
         try{
             var resultado = CasoDeUsoUsuarioConsultaTodos.Ejecutar();
-            UsuariosList = resultado;
+            UsuariosList = resultado.Where(usuario=> usuario.Id != UsuarioRegistrado.Id).ToList();
+            
         }catch(Exception ex){
             ShowError(ex.Message);
         }

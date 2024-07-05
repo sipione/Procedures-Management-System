@@ -2,9 +2,9 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
+@inject IJSRuntime JS
 
-<h3>Registro de Usuario</h3>
-
+<h1>Registro de Usuario</h1>
 
 
 @if(!string.IsNullOrEmpty(successMessage)){
@@ -49,12 +49,15 @@
     private string? errorMessage;
     private string? successMessage;
 
-    private void RegisterUser()
+    private async Task RegisterUser()
     {
         try{
-            CasoDeUsoUsuarioAlta.Ejecutar(user);
+            Usuario result = CasoDeUsoUsuarioAlta.Ejecutar(user);
             successMessage = "Usuario registrado correctamente";
-            NavigationManager.NavigateTo("/expedientes");
+
+            await JS.InvokeAsync<string>("setUsuario", result);
+
+            NavigationManager.NavigateTo("/expedientes", forceLoad: true);
 
         }catch(Exception e){
             Console.WriteLine(e.Message);

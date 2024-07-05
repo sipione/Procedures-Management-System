@@ -1,0 +1,12 @@
+.form-group {
+    margin: 1rem 0rem;
+}
+
+.form-group input {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn-danger{
+    margin-top: 1rem;
+}

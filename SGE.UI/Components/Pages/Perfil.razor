@@ -5,21 +5,6 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
 
-<style>
-    .form-group {
-        margin: 1rem 0rem;
-    }
-
-    .form-group input {
-        margin-top: 0.5rem;
-        margin-bottom: 1rem;
-    }
-
-    .btn-danger{
-        margin-top: 1rem;
-    }
-</style>
-
 <h3>Perfil</h3>
 
 @if (!string.IsNullOrEmpty(_mensajeExito))
@@ -58,7 +43,10 @@
         </div>
         <div class="form-group">
             <label for="password">Repetir Contraseña</label>
-            <input type="password" class="form-control" id="password" value="@UsuarioModificado.Password" @oninput="@(e => UsuarioModificado.Password = e.Value.ToString())" required=@(string.IsNullOrEmpty(UsuarioModificado.Password) ? false : true)>
+            <input type="password" class="form-control @(!string.IsNullOrEmpty(UsuarioModificado.Password) && _confirmacionPassword != UsuarioModificado.Password ? "is-invalid" : "")" id="password" value="@_confirmacionPassword" @oninput="@(e => _confirmacionPassword = e.Value.ToString())" required=@(string.IsNullOrEmpty(UsuarioModificado.Password) ? false : true)>
+            <div class="invalid-feedback">
+                Las contraseñas no coinciden
+            </div>
         </div>
         <button class="btn btn-primary" type="submit">Actualizar</button>
     </form>
@@ -70,6 +58,7 @@
 @code {
     public Usuario? UsuarioRegistrado;
     private Usuario? UsuarioModificado;
+    private string? _confirmacionPassword;
     private string? _mensajeExito;
     private string? _mensajeError;
 
@@ -96,23 +85,28 @@
 
     private void Actualizar()
     {
-        Console.WriteLine("Actualizar");
+        if (!string.IsNullOrEmpty(UsuarioModificado.Password) && _confirmacionPassword != UsuarioModificado.Password)
+        {
+            ShowMensajeError("Las contraseñas no coinciden");
+            return;
+        }
+
         try{
             CasoDeUsoUsuarioModificacion.Ejecutar(UsuarioModificado, UsuarioRegistrado.Id);
             UsuarioModificado = UsuarioModificado.Clone(); 
             JS.InvokeVoidAsync("setUsuario", UsuarioModificado);
             ShowMensajeExito("Usuario actualizado correctamente");
-            NavigationManager.NavigateTo("/perfil", forceLoad: true);
+
         }catch (Exception e)
         {
             ShowMensajeError(e.Message);
         }
     }
 
-    private void Logout()
+    private async Task Logout()
     {
-        servicioDeSecion.cerrarSesion(UsuarioRegistrado);
-        NavigationManager.NavigateTo("/login");
+        await JS.InvokeVoidAsync("removeUsuario");
+        NavigationManager.NavigateTo("/login", forceLoad: true);
     }
 
     private void ShowMensajeExito(string mensaje)

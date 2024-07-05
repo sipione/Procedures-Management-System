@@ -58,7 +58,13 @@ El proyecto utiliza SQLite como base de datos. Asegúrate de que el archivo de l
     dotnet build
     ```
 
-4. Inicia la aplicación:
+4. Navega al UI:
+
+    ```sh
+    cd SGE.UI
+    ```
+
+5. Inicia la aplicación:
 
     ```sh
     dotnet run

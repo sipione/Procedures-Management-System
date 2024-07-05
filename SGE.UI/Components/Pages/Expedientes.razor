@@ -8,83 +8,8 @@
 @inject CasoDeUsoExpedienteModificacion CasoDeUsoExpedienteModificacion
 @inject CasoDeUsoExpedienteBaja CasoDeUsoExpedienteBaja
 @inject CasoDeUsoExpedienteAlta CasoDeUsoExpedienteAlta
+@inject CasoDeUsoExpedienteConsultaPorld CasoDeUsoExpedienteConsultaPorld
 @inject IJSRuntime JS
-
-<style>
-    .table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #212529;
-    }
-
-    .table th,
-    .table td {
-        padding: 0.75rem;
-        vertical-align: top;
-        border-top: 1px solid #dee2e6;
-    }
-
-    .table thead th {
-        vertical-align: bottom;
-        border-bottom: 2px solid #dee2e6;
-    }
-
-    .table tbody+tbody {
-        border-top: 2px solid #dee2e6;
-    }
-
-    .table .table {
-        background-color: #fff;
-    }
-
-    .alert {
-        padding: 0.75rem 1.25rem;
-        margin: 2rem 0rem;
-        border: 1px solid transparent;
-        border-radius: 0.25rem;
-    }
-
-    .alert-danger {
-        color: #721c24;
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
-    }
-
-    .form-box {
-        padding: 1rem .5rem;
-        margin: 2rem 0rem;
-        background-color: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 0.25rem;
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-
-    .form-box button.close {
-        position: absolute;
-        top: 0;
-        right: 0;
-        padding: 1rem;
-        color: inherit;
-        outline: none;
-        border: none;
-        background-color: transparent;
-        font-size: 1.5rem;
-        color: red;
-        cursor: pointer;
-    }
-
-    .form-box h4 {
-        margin-bottom: 1rem;
-        text-align: center;
-    }
-
-    .form-group{
-        margin: 1rem 0rem;
-    }
-</style>
 
 <h3>Gestão de Expedientes</h3>
 
@@ -113,7 +38,15 @@
     _creando="_creando"
 />
 
-<button class="btn btn-primary" @onclick="() => AbrirEspacioParaCreacion()">Nuevo Expediente</button>
+<div class="expedientes_top_btns">
+    <button class="btn btn-primary" @onclick="() => ListarExpedientes()">Listar Expedientes</button>
+    <div class="top_btns_idbox">
+        <input type="text" @bind="_idParaBuscar" />
+        <button class="btn btn-primary" @onclick="() => BuscarPorId()">Buscar por Id</button>
+    </div>
+    <button class="btn btn-primary" @onclick="() => AbrirEspacioParaCreacion()">Nuevo Expediente</button>
+</div>
+
 
 @if (ExpedientesList != null && ExpedientesList.Any())
 {
@@ -124,29 +57,31 @@
             <th>Nombre</th>
             <th>Fecha de Creación</th>
             <th>Fecha de Modificación</th>
-            <th>Usuário de Modificación</th>
+            <th class="td_center">Usuário de Modificación</th>
             <th>Estado</th>
             <th>Tramites</th>
-            <th>Acciones</th>
+            <th class="td_center">Acciones</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var expediente in ExpedientesList)
             {
                 <tr>
-                    <td>@expediente.Id</td>
+                    <td class="td_center">@expediente.Id</td>
                     <td>@expediente.Caratula</td>
                     <td>@expediente.FechaCreacion</td>
                     <td>@expediente.FechaUltimaModificacion</td>
-                    <td>@expediente.UsuarioUltimaModificacionId</td>
+                    <td class="td_center">@expediente.UsuarioUltimaModificacionId</td>
                     <td>@expediente.Estado</td>
                     <td>
                         <button class="btn btn-primary" @onclick="() => ListarTramitesDelExpediente(expediente.Id)">Get tramites
                             Asociados</button>
                     </td>
                     <td>
-                        <button class="btn btn-primary" @onclick="() => AbrirEspacioDeEdicion(expediente.Id)">Editar</button>
-                        <button class="btn btn-danger" @onclick="() => ConfirmarReseteo(expediente.Id)">Eliminar</button>
+                        <div class="expediente_acciones">
+                            <button class="btn btn-primary" @onclick="() => AbrirEspacioDeEdicion(expediente.Id)">Editar</button>
+                            <button class="btn btn-danger" @onclick="() => ConfirmarEliminacion(expediente.Id)">Eliminar</button>
+                        </div>
                     </td>
                 </tr>
             }
@@ -196,6 +131,7 @@
     private IEnumerable<Expediente>? ExpedientesList;
     private IEnumerable<Tramite>? Tramites;
     private Expediente? _expediente;
+    private int _idParaBuscar;
     private bool _editando = false;
     private string _mensajeError = string.Empty;
     private string _mensajeExito = string.Empty;
@@ -204,16 +140,10 @@
     DialogoConfirmacion dialogo = null!;
     ExpedienteEditarCrear editarCrearExpediente = null!;
 
-    private void ConfirmarReseteo(int id)
+    private void ConfirmarEliminacion(int id)
     {
         dialogo.OnConfirmado = EventCallback.Factory.Create(this,() => EliminarExpediente(id));
         dialogo.Mostrar();
-    }
-
-    private void CerrarFormulario()
-    {
-        _editando = false;
-        _creando = false;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -317,6 +247,24 @@
         NavigationManager.NavigateTo("/tramites");
     }
 
+    private void BuscarPorId()
+    {
+        try
+        {
+            _expediente = CasoDeUsoExpedienteConsultaPorld.Ejecutar(_idParaBuscar);
+            if (_expediente == null)
+            {
+                throw new Exception($"No se encontró un expediente con id {_idParaBuscar}");
+            }
+            ExpedientesList = new List<Expediente> { _expediente };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            ShowError(e.Message);
+        }
+    }
+    
     public void ShowError(string message)
     {
         _mensajeError = message;
