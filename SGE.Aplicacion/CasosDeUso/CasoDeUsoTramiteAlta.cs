@@ -1,20 +1,12 @@
 ﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public class CasoDeUsoTramiteAlta
+    public class CasoDeUsoTramiteAlta(
+        ITramiteRepositorio _tramiteRepositorio,
+        IServicioAutorizacion _servicioAutorizacion,
+        IExpedienteRepositorio _expedienteRepositorio,
+        TramiteValidador _tramiteValidador
+    )
     {
-        private readonly ITramiteRepositorio _tramiteRepositorio;
-        private readonly IServicioAutorizacion _servicioAutorizacion;
-        private readonly IExpedienteRepositorio _expedienteRepositorio;
-        private readonly TramiteValidador _tramiteValidador;
-
-        public CasoDeUsoTramiteAlta(ITramiteRepositorio tramiteRepositorio, IServicioAutorizacion servicioAutorizacion, IExpedienteRepositorio expedienteRepositorio, TramiteValidador tramiteValidador)
-        {
-            _tramiteRepositorio = tramiteRepositorio;
-            _servicioAutorizacion = servicioAutorizacion;
-            _expedienteRepositorio = expedienteRepositorio;
-            _tramiteValidador = tramiteValidador;
-        }
-
         public void Ejecutar(Tramite tramite, int usuarioId)
         {
             if (!_servicioAutorizacion.PoseeElPermiso(usuarioId, Permiso.TramiteAlta))

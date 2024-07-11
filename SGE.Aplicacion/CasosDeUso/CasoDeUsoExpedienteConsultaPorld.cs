@@ -1,13 +1,9 @@
 ﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public class CasoDeUsoExpedienteConsultaPorld
+    public class CasoDeUsoExpedienteConsultaPorld(
+        IExpedienteRepositorio _expedienteRepositorio
+    )
     {
-        private readonly IExpedienteRepositorio _expedienteRepositorio;
-
-        public CasoDeUsoExpedienteConsultaPorld(IExpedienteRepositorio expedienteRepositorio)
-        {
-            _expedienteRepositorio = expedienteRepositorio;
-        }
 
         public Expediente Ejecutar(int expedienteId)
         {

@@ -1,12 +1,7 @@
-public class CasoDeUsoUsuarioBaja
+public class CasoDeUsoUsuarioBaja(
+    IUsuarioRepositorio _repositorioUsuarios
+)
 {
-    private readonly IUsuarioRepositorio _repositorioUsuarios;
-
-    public CasoDeUsoUsuarioBaja(IUsuarioRepositorio repositorioUsuarios)
-    {
-        _repositorioUsuarios = repositorioUsuarios;
-    }
-
     public void Ejecutar(int idUsuarioParaBajar, int idUsuarioQueBaja)
     {
         Usuario? usuarioQueBaja = _repositorioUsuarios.ObtenerUsuarioPorId(idUsuarioQueBaja) ?? throw new Exception($"Error 404. El usuario con id {idUsuarioQueBaja} no fue encontrado.");

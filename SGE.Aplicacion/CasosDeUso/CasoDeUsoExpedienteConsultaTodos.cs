@@ -1,14 +1,9 @@
 ﻿namespace SGE.Aplicacion.CasosDeUso
 {
-    public class CasoDeUsoExpedienteConsultaTodos
+    public class CasoDeUsoExpedienteConsultaTodos(
+        IExpedienteRepositorio _expedienteRepositorio
+    )
     {
-        private readonly IExpedienteRepositorio _expedienteRepositorio;
-
-        public CasoDeUsoExpedienteConsultaTodos(IExpedienteRepositorio expedienteRepositorio)
-        {
-            _expedienteRepositorio = expedienteRepositorio;
-        }
-
         public IEnumerable<Expediente> Ejecutar()
         {
             return _expedienteRepositorio.Listar();

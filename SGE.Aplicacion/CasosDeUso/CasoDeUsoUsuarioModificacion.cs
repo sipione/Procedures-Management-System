@@ -1,16 +1,9 @@
-public class CasoDeUsoUsuarioModificacion
+public class CasoDeUsoUsuarioModificacion(
+    IUsuarioRepositorio _repositorioUsuarios,
+    UsuarioValidador _usuarioValidador,
+    IServicioAutenticacion _servicioAutenticacion
+)
 {
-    private readonly IUsuarioRepositorio _repositorioUsuarios;
-    private readonly UsuarioValidador _usuarioValidador;
-    private readonly IServicioAutenticacion _servicioAutenticacion;
-
-    public CasoDeUsoUsuarioModificacion(IUsuarioRepositorio repositorioUsuarios, UsuarioValidador usuarioValidador, IServicioAutenticacion servicioAutenticacion)
-    {
-        _repositorioUsuarios = repositorioUsuarios;
-        _usuarioValidador = usuarioValidador;
-        _servicioAutenticacion = servicioAutenticacion;
-    }
-
     public void Ejecutar(Usuario usuario, int idUsuarioQueModifica)
     {        
         PrepararNuevoUsuario(usuario, idUsuarioQueModifica);

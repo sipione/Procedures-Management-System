@@ -14,6 +14,7 @@
 <DialogoConfirmacion @ref=dialogo />
 
 <MensajeExito @ref="mensajeExito" />
+
 <MensajeError @ref="mensajeError" />
 
 <UsuarioCrearEditar @ref="crearEditarUsuario" OnUpdate="Updated" _usuario="@_usuario" OnError="NotUpdated" UsuarioRegistrado="@UsuarioRegistrado" _creando="@_creando" _editando="@_editando"/>
@@ -135,12 +136,12 @@
         LoadUsuarios();
     }
 
-    private void NotUpdated()
+    private void NotUpdated(string mensaje)
     {
         if(_creando){
-            ExibirMensaje("Error al crear el usuario", "error");
+            ExibirMensaje($"Error al crear el usuario: {mensaje}", "error");
         }else{
-            ExibirMensaje("Error al crear el usuario", "error");
+            ExibirMensaje($"Error al crear el usuario: {mensaje}", "error");
         }
     }
 

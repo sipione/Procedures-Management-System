@@ -1,18 +1,10 @@
-public class CasoDeUsoUsuarioAlta
+public class CasoDeUsoUsuarioAlta(
+    IUsuarioRepositorio _repositorioUsuarios,
+    IServicioAutenticacion _servicioAutenticacion,
+    IServicioAutorizacion _servicioAutorizacion,
+    UsuarioValidador _usuarioValidador
+)
 {
-    private readonly IUsuarioRepositorio _repositorioUsuarios;
-    private readonly IServicioAutenticacion _servicioAutenticacion;
-    private readonly IServicioAutorizacion _servicioAutorizacion;
-    private readonly UsuarioValidador _usuarioValidador;
-
-    public CasoDeUsoUsuarioAlta(IUsuarioRepositorio repositorioUsuarios, IServicioAutenticacion servicioAutenticacion, IServicioAutorizacion servicioAutorizacion, UsuarioValidador usuarioValidador)
-    {
-        _repositorioUsuarios = repositorioUsuarios;
-        _servicioAutenticacion = servicioAutenticacion;
-        _servicioAutorizacion = servicioAutorizacion;
-        _usuarioValidador = usuarioValidador;
-    }
-
     public Usuario Ejecutar(Usuario usuario)
     {
         if (_repositorioUsuarios.ObtenerUsuarioPorEmail(usuario.Email) != null){

@@ -178,12 +178,12 @@
         ListarExpedientes();
     }
 
-    private void UpdatedError()
+    private void UpdatedError(string mensaje)
     {
         if(_creando){
-            Exibirmensaje("Error al crear el expediente", "error");
+            Exibirmensaje($"Error al crear el expediente: {mensaje}", "error");
         }else{
-            Exibirmensaje("Error al modificar el expediente", "error");
+            Exibirmensaje($"Error al modificar el expediente: {mensaje}", "error");
         }
     }
 

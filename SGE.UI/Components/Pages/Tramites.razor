@@ -261,12 +261,12 @@
         LoadTramites();
     }
 
-    private void UpdateError()
+    private void UpdateError(string mesaje)
     {
         if(_creando){
-            ExibirMensaje("Error al crear el expediente", "error");
+            ExibirMensaje($"Error al crear el expediente: {mesaje}", "error");
         }else{
-            ExibirMensaje("Error al actualizar el expediente", "error");
+            ExibirMensaje($"Error al actualizar el expediente: {mesaje}", "error");
         }
     }
 
