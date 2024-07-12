@@ -51,13 +51,13 @@
     [Parameter]
     public bool _creando { get; set; }
     [Parameter]
-    public Tramite _tramite { get; set; }
+    public Tramite? _tramite { get; set; }
     [Parameter]
-    public IEnumerable<Expediente> ExpedientesList { get; set; }
+    public IEnumerable<Expediente>? ExpedientesList { get; set; }
     [Parameter]
     public EventCallback OnUpdate { get; set; }
     [Parameter]
-    public Usuario UsuarioRegistrado { get; set; }
+    public Usuario? UsuarioRegistrado { get; set; }
     [Parameter]
     public EventCallback<string> OnError { get; set; }
 
@@ -89,6 +89,10 @@
 
     private void CrearNuevoTramite()
     {
+        if(_tramite == null)
+        {
+            return;
+        }
         try
         {
             CasoDeUsoTramiteAlta.Ejecutar(_tramite, UsuarioRegistrado.Id);
@@ -104,6 +108,10 @@
 
     private void ActualizarTramite()
     {
+        if(UsuarioRegistrado == null)
+        {
+            return;
+        }
         try
         {
             CasoDeUsoTramiteModificacion.Ejecutar(_tramite, UsuarioRegistrado.Id);

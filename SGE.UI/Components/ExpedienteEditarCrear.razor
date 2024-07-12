@@ -48,11 +48,11 @@
     [Parameter]
     public bool _creando { get; set; }
     [Parameter]
-    public Expediente _expediente { get; set; }
+    public Expediente? _expediente { get; set; }
     [Parameter]
     public EventCallback OnUpdate { get; set; }
     [Parameter]
-    public Usuario UsuarioRegistrado { get; set; }
+    public Usuario? UsuarioRegistrado { get; set; }
     [Parameter]
     public EventCallback<string> OnError { get; set; }
 

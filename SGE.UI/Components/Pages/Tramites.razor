@@ -287,6 +287,10 @@
 
     private void DeleteTramite(int tramiteId)
     {
+        if(UsuarioRegistrado == null){
+            ExibirMensaje("No se pudo obtener el usuario logueado", "error");
+            return;
+        }
         try{
             CasoDeUsoTramiteBaja.Ejecutar(tramiteId, UsuarioRegistrado.Id);
             ExibirMensaje("Trámite eliminado correctamente", "exito");
