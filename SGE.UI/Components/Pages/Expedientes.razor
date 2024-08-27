@@ -1,4 +1,4 @@
-@page "/expedientes"
+@page "/manager/expedientes"
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 @inject IServicioDeSecion servicioDeSecion
@@ -254,7 +254,7 @@
 
     private void goToTramites()
     {
-        NavigationManager.NavigateTo("/tramites");
+        NavigationManager.NavigateTo("/manager/tramites");
     }
 
     private void BuscarPorId()
