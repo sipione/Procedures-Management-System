@@ -109,10 +109,6 @@ The project uses SQLite as its database. Ensure that the database file `SGE.sqli
 
 ## Project Structure
 
-The project is organized into the following directories and files:
-Procedures-Management-System/ ├── Controllers/ │ ├── CasesController.cs │ ├── ProceduresController.cs │ └── UsersController.cs ├── Data/ │ ├── ApplicationDbContext.cs │ └── Migrations/ ├── Models/ │ ├── Case.cs │ ├── Procedure.cs │ └── User.cs ├── Services/ │ ├── CaseService.cs │ ├── ProcedureService.cs │ └── UserService.cs ├── Views/ │ ├── Cases/ │ ├── Procedures/ │ └── Users/ ├── wwwroot/ │ ├── css/ │ ├── js/ │ └── lib/ ├── appsettings.json ├── Program.cs ├── README.md ├── Startup.cs └── Procedures-Management-System.csproj
-
-
 ### Directories and Files
 
 - **Controllers/**: Contains the API controllers for handling HTTP requests.
