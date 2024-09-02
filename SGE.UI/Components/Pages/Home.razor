@@ -21,21 +21,21 @@
         <ul>
             <li>
                 <p>Se puede ver los expedientes, asi como eliminarlos, modificarlos y crear nuevos</p>
-                <NavLink href="/manager/expedientes"><button class="btn btn-primary">Expedientes</button></NavLink>
+                <NavLink href="/dashboard/expedientes"><button class="btn btn-primary">Expedientes</button></NavLink>
             </li>
             @if(servicioAutorizacion.PoseeElPermiso(UsuarioRegistrado.Id, Permiso.UsuarioConsulta)){
                 <li>
                     <p>Se puede ver los usuarios, asi como eliminarlos, modificarlos y crear nuevos</p>
-                    <NavLink href="/manager/manager/usuarios"><button class="btn btn-primary">Usuarios</button></NavLink>
+                    <NavLink href="/dashboard/dashboard/usuarios"><button class="btn btn-primary">Usuarios</button></NavLink>
                 </li>
             }
             <li>
                 <p>Se puede ver los tramites, asi como eliminarlos, modificarlos y crear nuevos</p>
-                <NavLink href="/manager/manager/tramites"><button class="btn btn-primary">Tramites</button></NavLink>
+                <NavLink href="/dashboard/dashboard/tramites"><button class="btn btn-primary">Tramites</button></NavLink>
             </li>
             <li>
                 <p>Se puede ver y modificar tu perfil</p>
-                <NavLink href="/manager/manager/perfil"><button class="btn btn-primary">Perfil</button></NavLink>
+                <NavLink href="/dashboard/dashboard/perfil"><button class="btn btn-primary">Perfil</button></NavLink>
             </li>
         </ul>
     </div>
@@ -48,8 +48,8 @@ else
         <p>Para poder acceder a las opciones del sistema, por favor logueate o registrate</p>
     </div>
     <div class="button-container">
-        <NavLink href="/manager/login"><button class="btn btn-primary">Login</button></NavLink>
-        <NavLink href="/manager/register"><button class="btn btn-primary">Registrar</button></NavLink>
+        <NavLink href="/dashboard/login"><button class="btn btn-primary">Login</button></NavLink>
+        <NavLink href="/dashboard/register"><button class="btn btn-primary">Registrar</button></NavLink>
     </div>
 }
 
@@ -75,6 +75,6 @@ else
     private async Task Logout()
     {
         await JS.InvokeVoidAsync("removeUsuario");
-        NavigationManager.NavigateTo("/login", forceLoad: true);
+        NavigationManager.NavigateTo("/dashboard/login", forceLoad: true);
     }
 }

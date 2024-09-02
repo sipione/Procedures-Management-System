@@ -50,7 +50,7 @@
 
             await JS.InvokeAsync<string>("setUsuario", result);
 
-            NavigationManager.NavigateTo("/manager/expedientes", forceLoad: true);
+            NavigationManager.NavigateTo("/dashboard/expedientes", forceLoad: true);
         }
         catch (Exception ex)
         {

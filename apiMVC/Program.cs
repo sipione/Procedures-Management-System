@@ -1,14 +1,10 @@
-using SGE.UI.Components;
 using SGE.Aplicacion;
 using SGE.Repositorios;
 using System.IO;
 using SGE.Aplicacion.CasosDeUso;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
 
 string path = Path.Combine(Directory.GetCurrentDirectory(), "SGE.sqlite");
 
@@ -22,6 +18,11 @@ using (var dbContext = builder.Services.BuildServiceProvider().GetRequiredServic
         SGESqlite.Inicializar(dbContext);
     }
 }
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // INJECCION DE REPOSITORIOS
 builder.Services.AddScoped<ITramiteRepositorio, TramiteRepositorioSqLite>();
@@ -59,21 +60,16 @@ builder.Services.AddTransient<CasoDeUsoUsuarioLogin>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-app.UsePathBase("/dashboard");
+app.UseAuthorization();
 
-app.UseStaticFiles();
-app.UseAntiforgery();
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapControllers();
 
 app.Run();

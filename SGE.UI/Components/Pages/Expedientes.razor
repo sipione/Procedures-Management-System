@@ -1,4 +1,4 @@
-@page "/manager/expedientes"
+@page "/dashboard/expedientes"
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 @inject IServicioDeSecion servicioDeSecion
@@ -162,7 +162,7 @@
         UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
         if (UsuarioRegistrado == null)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/dashboard");
         }else{
             ListarExpedientes();
         }
@@ -254,7 +254,7 @@
 
     private void goToTramites()
     {
-        NavigationManager.NavigateTo("/manager/tramites");
+        NavigationManager.NavigateTo("/dashboard/tramites");
     }
 
     private void BuscarPorId()

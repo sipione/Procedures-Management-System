@@ -1,4 +1,4 @@
-@page "/manager/usuarios"
+@page "/dashboard/usuarios"
 @inject NavigationManager NavigationManager
 @inject IServicioDeSecion servicioDeSecion
 @rendermode InteractiveServer
@@ -106,7 +106,7 @@
         
         if (UsuarioRegistrado == null || !servicioAutorizacion.PoseeElPermiso(UsuarioRegistrado.Id, Permiso.UsuarioConsulta))
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/dashboard");
         }
     }
 

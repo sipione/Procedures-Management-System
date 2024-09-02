@@ -1,4 +1,4 @@
-@page "/manager/tramites"
+@page "/dashboard/tramites"
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 @inject CasoDeUsoTramiteConsultaTodos CasoDeUsoTramiteConsultaTodos
@@ -213,7 +213,7 @@
         UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
         if (UsuarioRegistrado == null)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/dashboard");
         }
     }
 

@@ -1,4 +1,4 @@
-@page "/manager/perfil"
+@page "/dashboard/perfil"
 @rendermode InteractiveServer
 @inject CasoDeUsoUsuarioModificacion CasoDeUsoUsuarioModificacion
 @inject IServicioDeSecion servicioDeSecion
@@ -57,7 +57,7 @@
             UsuarioRegistrado = await JS.InvokeAsync<Usuario?>("getUsuario");
             if (UsuarioRegistrado == null)
             {
-                NavigationManager.NavigateTo("/login");
+                NavigationManager.NavigateTo("/dashboard/login");
             }
             else
             {
@@ -95,7 +95,7 @@
     private async Task Logout()
     {
         await JS.InvokeVoidAsync("removeUsuario");
-        NavigationManager.NavigateTo("/login", forceLoad: true);
+        NavigationManager.NavigateTo("/dashboard/login", forceLoad: true);
     }
 
     private void ExibirMensaje(string mensaje, string tipo)

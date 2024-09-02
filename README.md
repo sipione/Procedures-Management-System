@@ -77,9 +77,9 @@ El proyecto utiliza SQLite como base de datos. Asegúrate de que el archivo de l
 ### Funcionalidades Principales
 
 - **Inicio de Sesión**: Navega a `http://localhost:5000/login` para iniciar sesión.
-- **Gestión de Trámites**: Navega a `http://localhost:5000/manager/tramites` para gestionar trámites.
-- **Gestión de Expedientes**: Navega a `http://localhost:5000/manager/expedientes` para gestionar expedientes.
-- **Perfil de Usuario**: Navega a `http://localhost:5000/manager/perfil` para ver y editar tu perfil de usuario.
+- **Gestión de Trámites**: Navega a `http://localhost:5000/dashboard/tramites` para gestionar trámites.
+- **Gestión de Expedientes**: Navega a `http://localhost:5000/dashboard/expedientes` para gestionar expedientes.
+- **Perfil de Usuario**: Navega a `http://localhost:5000/dashboard/perfil` para ver y editar tu perfil de usuario.
 
 ## Estructura del Proyecto
 
