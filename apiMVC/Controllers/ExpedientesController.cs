@@ -3,7 +3,7 @@ using SGE.Aplicacion.CasosDeUso;
 namespace apiMVC.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 
 public class ExpedientesController : ControllerBase
 {
@@ -30,25 +30,36 @@ public class ExpedientesController : ControllerBase
     }
 
     [HttpPost(Name = "PostExpediente")]
-    public void Post([FromBody] Expediente expediente, [FromHeader] int usuarioId)
+    public IActionResult Post([FromBody] Expediente expediente, [FromHeader] int usuarioId)
     {
-        try{
-            _casoDeUsoExpedienteAlta.Ejecutar(expediente, usuarioId);
-        }catch(Exception e){
-            _logger.LogError(e.Message);
-            throw e;
+        if (expediente == null)
+        {
+            return BadRequest("Expediente data is required.");
         }
+
+        OperationResult result = _casoDeUsoExpedienteAlta.Ejecutar(expediente, usuarioId, true);
+
+        return StatusCode(result.StatusCode, result.Data ?? result.Message);
     }
 
     [HttpDelete("{id}", Name = "DeleteExpediente")]
-    public void Delete(int id, [FromHeader] int usuarioId)
+    public IActionResult Delete(int id, [FromHeader] int usuarioId)
     {
-        _casoDeUsoExpedienteBaja.Ejecutar(id, usuarioId);
+        OperationResult result = _casoDeUsoExpedienteBaja.Ejecutar(id, usuarioId, true);
+
+        return StatusCode(result.StatusCode, result.Data ?? result.Message);
     }
 
     [HttpPut(Name = "PutExpediente")]
-    public void Put([FromBody] Expediente expediente, [FromHeader] int usuarioId)
+    public IActionResult Put([FromBody] Expediente expediente, [FromHeader] int usuarioId)
     {
-        _casoDeUsoExpedienteModificacion.Ejecutar(expediente, usuarioId);
+        if (expediente == null)
+        {
+            return BadRequest("Expediente data is required.");
+        }
+
+        OperationResult result = _casoDeUsoExpedienteModificacion.Ejecutar(expediente, usuarioId, true);
+
+        return StatusCode(result.StatusCode, result.Data ?? result.Message);
     }
 }

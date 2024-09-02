@@ -13,5 +13,22 @@
             }
             _tramiteRepositorio.Eliminar(tramiteId);
         }
+
+        public OperationResult Ejecutar(int tramiteId, int usuarioId, bool toApi)
+        {
+            try
+            {
+                Ejecutar(tramiteId, usuarioId);
+                return OperationResult.Ok("Tramite eliminado con exito");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return OperationResult.Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.BadRequest(ex.Message);
+            }
+        }
     }
 }

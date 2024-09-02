@@ -28,5 +28,22 @@
             _tramiteValidador.Validar(tramite);
             _tramiteRepositorio.Crear(tramite);
         }
+
+        public OperationResult Ejecutar(Tramite tramite, int usuarioId, bool toApi)
+        {
+            try
+            {
+                Ejecutar(tramite, usuarioId);
+                return OperationResult.Created(tramite, "Tramite creado con exito");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return OperationResult.Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.BadRequest(ex.Message);
+            }
+        }
     }
 }

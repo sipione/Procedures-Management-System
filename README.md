@@ -1,104 +1,104 @@
 # Procedures Management System
 
-Este repositorio contiene el código fuente de un sistema de gestión de procedimientos desarrollado con Blazor y ASP.NET Core. El sistema permite a los usuarios gestionar trámites, expedientes y usuarios, ofreciendo una interfaz web intuitiva y funcional.
+This repository contains the source code for a procedures management system developed with Blazor and ASP.NET Core. The system allows users to manage procedures, cases, and users, providing an intuitive and functional web interface.
 
-## Características
+## Features
 
-- **Gestión de Trámites**: Crear, modificar, eliminar y consultar trámites.
-- **Gestión de Expedientes**: Crear, modificar, eliminar y consultar expedientes.
-- **Gestión de Usuarios**: Registro, autenticación, autorización y gestión de usuarios.
-- **Almacenamiento de Sesión**: Uso de `sessionStorage` para mantener la sesión del usuario.
+- **Procedure Management**: Create, modify, delete, and view procedures.
+- **Case Management**: Create, modify, delete, and view cases.
+- **User Management**: Registration, authentication, authorization, and user management.
+- **Session Storage**: Utilizes `sessionStorage` to maintain the user session.
 
-## Tecnologías Utilizadas
+## Technologies Used
 
-- **Blazor Server**: Framework para crear aplicaciones web interactivas del lado del servidor.
-- **ASP.NET Core**: Framework para construir aplicaciones web modernas.
-- **Entity Framework Core**: ORM para manejar la base de datos SQLite.
-- **SQLite**: Base de datos ligera y eficiente.
-- **C#**: Lenguaje de programación utilizado para el desarrollo backend y frontend.
+- **Blazor Server**: A framework for building interactive web applications on the server side.
+- **ASP.NET Core**: A framework for building modern web applications.
+- **Entity Framework Core**: An ORM for handling the SQLite database.
+- **SQLite**: A lightweight and efficient database.
+- **C#**: The programming language used for backend and frontend development.
 
-## Requisitos Previos
+## Prerequisites
 
 - [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Node.js](https://nodejs.org/) (opcional, para desarrollo frontend adicional)
-- [SQLite](https://www.sqlite.org/download.html) (opcional, si deseas interactuar con la base de datos directamente)
+- [Node.js](https://nodejs.org/) (optional, for additional frontend development)
+- [SQLite](https://www.sqlite.org/download.html) (optional, if you want to interact directly with the database)
 
-## Instalación y Configuración
+## Installation and Setup
 
-Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local:
+Follow these steps to set up and run the project in your local environment:
 
-### Clonar el Repositorio
+### Clone the Repository
 
 ```sh
 git clone https://github.com/sipione/Procedures-Management-System.git
 cd Procedures-Management-System
 ```
 
-### Configurar la Base de Datos
+### Set Up the Database
 
-El proyecto utiliza SQLite como base de datos. Asegúrate de que el archivo de la base de datos `SGE.sqlite` esté en el directorio raíz del proyecto. Si no existe, se creará automáticamente.
+The project uses SQLite as its database. Ensure that the database file `SGE.sqlite` is in the root directory of the project. If it doesn't exist, it will be created automatically.
 
-### Ejecutar la Aplicación
+### Run the Application
 
-1. Navega al directorio del proyecto:
+1. Navigate to the project directory:
 
     ```sh
     cd Procedures-Management-System
     ```
 
-2. Restaura las dependencias:
+2. Restore the dependencies:
 
     ```sh
     dotnet restore
     ```
 
-3. Construye el proyecto:
+3. Build the project:
 
     ```sh
     dotnet build
     ```
 
-4. Navega al UI:
+4. Navigate to the UI:
 
     ```sh
     cd SGE.UI
     ```
 
-5. Inicia la aplicación:
+5. Start the application:
 
     ```sh
     dotnet run
     ```
 
-   La aplicación estará disponible en `http://localhost:5000`.
+   The application will be available at `http://localhost:5000`.
 
-## Uso
+## Usage
 
-### Funcionalidades Principales
+### Main Features
 
-- **Inicio de Sesión**: Navega a `http://localhost:5000/login` para iniciar sesión.
-- **Gestión de Trámites**: Navega a `http://localhost:5000/dashboard/tramites` para gestionar trámites.
-- **Gestión de Expedientes**: Navega a `http://localhost:5000/dashboard/expedientes` para gestionar expedientes.
-- **Perfil de Usuario**: Navega a `http://localhost:5000/dashboard/perfil` para ver y editar tu perfil de usuario.
+- **Login**: Navigate to `http://localhost:5000/login` to log in.
+- **Procedure Management**: Navigate to `http://localhost:5000/dashboard/tramites` to manage procedures.
+- **Case Management**: Navigate to `http://localhost:5000/dashboard/expedientes` to manage cases.
+- **User Profile**: Navigate to `http://localhost:5000/dashboard/perfil` to view and edit your user profile.
 
-## Estructura del Proyecto
+## Project Structure
 
-El proyecto está dividido en tres principales carpetas:
+The project is divided into three main folders:
 
-- **Client**: Contiene la lógica del lado del cliente y los componentes Blazor.
-- **Server**: Contiene la lógica del lado del servidor, controladores y configuración de la API.
-- **Shared**: Contiene modelos y clases compartidas entre el cliente y el servidor.
+- **Client**: Contains client-side logic and Blazor components.
+- **Server**: Contains server-side logic, controllers, and API configuration.
+- **Shared**: Contains models and classes shared between the client and server.
 
-## Contribuir
+## Contributing
 
-Si deseas contribuir a este proyecto, por favor sigue estos pasos:
+If you would like to contribute to this project, please follow these steps:
 
-1. Haz un fork del repositorio.
-2. Crea una nueva rama (`git checkout -b feature/nueva-funcionalidad`).
-3. Realiza tus cambios y haz commits descriptivos (`git commit -m 'Añadida nueva funcionalidad'`).
-4. Sube tus cambios a tu fork (`git push origin feature/nueva-funcionalidad`).
-5. Abre un Pull Request describiendo tus cambios.
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/new-feature`).
+3. Make your changes and commit them with descriptive messages (`git commit -m 'Added new feature'`).
+4. Push your changes to your fork (`git push origin feature/new-feature`).
+5. Open a Pull Request describing your changes.
 
-## Contacto
+## Contact
 
-Si tienes alguna pregunta o sugerencia, no dudes en contactarnos a través de [ricardo@sipionetech.com](mailto:tu_email@dominio.com).
+If you have any questions or suggestions, feel free to contact us at [ricardo@sipionetech.com](mailto:ricardo@sipionetech.com).

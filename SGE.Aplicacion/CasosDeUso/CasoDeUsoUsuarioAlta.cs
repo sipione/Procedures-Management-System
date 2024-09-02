@@ -1,3 +1,5 @@
+namespace SGE.Aplicacion.CasosDeUso;
+
 public class CasoDeUsoUsuarioAlta(
     IUsuarioRepositorio _repositorioUsuarios,
     IServicioAutenticacion _servicioAutenticacion,
@@ -41,5 +43,31 @@ public class CasoDeUsoUsuarioAlta(
         _usuarioValidador.Validar(usuario);
 
         _repositorioUsuarios.GuardarUsuario(usuario);
+    }
+
+    public OperationResult Ejecutar(Usuario usuario, int idUsuarioCreador, bool toApi)
+    {
+        try
+        {
+            Ejecutar(usuario, idUsuarioCreador);
+            return OperationResult.Created(usuario, "Usuario creado con exito");
+        }
+        catch (Exception ex)
+        {
+            return OperationResult.BadRequest(ex.Message);
+        }
+    }
+
+    public OperationResult Ejecutar(Usuario usuario, bool toApi)
+    {
+        try
+        {
+            var usuarioCreado = Ejecutar(usuario);
+            return OperationResult.Created(usuarioCreado, "Usuario creado con exito");
+        }
+        catch (Exception ex)
+        {
+            return OperationResult.BadRequest(ex.Message);
+        }
     }
 }

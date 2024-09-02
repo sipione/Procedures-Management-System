@@ -22,5 +22,22 @@
 
             CambioEstadoExpedienteService.ActualizarEstado(tramite.ExpedienteId, _expedienteRepositorio, _tramiteRepositorio);
         }
+
+        public OperationResult Ejecutar(Tramite tramite, int usuarioId, bool toApi)
+        {
+            try
+            {
+                Ejecutar(tramite, usuarioId);
+                return OperationResult.Ok("Tramite modificado con exito");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return OperationResult.Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.BadRequest(ex.Message);
+            }
+        }
     }
 }

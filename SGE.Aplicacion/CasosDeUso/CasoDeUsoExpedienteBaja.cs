@@ -13,5 +13,22 @@
             }
             _expedienteRepositorio.Eliminar(expedienteId);
         }
+
+        public OperationResult Ejecutar(int expedienteId, int usuarioId, bool toApi)
+        {
+            try
+            {
+                Ejecutar(expedienteId, usuarioId);
+                return OperationResult.Ok("Expediente eliminado con exito");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return OperationResult.Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.BadRequest(ex.Message);
+            }
+        }
     }
 }

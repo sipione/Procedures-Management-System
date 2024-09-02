@@ -35,27 +35,27 @@ builder.Services.AddScoped<IServicioAutorizacion, ServicioAutorizacion>();
 builder.Services.AddScoped<IServicioDeSecion, ServicioDeSecionInterna>();
 
 //INJECCION DE VALIDADORES
-builder.Services.AddTransient<TramiteValidador>();
-builder.Services.AddTransient<UsuarioValidador>();
-builder.Services.AddTransient<ExpedienteValidador>();
+builder.Services.AddScoped<TramiteValidador>();
+builder.Services.AddScoped<UsuarioValidador>();
+builder.Services.AddScoped<ExpedienteValidador>();
 
 //INJECCION DE CASOSO DE USO
-builder.Services.AddTransient<CasoDeUsoTramiteAlta>();
-builder.Services.AddTransient<CasoDeUsoTramiteBaja>();
-builder.Services.AddTransient<CasoDeUsoTramiteModificacion>();
-builder.Services.AddTransient<CasoDeUsoTramiteConsultaTodos>();
-builder.Services.AddTransient<CasoDeUsoTramiteConsultaPorEtiqueta>();
-builder.Services.AddTransient<CasoDeUsoTramiteConsultaPorExpediente>();
-builder.Services.AddTransient<CasoDeUsoExpedienteAlta>();
-builder.Services.AddTransient<CasoDeUsoExpedienteBaja>();
-builder.Services.AddTransient<CasoDeUsoExpedienteModificacion>();
-builder.Services.AddTransient<CasoDeUsoExpedienteConsultaTodos>();
-builder.Services.AddTransient<CasoDeUsoExpedienteConsultaPorld>();
-builder.Services.AddTransient<CasoDeUsoUsuarioAlta>();
-builder.Services.AddTransient<CasoDeUsoUsuarioBaja>();
-builder.Services.AddTransient<CasoDeUsoUsuarioModificacion>();
-builder.Services.AddTransient<CasoDeUsoUsuarioConsultaTodos>();
-builder.Services.AddTransient<CasoDeUsoUsuarioLogin>();
+builder.Services.AddScoped<CasoDeUsoTramiteAlta>();
+builder.Services.AddScoped<CasoDeUsoTramiteBaja>();
+builder.Services.AddScoped<CasoDeUsoTramiteModificacion>();
+builder.Services.AddScoped<CasoDeUsoTramiteConsultaTodos>();
+builder.Services.AddScoped<CasoDeUsoTramiteConsultaPorEtiqueta>();
+builder.Services.AddScoped<CasoDeUsoTramiteConsultaPorExpediente>();
+builder.Services.AddScoped<CasoDeUsoExpedienteAlta>();
+builder.Services.AddScoped<CasoDeUsoExpedienteBaja>();
+builder.Services.AddScoped<CasoDeUsoExpedienteModificacion>();
+builder.Services.AddScoped<CasoDeUsoExpedienteConsultaTodos>();
+builder.Services.AddScoped<CasoDeUsoExpedienteConsultaPorld>();
+builder.Services.AddScoped<CasoDeUsoUsuarioAlta>();
+builder.Services.AddScoped<CasoDeUsoUsuarioBaja>();
+builder.Services.AddScoped<CasoDeUsoUsuarioModificacion>();
+builder.Services.AddScoped<CasoDeUsoUsuarioConsultaTodos>();
+builder.Services.AddScoped<CasoDeUsoUsuarioLogin>();
 
 var app = builder.Build();
 

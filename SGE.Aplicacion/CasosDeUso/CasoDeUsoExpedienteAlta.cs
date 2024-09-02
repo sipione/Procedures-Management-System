@@ -22,5 +22,22 @@ namespace SGE.Aplicacion.CasosDeUso
 
             _expedienteRepositorio.Crear(expediente);
         }
+
+        public OperationResult Ejecutar(Expediente expediente, int usuarioId, bool toApi)
+        {
+            try
+            {
+                Ejecutar(expediente, usuarioId);
+                return OperationResult.Created(expediente, "Expediente creado con exito");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return OperationResult.Unauthorized(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.BadRequest(ex.Message);
+            }
+        }
     }
 }

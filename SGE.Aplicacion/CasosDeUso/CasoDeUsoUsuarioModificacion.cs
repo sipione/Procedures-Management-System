@@ -1,3 +1,5 @@
+namespace SGE.Aplicacion.CasosDeUso;
+
 public class CasoDeUsoUsuarioModificacion(
     IUsuarioRepositorio _repositorioUsuarios,
     UsuarioValidador _usuarioValidador,
@@ -49,5 +51,18 @@ public class CasoDeUsoUsuarioModificacion(
         }
 
         return nuevoUsuario;
+    }
+
+    public OperationResult Ejecutar(Usuario usuario, int idUsuarioQueModifica, bool toApi)
+    {
+        try
+        {
+            Ejecutar(usuario, idUsuarioQueModifica);
+            return OperationResult.Ok("Usuario modificado con exito");
+        }
+        catch (Exception ex)
+        {
+            return OperationResult.BadRequest(ex.Message);
+        }
     }
 }

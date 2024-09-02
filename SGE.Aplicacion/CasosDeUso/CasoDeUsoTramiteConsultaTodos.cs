@@ -8,5 +8,18 @@ namespace SGE.Aplicacion.CasosDeUso
         {
             return _tramiteRepositorio.ObtenerTodos();
         }
+
+        public OperationResult Ejecutar(bool toApi)
+        {
+            try
+            {
+                var tramites = Ejecutar();
+                return OperationResult.Ok(tramites);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.InternalServerError(ex.Message);
+            }
+        }
     }
 }

@@ -50,6 +50,9 @@ namespace SGE.Repositorios
             {
                 _contexto.Expedientes.Remove(expediente);
                 _contexto.SaveChanges();
+            }else
+            {
+                throw new Exception("El expediente no existe");
             }
         }
 

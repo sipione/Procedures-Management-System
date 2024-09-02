@@ -9,7 +9,13 @@ public class ServicioAutorizacion : IServicioAutorizacion
 
     public bool PoseeElPermiso(int idUsuario, Permiso permiso)
     {
-        Usuario? usuario = _repositorioUsuarios.ObtenerUsuarioPorId(idUsuario) ?? throw new Exception($"Error 404. El usuario con id {idUsuario} no fue encontrado.");
+        Usuario? usuario = _repositorioUsuarios.ObtenerUsuarioPorId(idUsuario);
+
+        if (usuario == null)
+        {
+            return false;
+        }
+        
         return usuario.Permisos.Contains(permiso);
     }
 
