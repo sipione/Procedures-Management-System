@@ -1,6 +1,6 @@
 # Procedures Management System
 
-This repository contains the source code for a procedures management system developed with Blazor and ASP.NET Core. The system allows users to manage procedures, cases, and users, providing an intuitive and functional web interface.
+This repository contains the source code for a procedures management system developed with Blazor, ASP.NET Core, and apiMVC. The system allows users to manage procedures, cases, and users, providing an intuitive and functional web interface.
 
 ## Features
 
@@ -8,11 +8,13 @@ This repository contains the source code for a procedures management system deve
 - **Case Management**: Create, modify, delete, and view cases.
 - **User Management**: Registration, authentication, authorization, and user management.
 - **Session Storage**: Utilizes `sessionStorage` to maintain the user session.
+- **API Integration**: Provides RESTful API endpoints for external integrations using apiMVC.
 
 ## Technologies Used
 
 - **Blazor Server**: A framework for building interactive web applications on the server side.
 - **ASP.NET Core**: A framework for building modern web applications.
+- **apiMVC**: A framework for building RESTful APIs.
 - **Entity Framework Core**: An ORM for handling the SQLite database.
 - **SQLite**: A lightweight and efficient database.
 - **C#**: The programming language used for backend and frontend development.
@@ -76,18 +78,77 @@ The project uses SQLite as its database. Ensure that the database file `SGE.sqli
 
 ### Main Features
 
-- **Login**: Navigate to `http://localhost:5000/login` to log in.
-- **Procedure Management**: Navigate to `http://localhost:5000/dashboard/tramites` to manage procedures.
-- **Case Management**: Navigate to `http://localhost:5000/dashboard/expedientes` to manage cases.
-- **User Profile**: Navigate to `http://localhost:5000/dashboard/perfil` to view and edit your user profile.
+- **Login**: Navigate to `http://localhost:5114/dashboard/login` to log in.
+- **Procedure Management**: Navigate to `http://localhost:5114/dashboard/tramites` to manage procedures.
+- **Case Management**: Navigate to `http://localhost:5114/dashboard/expedientes` to manage cases.
+- **User Profile**: Navigate to `http://localhost:5114/dashboard/perfil` to view and edit your user profile.
+- **API Documentation**: Navigate to `http://localhost:5197/swagger` to view and interact with the API endpoints provided by `apiMVC`.
+
+### API Endpoints
+
+- **Procedures**:
+  - `GET /api/procedures`: Retrieve a list of procedures.
+  - `POST /api/procedures`: Create a new procedure.
+  - `GET /api/procedures/{id}`: Retrieve a specific procedure by ID.
+  - `PUT /api/procedures/{id}`: Update a specific procedure by ID.
+  - `DELETE /api/procedures/{id}`: Delete a specific procedure by ID.
+
+- **Cases**:
+  - `GET /api/cases`: Retrieve a list of cases.
+  - `POST /api/cases`: Create a new case.
+  - `GET /api/cases/{id}`: Retrieve a specific case by ID.
+  - `PUT /api/cases/{id}`: Update a specific case by ID.
+  - `DELETE /api/cases/{id}`: Delete a specific case by ID.
+
+- **Users**:
+  - `GET /api/users`: Retrieve a list of users.
+  - `POST /api/users`: Create a new user.
+  - `GET /api/users/{id}`: Retrieve a specific user by ID.
+  - `PUT /api/users/{id}`: Update a specific user by ID.
+  - `DELETE /api/users/{id}`: Delete a specific user by ID.
 
 ## Project Structure
 
-The project is divided into three main folders:
+The project is organized into the following directories and files:
+Procedures-Management-System/ ├── Controllers/ │ ├── CasesController.cs │ ├── ProceduresController.cs │ └── UsersController.cs ├── Data/ │ ├── ApplicationDbContext.cs │ └── Migrations/ ├── Models/ │ ├── Case.cs │ ├── Procedure.cs │ └── User.cs ├── Services/ │ ├── CaseService.cs │ ├── ProcedureService.cs │ └── UserService.cs ├── Views/ │ ├── Cases/ │ ├── Procedures/ │ └── Users/ ├── wwwroot/ │ ├── css/ │ ├── js/ │ └── lib/ ├── appsettings.json ├── Program.cs ├── README.md ├── Startup.cs └── Procedures-Management-System.csproj
 
-- **Client**: Contains client-side logic and Blazor components.
-- **Server**: Contains server-side logic, controllers, and API configuration.
-- **Shared**: Contains models and classes shared between the client and server.
+
+### Directories and Files
+
+- **Controllers/**: Contains the API controllers for handling HTTP requests.
+  - `CasesController.cs`: Manages case-related API endpoints.
+  - `ProceduresController.cs`: Manages procedure-related API endpoints.
+  - `UsersController.cs`: Manages user-related API endpoints.
+
+- **Data/**: Contains the database context and migration files.
+  - `ApplicationDbContext.cs`: Defines the database context.
+  - `Migrations/`: Contains the Entity Framework Core migration files.
+
+- **Models/**: Contains the data models used in the application.
+  - `Case.cs`: Defines the Case model.
+  - `Procedure.cs`: Defines the Procedure model.
+  - `User.cs`: Defines the User model.
+
+- **Services/**: Contains the business logic and service classes.
+  - `CaseService.cs`: Contains business logic for managing cases.
+  - `ProcedureService.cs`: Contains business logic for managing procedures.
+  - `UserService.cs`: Contains business logic for managing users.
+
+- **Views/**: Contains the Razor views for the web application.
+  - `Cases/`: Views related to case management.
+  - `Procedures/`: Views related to procedure management.
+  - `Users/`: Views related to user management.
+
+- **wwwroot/**: Contains static files such as CSS, JavaScript, and libraries.
+  - `css/`: Contains CSS files.
+  - `js/`: Contains JavaScript files.
+  - `lib/`: Contains third-party libraries.
+
+- `appsettings.json`: Configuration file for the application.
+- `Program.cs`: Entry point of the application.
+- [`README.md`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2Froot%2FProcedures-Management-System%2FREADME.md%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%5D "/root/Procedures-Management-System/README.md"): Project documentation.
+- `Startup.cs`: Configures services and the app's request pipeline.
+- `Procedures-Management-System.csproj`: Project file for the .NET application.
 
 ## Contributing
 
