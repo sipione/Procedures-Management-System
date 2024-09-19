@@ -2,6 +2,9 @@
 
 This repository contains the source code for a procedures management system developed with Blazor, ASP.NET Core, and apiMVC. The system allows users to manage procedures, cases, and users, providing an intuitive and functional web interface.
 
+## Try it
+For now the system is in Spanish: https://manage.sipionetech.com/dashboard/
+
 ## Features
 
 - **Procedure Management**: Create, modify, delete, and view procedures.
